@@ -24,7 +24,7 @@ Install http-server `npm install -g http-server`
 
 ## Proyect Installation
 
-`git clone https://github.com/jlramosr/zrickr.git zrickr`
+`git clone https://jlramosr@bitbucket.org/jlramosr/zrickr.git zrickr`
 
 `cd zrickr && bower install`
 
