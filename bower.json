@@ -13,6 +13,7 @@
   "homepage": "",
   "dependencies": {
     "polymer": "Polymer/polymer#~1.4.0",
-    "iron-input": "PolymerElements/iron-input#1.0.0"
+    "paper-toolbar": "PolymerElements/paper-toolbar#~1.1.4",
+    "paper-input": "PolymerElements/paper-input#~1.1.10"
   }
 }

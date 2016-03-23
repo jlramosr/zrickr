@@ -1,26 +1,27 @@
 <link rel="import"
       href="bower_components/polymer/polymer.html">
 <link rel="import"
-      href="bower_components/paper-input/paper-input.html">
+      href="bower_components/paper-toolbar/paper-toolbar.html">
 
 
-<dom-module id="collection-element">
+<dom-module id="toolbar-element">
 
   <style>
   </style>
 
   <template>
-    <p>Hello, <b>{{user}}</b>, you have a collection called <b>{{name}}</b> </p>
-    <paper-input label="Nombre" value="{{name}}"></paper-input>
-    <span id="name"></span>
-    <button on-tap="handleTap">Kick me</button>
+    <paper-toolbar>
+      <paper-icon-button icon="menu" on-tap="menuAction"></paper-icon-button>
+      <div class="title">Title</div>
+      <paper-icon-button icon="more-vert" on-tap="moreAction"></paper-icon-button>
+    </paper-toolbar>
   </template>
 
 </dom-module>
 
 <script>
   Polymer({
-    is: "collection-element",
+    is: "toolbar-element",
     properties: {
       name: {type: String, value: "Balones"},
       user: {type: String, value: "Josito"}
