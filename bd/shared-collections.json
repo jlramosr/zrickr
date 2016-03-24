@@ -1,0 +1,97 @@
+[
+  {
+    "_id": "56f00fd63607bd443426ca13",
+    "slug": "partidos",
+    "createdAt": "2016-03-21T15:14:30.484Z",
+    "updatedAt": "2016-03-21T15:14:30.484Z",
+    "name": "Partidos",
+    "_user": "56cee403d09599542fdc3537",
+    "_sharedWith": [],
+    "_fields": [
+      {
+        "name": "brand",
+        "type": "string",
+        "required": true,
+        "unique": true,
+        "main": true,
+        "_id": "56f00fd63607bd443426ca18"
+      },
+      {
+        "name": "year",
+        "type": "integer",
+        "required": true,
+        "unique": false,
+        "byDefault": 20000,
+        "_id": "56f00fd63607bd443426ca17"
+      },
+      {
+        "name": "price",
+        "type": "number",
+        "_id": "56f00fd63607bd443426ca16"
+      },
+      {
+        "_collection": "56f00fd63607bd443426ca13",
+        "name": "owners",
+        "type": "relationMany",
+        "thisCollection": true,
+        "_id": "56f00fd63607bd443426ca15"
+      },
+      {
+        "_collection": "56f00fd63607bd443426ca13",
+        "name": "country",
+        "type": "relationOne",
+        "thisCollection": true,
+        "_id": "56f00fd63607bd443426ca14"
+      }
+    ],
+    "publicSchema": "false"
+  },
+  {
+    "_id": "56f00fe43607bd443426ca1f",
+    "slug": "documentos",
+    "createdAt": "2016-03-21T15:14:44.659Z",
+    "updatedAt": "2016-03-21T15:14:44.659Z",
+    "name": "Documentos",
+    "image": "documentos.png",
+    "_user": "56cee403d09599542fdc3537",
+    "_sharedWith": [],
+    "_fields": [
+      {
+        "name": "brand",
+        "type": "string",
+        "required": true,
+        "unique": true,
+        "main": true,
+        "_id": "56f00fe43607bd443426ca24"
+      },
+      {
+        "name": "year",
+        "type": "integer",
+        "required": true,
+        "unique": false,
+        "byDefault": 20000,
+        "_id": "56f00fe43607bd443426ca23"
+      },
+      {
+        "name": "price",
+        "type": "number",
+        "_id": "56f00fe43607bd443426ca22"
+      },
+      {
+        "_collection": "56f00fe43607bd443426ca1f",
+        "name": "owners",
+        "type": "relationMany",
+        "thisCollection": true,
+        "_id": "56f00fe43607bd443426ca21"
+      },
+      {
+        "_collection": "56f00fe43607bd443426ca1f",
+        "name": "country",
+        "type": "relationOne",
+        "thisCollection": true,
+        "_id": "56f00fe43607bd443426ca20"
+      }
+    ],
+    "publicSchema": "false"
+  }
+]

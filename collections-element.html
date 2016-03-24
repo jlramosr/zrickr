@@ -18,36 +18,86 @@
       }
 
       paper-item {
-        border: 1px solid var(--paper-grey-300);
+        border: 1px solid var(--paper-grey-700);
+        margin-right: 8px;
+        margin-left: 8px;
+        padding: 6px;
       }
+
+      paper-item img {
+        width: 72px;
+        height: 72px;
+      }
+
+      .name {
+        font-size: 14px;
+      }
+
+      #my-collections {
+        margin-bottom: 20px;
+      }
+
+      #my-collections .add-my-collections {
+        margin-left: 14px;
+        width: 52px;
+        height: 52px;
+        --iron-icon-fill-color: var(--primary-color);
+      }
+
+      #my-shared-collections {
+        margin-bottom: 20px;
+      }
+
     </style>
 
     <iron-ajax
       auto
-      url="collections.json"
+      url="bd/collections.json"
       handle-as="json"
-      last-response="{{ajaxResponse}}">
+      last-response="{{ajaxResponseCollections}}">
     </iron-ajax>
 
-    <div class="layout vertical">
+    <iron-ajax
+      auto
+      url="bd/shared-collections.json"
+      handle-as="json"
+      last-response="{{ajaxResponseSharedCollections}}">
+    </iron-ajax>
+
+    <div id="my-collections" class="layout vertical">
       <div class="layout horizontal center">
         <iron-icon icon="image:filter-none"></iron-icon>
-        <h3 class="layout flex">MY COLLECTIONS</h3>
+        <h3>MY COLLECTIONS</h3>
+        <paper-icon-button class="add-my-collections layout left" icon="icons:add-circle"></paper-icon-button>
       </div>
       <div class="layout horizontal">
-        <template is="dom-repeat" items="[[ajaxResponse]]">
-          <paper-item>
-            <img src="[[_computeImg(item)]]" >
-            <div class="title">{{item.name}}</div>
-          </paper-item>
+        <template is="dom-repeat" items="[[ajaxResponseCollections]]">
+          <div class="layout vertical center">
+            <paper-item>
+              <img src="[[_computeImg(item)]]"/>
+            </paper-item>
+            <div class="name layout center">{{item.name}}</div>
+          </div>
         </template>
       </div>
     </div>
 
-    <!-- <iron-icon icon="social:group"></iron-icon><h3>MY SHARED COLLECTIONS</h3>
-    <template is="dom-repeat" items="[[ajaxResponse]]">
-      <span>{{item.name}}</span>
-    </template> -->
+    <div id="my-shared-collections" class="layout vertical">
+      <div class="layout horizontal center">
+        <iron-icon icon="social:group"></iron-icon>
+        <h3 class="layout flex">MY SHARED COLLECTIONS</h3>
+      </div>
+      <div class="layout horizontal">
+        <template is="dom-repeat" items="[[ajaxResponseSharedCollections]]">
+          <div class="layout vertical center">
+            <paper-item>
+              <img src="[[_computeImg(item)]]"/>
+            </paper-item>
+            <div class="name layout center">{{item.name}}</div>
+          </div>
+        </template>
+      </div>
+    </div>
 
   </template>
 </dom-module>
@@ -56,7 +106,7 @@
 (function() {
   'use strict';
 
-  const DEFAULT_IMG = 'image.jpg';
+  const DEFAULT_IMG = 'zrickr.png';
 
   Polymer({
 
@@ -88,8 +138,8 @@
     },
 
     _computeImg(item) {
-      if (item.img) {
-        return item.img;
+      if (item.image) {
+        return "bd/" + item.image;
       }
       return DEFAULT_IMG;
     }
