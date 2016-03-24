@@ -1,31 +1,41 @@
-<link rel="import"
-      href="bower_components/polymer/polymer.html">
-<link rel="import"
-      href="bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="bower_components/paper-item/paper-item.html">
+<link rel="import" href="bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="bower_components/iron-icons/iron-icons.html">
 
 
 <dom-module id="toolbar-element">
-
-  <style>
-  </style>
-
   <template>
-    <paper-toolbar>
-      <paper-icon-button icon="menu" on-tap="menuAction"></paper-icon-button>
-      <div class="title">Title</div>
-      <paper-icon-button icon="more-vert" on-tap="moreAction"></paper-icon-button>
-    </paper-toolbar>
-  </template>
 
+    <style>
+      :host {
+
+      }
+    </style>
+
+    <paper-toolbar>
+      <paper-icon-button icon="menu">
+        <paper-menu class="dropdown-content">
+          <paper-item>Share</paper-item>
+          <paper-item>Settings</paper-item>
+          <paper-item>Help</paper-item>
+        </paper-menu>
+      </paper-icon-button>
+      <div class="title">zrickr</div>
+      <paper-icon-button icon="more-vert" on-tap="moreAction"></paper-icon-button>
+      <paper-icon-button icon="refresh"></paper-icon-button>
+      <paper-icon-button icon="add">+</paper-icon-button>
+    </paper-toolbar>
+
+  </template>
 </dom-module>
 
 <script>
   Polymer({
     is: "toolbar-element",
-    properties: {
-      name: {type: String, value: "Balones"},
-      user: {type: String, value: "Josito"}
-    },
+
     handleTap: function() {
       alert("HOLA");
     },
@@ -35,7 +45,6 @@
     },
     ready: function() {
       console.log(this.localName + '#' + this.id + ' has local DOM initialized');
-      this.$.name.textContent = this.getContentChildren('#body');
     },
     attached: function() {
       console.log(this.localName + '#' + this.id + ' was attached');

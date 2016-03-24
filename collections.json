@@ -1,0 +1,143 @@
+[
+  {
+    "_id": "56f00fd63607bd443426ca13",
+    "slug": "c3",
+    "createdAt": "2016-03-21T15:14:30.484Z",
+    "updatedAt": "2016-03-21T15:14:30.484Z",
+    "name": "c3",
+    "_user": "56cee403d09599542fdc3537",
+    "_sharedWith": [],
+    "_fields": [
+      {
+        "name": "brand",
+        "type": "string",
+        "required": true,
+        "unique": true,
+        "main": true,
+        "_id": "56f00fd63607bd443426ca18"
+      },
+      {
+        "name": "year",
+        "type": "integer",
+        "required": true,
+        "unique": false,
+        "byDefault": 20000,
+        "_id": "56f00fd63607bd443426ca17"
+      },
+      {
+        "name": "price",
+        "type": "number",
+        "_id": "56f00fd63607bd443426ca16"
+      },
+      {
+        "_collection": "56f00fd63607bd443426ca13",
+        "name": "owners",
+        "type": "relationMany",
+        "thisCollection": true,
+        "_id": "56f00fd63607bd443426ca15"
+      },
+      {
+        "_collection": "56f00fd63607bd443426ca13",
+        "name": "country",
+        "type": "relationOne",
+        "thisCollection": true,
+        "_id": "56f00fd63607bd443426ca14"
+      }
+    ],
+    "publicSchema": "false"
+  },
+  {
+    "_id": "56f00fe43607bd443426ca1f",
+    "slug": "c31",
+    "createdAt": "2016-03-21T15:14:44.659Z",
+    "updatedAt": "2016-03-21T15:14:44.659Z",
+    "name": "c31",
+    "_user": "56cee403d09599542fdc3537",
+    "_sharedWith": [],
+    "_fields": [
+      {
+        "name": "brand",
+        "type": "string",
+        "required": true,
+        "unique": true,
+        "main": true,
+        "_id": "56f00fe43607bd443426ca24"
+      },
+      {
+        "name": "year",
+        "type": "integer",
+        "required": true,
+        "unique": false,
+        "byDefault": 20000,
+        "_id": "56f00fe43607bd443426ca23"
+      },
+      {
+        "name": "price",
+        "type": "number",
+        "_id": "56f00fe43607bd443426ca22"
+      },
+      {
+        "_collection": "56f00fe43607bd443426ca1f",
+        "name": "owners",
+        "type": "relationMany",
+        "thisCollection": true,
+        "_id": "56f00fe43607bd443426ca21"
+      },
+      {
+        "_collection": "56f00fe43607bd443426ca1f",
+        "name": "country",
+        "type": "relationOne",
+        "thisCollection": true,
+        "_id": "56f00fe43607bd443426ca20"
+      }
+    ],
+    "publicSchema": "false"
+  },
+  {
+    "_id": "56f13c40658b19181a01d79b",
+    "slug": "c33",
+    "createdAt": "2016-03-22T12:36:16.740Z",
+    "updatedAt": "2016-03-22T12:36:16.740Z",
+    "name": "c33",
+    "_user": "56cee403d09599542fdc3537",
+    "_sharedWith": [],
+    "_fields": [
+      {
+        "name": "brand",
+        "type": "string",
+        "required": true,
+        "unique": true,
+        "main": true,
+        "_id": "56f13c40658b19181a01d7a0"
+      },
+      {
+        "name": "year",
+        "type": "integer",
+        "required": true,
+        "unique": false,
+        "byDefault": 20000,
+        "_id": "56f13c40658b19181a01d79f"
+      },
+      {
+        "name": "price",
+        "type": "number",
+        "_id": "56f13c40658b19181a01d79e"
+      },
+      {
+        "_collection": "56f13c40658b19181a01d79b",
+        "name": "owners",
+        "type": "relationMany",
+        "thisCollection": true,
+        "_id": "56f13c40658b19181a01d79d"
+      },
+      {
+        "_collection": "56f13c40658b19181a01d79b",
+        "name": "country",
+        "type": "relationOne",
+        "thisCollection": true,
+        "_id": "56f13c40658b19181a01d79c"
+      }
+    ],
+    "publicSchema": "true"
+  }
+]

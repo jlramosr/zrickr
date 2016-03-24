@@ -1,12 +1,31 @@
 <!DOCTYPE html>
 <html>
+
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <script src="bower_components/polymer/polymer.html"></script>
+    <link rel="import" href="collections-element.html">
     <link rel="import" href="collection-element.html">
     <link rel="import" href="toolbar-element.html">
+    <link rel="import" href="zrickr-styles.html">
+    <style>
+      body {
+        padding: 0px !important;
+      }
+
+      .content {
+        padding: 25px;
+      }
+    </style>
   </head>
-  <body>
+
+  <body unresolved>
     <toolbar-element></toolbar-element>
-    <collection-element></collection-element>
+    <div class="content">
+      <collections-element></collections-element>
+      <collection-element></collection-element>
+    </div>
   </body>
+
 </html>

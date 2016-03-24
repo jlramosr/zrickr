@@ -1,0 +1,99 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="bower_components/paper-item/paper-item.html">
+<link rel="import" href="bower_components/iron-icons/social-icons.html">
+<link rel="import" href="bower_components/iron-icons/image-icons.html">
+<link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<dom-module id="collections-element">
+  <template>
+    <style include="iron-flex iron-flex-alignment">
+      :host {
+        display: block;
+        --iron-icon-fill-color: var(--paper-amber-700);
+      }
+
+      iron-icon {
+        margin-right: 12px;
+      }
+
+      paper-item {
+        border: 1px solid var(--paper-grey-300);
+      }
+    </style>
+
+    <iron-ajax
+      auto
+      url="collections.json"
+      handle-as="json"
+      last-response="{{ajaxResponse}}">
+    </iron-ajax>
+
+    <div class="layout vertical">
+      <div class="layout horizontal center">
+        <iron-icon icon="image:filter-none"></iron-icon>
+        <h3 class="layout flex">MY COLLECTIONS</h3>
+      </div>
+      <div class="layout horizontal">
+        <template is="dom-repeat" items="[[ajaxResponse]]">
+          <paper-item>
+            <img src="[[_computeImg(item)]]" >
+            <div class="title">{{item.name}}</div>
+          </paper-item>
+        </template>
+      </div>
+    </div>
+
+    <!-- <iron-icon icon="social:group"></iron-icon><h3>MY SHARED COLLECTIONS</h3>
+    <template is="dom-repeat" items="[[ajaxResponse]]">
+      <span>{{item.name}}</span>
+    </template> -->
+
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  'use strict';
+
+  const DEFAULT_IMG = 'image.jpg';
+
+  Polymer({
+
+    is: "collections-element",
+
+    properties: {
+
+    },
+
+    created() {
+      console.log(this.localName + '#' + this.id + ' was created');
+    },
+
+    ready() {
+      console.log(this.localName + '#' + this.id + ' has local DOM initialized');
+    },
+
+    attached() {
+      console.log(this.localName + '#' + this.id + ' was attached');
+    },
+
+    detached() {
+      console.log(this.localName + '#' + this.id + ' was detached');
+    },
+
+    attributeChanged(name, type) {
+      console.log(this.localName + '#' + this.id + ' attribute ' + name +
+        ' was changed to ' + this.getAttribute(name));
+    },
+
+    _computeImg(item) {
+      if (item.img) {
+        return item.img;
+      }
+      return DEFAULT_IMG;
+    }
+
+  });
+}());
+</script>
