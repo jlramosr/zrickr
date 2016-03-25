@@ -4,6 +4,7 @@
 <link rel="import" href="bower_components/iron-icons/social-icons.html">
 <link rel="import" href="bower_components/iron-icons/image-icons.html">
 <link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="new-collection-element.html">
 
 <dom-module id="collections-element">
   <template>
@@ -50,6 +51,9 @@
 
     </style>
 
+    <new-collection-element id="newCollectionElement">
+    </new-collection-element>
+
     <iron-ajax
       auto
       url="bd/collections.json"
@@ -68,7 +72,10 @@
       <div class="layout horizontal center">
         <iron-icon icon="image:filter-none"></iron-icon>
         <h3>MY COLLECTIONS</h3>
-        <paper-icon-button class="add-my-collections layout left" icon="icons:add-circle"></paper-icon-button>
+        <paper-icon-button  class="add-my-collections layout left"
+                            icon="icons:add-circle"
+                            on-tap="_toggleNewCollectionDialog">
+        </paper-icon-button>
       </div>
       <div class="layout horizontal">
         <template is="dom-repeat" items="[[ajaxResponseCollections]]">
@@ -142,6 +149,10 @@
         return "bd/" + item.image;
       }
       return DEFAULT_IMG;
+    },
+
+    _toggleNewCollectionDialog() {
+      this.$.newCollectionElement.toggle();
     }
 
   });
