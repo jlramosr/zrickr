@@ -1,0 +1,49 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
+
+<dom-module id="toolbar-main">
+  <styles>
+  </styles>
+  <template>
+    <paper-toolbar>
+      <!--<paper-icon-button icon="menu"></paper-icon-button>
+      <span class="title">zrickr</span>
+      <paper-icon-button icon="refresh"></paper-icon-button>
+      <paper-icon-button icon="add">+</paper-icon-button>
+    </paper-toolbar>-->
+    <paper-icon-button on-tap="_onLogoutTapped" icon="icons:power-settings-new"></paper-icon-button>
+    <span class="title"></span>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+
+  Polymer({
+
+    is: "toolbar-main",
+
+    properties: {
+
+      user: {
+        type: Object
+      }
+
+    },
+
+    _onLogoutTapped() {
+      this.fire('logout-tapped');
+    }
+  });
+
+})();
+</script>

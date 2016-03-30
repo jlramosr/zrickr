@@ -1,0 +1,21 @@
+{
+  "firebase": "zrickr",
+  "public": "app",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ],
+  "rules": "security-rules.json",
+  "redirects": [
+    {
+      "source" : "/foo",
+      "destination" : "/bar",
+      "type" : 301
+    }, {
+      "source" : "/firebase/*",
+      "destination" : "https://www.firebase.com",
+      "type" : 302
+    }
+  ]
+}

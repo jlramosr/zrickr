@@ -16,16 +16,20 @@ Download and install nodejs and npm (https://nodejs.org/en/download/)
 
 Download and install nvm (https://github.com/coreybutler/nvm-windows/releases)
 
-Install http-server `npm install -g http-server`
-
 ### Bower
 
 `npm install -g bower`
+
+### Optional
+
+`npm install -g polyserve`
+
+`npm install -g firebase-tools`
 
 ## Proyect Installation
 
 `git clone https://jlramosr@bitbucket.org/jlramosr/zrickr.git zrickr`
 
-`cd zrickr && bower install`
+`cd zrickr && bower install && npm install`
 
-`http-server zrickr`
+`npm start` (view all tasks in package.json)

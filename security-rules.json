@@ -1,0 +1,9 @@
+{
+  "rules": {
+    "collections": {
+      ".read": true,
+      ".write": true,
+      ".validate": "newData.isString() && newData.val().length < 100"
+    }
+  }
+}

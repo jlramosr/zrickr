@@ -1,12 +1,13 @@
-<link rel="import" href="bower_components/polymer/polymer.html">
-<link rel="import" href="bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="bower_components/paper-item/paper-item.html">
-<link rel="import" href="bower_components/iron-icons/social-icons.html">
-<link rel="import" href="bower_components/iron-icons/image-icons.html">
-<link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="new-collection-element.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/image-icons.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../bower_components/firebase-element/firebase-collection.html">
+<link rel="import" href="collection-new-dialog.html">
 
-<dom-module id="collections-element">
+<dom-module id="collection-list">
   <template>
     <style include="iron-flex iron-flex-alignment">
       :host {
@@ -51,19 +52,34 @@
 
     </style>
 
-    <new-collection-element id="newCollectionElement">
-    </new-collection-element>
+    <collection-new-dialog id="newCollectionElement">
+    </collection-new-dialog>
 
+    <firebase-collection
+      order-by-child="name"
+      limit-to-first="3"
+      location="https://zrickr.firebaseio.com/collections"
+      data="{{collections}}">
+    </firebase-collection>
+    <h3>MY COLLECTIONS</h3>
+    <template is="dom-repeat" items="[[collections]]" as="collection">
+      <h4>[[collection.__firebaseKey__]]</h4>
+      Name: <span>[[collection.name]]</span>
+    </template>
+    <paper-icon-button  class="add-my-collections layout left"
+                        icon="icons:add-circle"
+                        on-tap="_addCollection">
+    </paper-icon-button>
     <iron-ajax
       auto
-      url="bd/collections.json"
+      url="../../bd/collections.json"
       handle-as="json"
       last-response="{{ajaxResponseCollections}}">
     </iron-ajax>
 
     <iron-ajax
       auto
-      url="bd/shared-collections.json"
+      url="../../bd/shared-collections.json"
       handle-as="json"
       last-response="{{ajaxResponseSharedCollections}}">
     </iron-ajax>
@@ -117,10 +133,15 @@
 
   Polymer({
 
-    is: "collections-element",
+    is: "collection-list",
 
     properties: {
 
+    },
+
+    _addCollection() {
+      console.log("HOLA");
+      console.log(this);
     },
 
     created() {

@@ -1,15 +1,15 @@
-<link rel="import" href="bower_components/polymer/polymer.html">
-<link rel="import" href="bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="bower_components/paper-button/paper-button.html">
-<link rel="import" href="bower_components/paper-input/paper-input.html">
-<link rel="import" href="bower_components/paper-radio-group/paper-radio-group.html">
-<link rel="import" href="bower_components/paper-radio-button/paper-radio-button.html">
-<link rel="import" href="bower_components/paper-checkbox/paper-checkbox.html">
-<link rel="import" href="bower_components/iron-icons/image-icons.html">
-<link rel="import" href="bower_components/iron-icons/social-icons.html">
-<link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../bower_components/iron-icons/image-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
-<dom-module id="new-collection-element">
+<dom-module id="collection-new-dialog">
   <template>
     <style include="iron-flex iron-flex-alignment">
       :host {
@@ -34,7 +34,7 @@
 
     <iron-ajax
       auto
-      url="bd/collections.json"
+      url="../../bd/collections.json"
       handle-as="json"
       last-response="{{ajaxResponsePublicCollections}}">
     </iron-ajax>
@@ -104,7 +104,7 @@
 
   Polymer({
 
-    is: "new-collection-element",
+    is: "collection-new-dialog",
 
     created() {
       console.log(this.localName + '#' + this.id + ' was created');
