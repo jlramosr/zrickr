@@ -1,11 +1,9 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/firebase-element/firebase-auth.html">
 
-<dom-module id="auth-login">
+<dom-module id="user-auth">
   <template>
-
-    <firebase-auth id="firebaseLogin"
+    <firebase-auth id="firebaseAuth"
       user="{{user}}"
       status-known="{{statusKnown}}"
       location="[[location]]"
@@ -16,58 +14,12 @@
       on-password-reset="userSuccessHandler"
       on-user-removed="userSuccessHandler">
     </firebase-auth>
-
-    Firebase location:
-    <input value="[[location]]" size="40" disabled>
-    <br>
-
-    Provider type:
-    <select value="{{provider::change}}">
-      <option>anonymous</option>
-      <option>facebook</option>
-      <option>github</option>
-      <option>google</option>
-      <option>twitter</option>
-      <option>password</option>
-    </select>
-    <em>Only 'anonymous', 'google', and 'password' are activated for demo Firebase account</em>
-    <br>
-
-    Login params (JSON):
-    <input value="{{params::input}}" id="params">
-    <em>Required by some provider types</em>
-    <br>
-
-    <div hidden$="{{computePasswordHidden(provider)}}">
-      <br><em>Password-specific options:</em><br>
-      <input placeholder="email" value="{{email::input}}">
-      <input placeholder="password" value="{{password::input}}">
-      <button on-tap="createUserHandler" disabled$="{{computeCreateUserDisabled(email, password)}}">Create user</button>
-      <br>
-      <input placeholder="new password" value="{{newPassword::input}}">
-      <button on-tap="changePasswordHandler" disabled$="{{computeChangePasswordDisabled(email, password, newPassword)}}">Change password</button>
-      <br>
-      <button on-tap="resetPasswordHandler" disabled$="{{computeResetPasswordDisabled(email, password)}}">Reset password</button>
-      <button on-tap="removeUserHandler" disabled$="{{computeRemoveUserDisabled(email, password)}}">Remove user</button>
-    </div>
-    <br>
-    <div id="message">[[message]]</div>
-    <br>
-
-    <button on-tap="login" hidden$="{{computeLoginHidden(statusKnown, user)}}">Login</button>
-    <button on-tap="logout" hidden$="{{computeLogoutHidden(statusKnown, user)}}">Logout</button>
-
-    <h3>Login status:</h3>
-    <p>{{computeLoginStatus(statusKnown, user)}}</p>
-
-    <h3>User ID:</h3>
-    <pre>{{user.uid}}</pre>
   </template>
 </dom-module>
 
 <script>
   Polymer({
-    is: 'auth-login',
+    is: 'user-auth',
 
     properties: {
       location: {
@@ -79,7 +31,7 @@
 
       provider: {
         type: String,
-        value: 'anonymous'
+        value: 'password'
       },
 
       message: {
@@ -89,7 +41,8 @@
 
       email: {
         type: String,
-        value: ''
+        value: '',
+        notify: true
       },
 
       password: {
@@ -108,46 +61,46 @@
       }
     },
 
-    login: function() {
-      var params;
-
+    login() {
+      let params;
       try {
         params = JSON.parse(this.params);
       } catch (e) {
         params = null;
       }
-
       if (this.provider == 'password') {
         params = params || {};
         params.email = this.email;
         params.password = this.password;
       }
-
-      this.$.firebaseLogin.login(params);
+      this.$.firebaseAuth.login(params);
     },
 
-    logout: function() {
-      this.$.firebaseLogin.logout();
+    logout() {
+      this.$.firebaseAuth.logout();
     },
 
-    errorHandler: function(e) {
+    createUser(e) {
+      this.$.firebaseAuth.createUser(this.email, this.password);
+    },
+
+    errorHandler(e) {
       this.message = 'Error: ' + e.detail.message;
     },
 
-    userSuccessHandler: function(e) {
+    userSuccessHandler(e) {
       this.message = e.type + ' success!';
     },
 
-    createUserHandler: function(e) {
-      this.$.firebaseLogin.createUser(this.email, this.password);
-    },
-
+    /*on-password-changed="userSuccessHandler"
+    on-password-reset="userSuccessHandler"
+    on-user-removed="userSuccessHandler">*/
     changePasswordHandler: function(e) {
-      this.$.firebaseLogin.changePassword(this.email, this.password, this.newPassword);
+      this.$.firebaseAuth.changePassword(this.email, this.password, this.newPassword);
     },
 
     resetPasswordHandler: function(e) {
-      this.$.firebaseLogin.sendPasswordResetEmail(this.email);
+      this.$.firebaseAuth.sendPasswordResetEmail(this.email);
     },
 
     computePasswordHidden: function(provider) {

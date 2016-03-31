@@ -58,7 +58,12 @@
     <!-- endbuild -->
 
     <template is="dom-bind" id="app">
-      <auth-login user="{{user}}"></auth-login>
+      <user-auth
+        user="{{user}}"
+        provider="{{provider}}"
+        email="{{email}}"
+        password="{{password}}">
+      </user-auth>
     </template>
 
     <!-- build:js scripts/app.js -->

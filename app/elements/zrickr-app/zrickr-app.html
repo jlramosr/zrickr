@@ -1,0 +1,21 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="zrickr-app">
+  <template>
+    ZRICKR APP
+    <button on-tap="_logoutTapped">Logout</button>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  Polymer({
+    is: 'zrickr-app',
+
+    _logoutTapped() {
+      this.fire("logout-tapped");
+    },
+
+  });
+})();
+</script>

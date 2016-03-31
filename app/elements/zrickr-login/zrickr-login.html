@@ -1,0 +1,100 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="zrickr-login">
+  <template>
+    ZRICKR-LOGIN<br>
+    <select value="{{provider::change}}">
+      <option>anonymous</option>
+      <option>facebook</option>
+      <option>github</option>
+      <option>google</option>
+      <option>twitter</option>
+      <option>password</option>
+    </select>
+    <input placeholder="email" value="{{email::input}}">
+    <input placeholder="password" value="{{password::input}}">
+    <br>
+    <button on-tap="_loginTapped">Login</button>
+    <button on-tap="_signinTapped">Signin</button>
+<!--
+    Firebase location:
+    <input value="[[location]]" size="40" disabled>
+    <br>
+
+
+
+    Login params (JSON):
+    <input value="{{params::input}}" id="params">
+    <em>Required by some provider types</em>
+    <br>
+
+    <div hidden$="{{computePasswordHidden(provider)}}">
+      <br><em>Password-specific options:</em><br>
+
+      <button on-tap="createUserHandler" disabled$="{{computeCreateUserDisabled(email, password)}}">Create user</button>
+      <br>
+      <input placeholder="new password" value="{{newPassword::input}}">
+      <button on-tap="changePasswordHandler" disabled$="{{computeChangePasswordDisabled(email, password, newPassword)}}">Change password</button>
+      <br>
+      <button on-tap="resetPasswordHandler" disabled$="{{computeResetPasswordDisabled(email, password)}}">Reset password</button>
+      <button on-tap="removeUserHandler" disabled$="{{computeRemoveUserDisabled(email, password)}}">Remove user</button>
+    </div>
+    <br>
+    <div id="message">[[message]]</div>
+    <br>
+
+    <button on-tap="login" hidden$="{{computeLoginHidden(statusKnown, user)}}">Login</button>
+    <button on-tap="logout" hidden$="{{computeLogoutHidden(statusKnown, user)}}">Logout</button>
+
+    <h3>Login status:</h3>
+    <p>{{computeLoginStatus(statusKnown, user)}}</p>
+
+    <h3>User ID:</h3>
+    <pre>{{user.uid}}</pre>-->
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  Polymer({
+    is: 'zrickr-login',
+
+    properties: {
+      provider: {
+        type: String,
+      },
+
+      message: {
+        type: String,
+        value: '',
+      },
+
+      email: {
+        type: String,
+        value: '',
+        notify: true,
+      },
+
+      password: {
+        type: String,
+        value: '',
+      },
+    },
+
+    _loginTapped() {
+      console.log(this.provider);
+      let params = {
+        "pepito": "HOLA",
+        "provider": "password",
+        "email": "jlramosr@gmail.com",
+        "password": "rUwdc6np6mMETH96"
+      };
+      this.fire("login-tapped", params);
+    },
+
+    _signinTapped() {
+      this.fire("signin-tapped");
+    },
+  });
+})();
+</script>

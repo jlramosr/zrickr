@@ -17,10 +17,10 @@
   // Listen for template bound event to know when bindings
   // have resolved and content has been stamped to the page
   myApp.addEventListener('dom-change', () => {
-    let authLogin = document.querySelector('auth-login');
+    let userAuth = document.querySelector('user-auth');
     let currentElement;
 
-    authLogin.addEventListener('user-changed', (event) => {
+    userAuth.addEventListener('user-changed', (event) => {
       if (currentElement) {
         currentElement.remove();
         currentElement = null;
@@ -33,7 +33,28 @@
       }
 
       document.body.appendChild(currentElement);
-    })
+    });
+
+    window.addEventListener('login-tapped', (event) => {
+      console.log("event.detail", event.detail);
+      console.log("userAuth ", userAuth);
+      userAuth.provider = event.detail.provider;
+      userAuth.email = event.detail.email;
+      userAuth.password = event.detail.password;
+      userAuth.login();
+    });
+
+    window.addEventListener('input', (event) => {
+      console.log(event.detail);
+    });
+
+    window.addEventListener('logout-tapped', (event) => {
+      userAuth.logout();
+    });
+
+    window.addEventListener('signin-tapped', (event) => {
+      userAuth.createUser();
+    });
   });
 
   // See https://github.com/Polymer/polymer/issues/1381
