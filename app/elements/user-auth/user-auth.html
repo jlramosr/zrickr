@@ -31,12 +31,15 @@
 
       provider: {
         type: String,
-        value: 'password'
+        value: 'password',
+        notify: true,
+        readonly: true
       },
 
       message: {
         type: String,
-        value: ''
+        value: '',
+        notify: true,
       },
 
       email: {
@@ -80,8 +83,20 @@
       this.$.firebaseAuth.logout();
     },
 
-    createUser(e) {
+    createUser() {
       this.$.firebaseAuth.createUser(this.email, this.password);
+    },
+
+    changePassword(oldPassword, newPassword) {
+      this.$.firebaseAuth.changePassword(this.email, oldPassword, newPassword);
+    },
+
+    resetPassword() {
+      this.$.firebaseAuth.sendPasswordResetEmail(this.email);
+    },
+
+    removeUser() {
+      this.$.firebaseAuth.removeUser(this.email, this.password)
     },
 
     errorHandler(e) {
@@ -91,56 +106,5 @@
     userSuccessHandler(e) {
       this.message = e.type + ' success!';
     },
-
-    /*on-password-changed="userSuccessHandler"
-    on-password-reset="userSuccessHandler"
-    on-user-removed="userSuccessHandler">*/
-    changePasswordHandler: function(e) {
-      this.$.firebaseAuth.changePassword(this.email, this.password, this.newPassword);
-    },
-
-    resetPasswordHandler: function(e) {
-      this.$.firebaseAuth.sendPasswordResetEmail(this.email);
-    },
-
-    computePasswordHidden: function(provider) {
-      return provider !== 'password';
-    },
-
-    computeCreateUserDisabled: function(email, password) {
-      return !email || !password;
-    },
-
-    computeChangePasswordDisabled: function(email, password, newPassword) {
-      return !email || !password || !newPassword;
-    },
-
-    computeResetPasswordDisabled: function(email, password) {
-      return !email || !password;
-    },
-
-    computeRemoveUserDisabled: function(email, password) {
-      return !email || !password;
-    },
-
-    computeLoginHidden: function(statusKnown, user) {
-      return !statusKnown || !!user;
-    },
-
-    computeLogoutHidden: function(statusKnown, user) {
-      return !statusKnown || !user;
-    },
-
-    computeLoginStatus: function(statusKnown, user) {
-      if (statusKnown && user) {
-        return 'Logged in';
-      }
-
-      if (statusKnown) {
-        return 'Logged out';
-      }
-
-      return 'Unknown (checking status...)';
-    }
   });
 </script>

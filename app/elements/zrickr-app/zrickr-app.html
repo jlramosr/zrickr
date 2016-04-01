@@ -4,6 +4,11 @@
   <template>
     ZRICKR APP
     <button on-tap="_logoutTapped">Logout</button>
+    <input placeholder="old password" value="{{oldPassword::input}}">
+    <input placeholder="new password" value="{{newPassword::input}}">
+    <button on-tap="_changePasswordTapped">Change password</button>
+    <br>
+    <button on-tap="_signoutTapped">Signout</button>
   </template>
 </dom-module>
 
@@ -12,8 +17,23 @@
   Polymer({
     is: 'zrickr-app',
 
+    properties: {
+      newPassword: {
+        type: String,
+        value: '',
+      }
+    },
+
     _logoutTapped() {
       this.fire("logout-tapped");
+    },
+
+    _changePasswordTapped() {
+      this.fire("change-password-tapped", this);
+    },
+
+    _signoutTapped() {
+      this.fire("signout-tapped");
     },
 
   });
