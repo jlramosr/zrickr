@@ -51,17 +51,19 @@
 
     //User Login Events
     window.addEventListener('login-tapped', (event) => {
-      let auth = event.detail;
-      userAuth.provider = auth.provider;
-      userAuth.email = auth.email;
-      userAuth.password = auth.password;
+      let zrickrLogin = event.detail;
+      userAuth.provider = zrickrLogin.provider;
+      userAuth.email = zrickrLogin.email;
+      userAuth.password = zrickrLogin.password;
+      console.log("auth-email ", zrickrLogin.email);
       userAuth.login();
+      console.log("MESSAGE", userAuth.message)
     });
     window.addEventListener('signin-tapped', (event) => {
-      let auth = event.detail;
-      userAuth.provider = auth.provider;
-      userAuth.email = auth.email;
-      userAuth.password = auth.password;
+      let zrickrLogin = event.detail;
+      userAuth.provider = zrickrLogin.provider;
+      userAuth.email = zrickrLogin.email;
+      userAuth.password = zrickrLogin.password;
       userAuth.createUser();
     });
     window.addEventListener('reset-password-tapped', (event) => {
@@ -74,10 +76,9 @@
       userAuth.logout();
     });
     window.addEventListener('change-password-tapped', (event) => {
-      let auth = event.detail;
-      console.log(auth.oldPassword, auth.newPassword)
+      let zrickrApp = event.detail;
       userAuth.email = zrickrUser.password.email;
-      userAuth.changePassword(auth.oldPassword, auth.newPassword);
+      userAuth.changePassword(zrickrApp.oldPassword, zrickrApp.newPassword);
     });
     window.addEventListener('signout-tapped', (event) => {
       userAuth.removeUser();
