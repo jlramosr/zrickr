@@ -39,14 +39,25 @@
       document.body.appendChild(currentElement);
     });
 
-    window.addEventListener('input', (event) => {
+    //Show Message
+    window.addEventListener('show-message', (event) => {
+      let messageElement = document.createElement('paper-toast');
+      let text = document.createAttribute("text");
+      text.value = event.detail.message;
+      messageElement.setAttributeNode(text);
+      let id = document.createAttribute("id");
+      id.value = "message";
+      messageElement.setAttributeNode(id);
+      document.body.appendChild(messageElement);
+      messageElement.open();
+      //messageElement.remove();
     });
-
-    window.addEventListener('change', (event) => {
-    });
-
-    userAuth.addEventListener('message-changed', (e) => {
-      console.log("Message UserAuth changed " + e.detail.value);
+    //Remove Message from DOM
+    window.addEventListener('iron-overlay-closed', (event) => {
+      let messageElement = document.querySelector('#message');
+      if (messageElement) {
+        messageElement.remove();
+      }
     });
 
     //User Login Events
@@ -55,9 +66,7 @@
       userAuth.provider = zrickrLogin.provider;
       userAuth.email = zrickrLogin.email;
       userAuth.password = zrickrLogin.password;
-      console.log("auth-email ", zrickrLogin.email);
       userAuth.login();
-      console.log("MESSAGE", userAuth.message)
     });
     window.addEventListener('signin-tapped', (event) => {
       let zrickrLogin = event.detail;

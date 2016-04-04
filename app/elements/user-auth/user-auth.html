@@ -9,6 +9,8 @@
       location="[[location]]"
       provider="{{provider}}"
       on-error="errorHandler"
+      on-login="userSuccessHandler"
+      on-logout="userSuccessHandler"
       on-user-created="userSuccessHandler"
       on-password-changed="userSuccessHandler"
       on-password-reset="userSuccessHandler"
@@ -38,7 +40,6 @@
       message: {
         type: String,
         value: '',
-        notify: true
       },
 
       email: {
@@ -97,12 +98,14 @@
       this.$.firebaseAuth.removeUser(this.email, this.password)
     },
 
-    errorHandler(e) {
-      this.message = 'Error: ' + e.detail.message;
+    errorHandler(event) {
+      this.message = 'Error: ' + event.detail.message;
+      this.fire('show-message', this);
     },
 
-    userSuccessHandler(e) {
-      this.message = e.type + ' success!';
+    userSuccessHandler(event) {
+      this.message = event.type + ' success!';
+      this.fire('show-message', this);
     },
   });
 </script>

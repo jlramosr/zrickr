@@ -1,17 +1,94 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/gold-email-input/gold-email-input.html">
+<link rel="import" href="../../bower_components/paper-styles/color.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <dom-module id="zrickr-login">
+  <style include="iron-flex iron-flex-alignment">
+    :host {
+      margin:auto;
+      display: block;
+    }
+
+    header {
+      margin: 0 auto 20px auto;
+    }
+
+    header img {
+      width: 32px;
+      height: 32px;
+      margin-right: 10px;
+    }
+
+    .section {
+      margin-bottom: 10px;
+    }
+
+    .google-signin img {
+      width: 32px;
+      height: 32px;
+      margin-right: 6px;
+    }
+
+    .divider::before {
+      content: '';
+      border-top: 80px solid #c5cad9;
+      margin: 0 auto;
+      position: absolute;
+      top: 6px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+    }
+
+    paper-button.google-signin {
+      text-transform: none;
+      color: #fff;
+      background: var(--paper-indigo-500);
+    }
+
+}
+
+  </style>
+
   <template>
-    ZRICKR-LOGIN<br>
-    <input placeholder="email" value="{{email::input}}">
-    <input placeholder="password" value="{{password::input}}">
-    <br>
+    <header class="horizontal center center-justified layout">
+      <img src="../../images/touch/icon-72x72.png" alt="logo" />
+      <h2>ZrickR</h2>
+    </header>
+    <div class="vertical center center-justified layout">
+      <div class="section">
+        <paper-button
+          class="google-signin horizontal center layout"
+          on-tap="_loginGoogleTapped">
+            <img src="../../images/common/logos/google_whiteg.png"/>
+            <span>Sign in with Google</span>
+        </paper-button>
+      </div>
+      <div class="vertical center center-justified layout section divider">
+        <span>or</span>
+      </div>
+      <div class="section">
+        <gold-email-input
+          auto-validate
+          error-message=""
+          label="email"
+          value="{{email::input}}">
+        </gold-email-input>
+        <paper-input
+          label="password"
+          type="password"
+          value="{{password::input}}">
+        </paper-input>
+        <button on-tap="_loginPasswordTapped">Login</button>
+      </div>
+    </div>
+    <br></br>
     <button on-tap="_resetPasswordTapped">Reset Password</button>
-    <button on-tap="_loginPasswordTapped">Login</button>
-    <button on-tap="_loginGoogleTapped">Login with Google</button>
-    <br>
     <button on-tap="_signinTapped">Signin</button>
-    <div id="message">[[message]]</div>
   </template>
 </dom-module>
 
@@ -24,11 +101,6 @@
       provider: {
         type: String,
         value: 'password',
-      },
-
-      message: {
-        type: String,
-        value: '',
       },
 
       email: {
