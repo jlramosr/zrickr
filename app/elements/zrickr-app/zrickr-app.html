@@ -1,9 +1,9 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../elements/toolbar-main/toolbar-main.html">
 
 <dom-module id="zrickr-app">
   <template>
-    ZRICKR APP
-    <button on-tap="_logoutTapped">Logout</button>
+    <toolbar-main id="toolbar" user={{user}}></toolbar-main>
     <input placeholder="old password" value="{{oldPassword::input}}">
     <input placeholder="new password" value="{{newPassword::input}}">
     <button on-tap="_changePasswordTapped">Change password</button>
@@ -18,6 +18,10 @@
     is: 'zrickr-app',
 
     properties: {
+      user: {
+        type: Object,
+      },
+
       newPassword: {
         type: String,
         value: '',

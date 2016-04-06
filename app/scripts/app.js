@@ -4,21 +4,20 @@
   // Grab a reference to our auto-binding template
   // and give it some initial binding values
   // Learn more about auto-binding templates at http://goo.gl/Dx1u2g
-  let zrickrApp = document.querySelector('#app');
+  let zrickr = document.querySelector('#app');
 
   // Sets app default base URL
-  zrickrApp.baseUrl = '/';
+  zrickr.baseUrl = '/';
   if (window.location.port === '') {  // if production
-    // Uncomment zrickrApp.baseURL below and
-    // set zrickrApp.baseURL to '/your-pathname/' if running from folder in production
-    // zrickrApp.baseUrl = '/polymer-starter-kit/';
+    // Uncomment zrickr.baseURL below and
+    // set zrickr.baseURL to '/your-pathname/' if running from folder in production
+    // zrickr.baseUrl = '/polymer-starter-kit/';
   }
 
   // Listen for template bound event to know when bindings
   // have resolved and content has been stamped to the page
-  zrickrApp.addEventListener('dom-change', () => {
+  zrickr.addEventListener('dom-change', () => {
     let userAuth = document.querySelector('user-auth');
-    let zrickrUser;
     let currentElement;
 
     //Main Switched Event
@@ -30,12 +29,14 @@
 
       if (event.detail.value) {
         currentElement = document.createElement('zrickr-app');
-        zrickrUser = zrickrApp.user;
+        currentElement.user = zrickr.user;
       }
       else {
         currentElement = document.createElement('zrickr-login');
+        document.body.style.backgroundImage = "url('../images/background.jpg')";
+        document.body.style.backgroundRepeat = "no-repeat";
+        document.body.style.backgroundSize = "100% 100%";
       }
-
       document.body.appendChild(currentElement);
     });
 
@@ -43,14 +44,25 @@
     window.addEventListener('show-message', (event) => {
       let messageElement = document.createElement('paper-toast');
       let text = document.createAttribute("text");
-      text.value = event.detail.message;
-      messageElement.setAttributeNode(text);
       let id = document.createAttribute("id");
+      let duration = document.createAttribute("duration");
+      text.value = event.detail.message;
       id.value = "message";
+      duration.value = "5000";
+      messageElement.setAttributeNode(text);
       messageElement.setAttributeNode(id);
+      messageElement.setAttributeNode(duration);
+      if (event.detail.error) {
+        messageElement.className = 'error';
+      }
+      else if (event.detail.sucess) {
+        messageElement.className = 'success';
+      }
+      else if (event.detail.info) {
+        messageElement.className = 'info';
+      }
       document.body.appendChild(messageElement);
       messageElement.open();
-      //messageElement.remove();
     });
     //Remove Message from DOM
     window.addEventListener('iron-overlay-closed', (event) => {
@@ -85,9 +97,10 @@
       userAuth.logout();
     });
     window.addEventListener('change-password-tapped', (event) => {
-      let zrickrApp = event.detail;
-      userAuth.email = zrickrUser.password.email;
-      userAuth.changePassword(zrickrApp.oldPassword, zrickrApp.newPassword);
+      let zrickr = event.detail;
+      let infoUser = zrickr.user.password;
+      userAuth.email = infoUser.email;
+      userAuth.changePassword(zrickr.oldPassword, zrickr.newPassword);
     });
     window.addEventListener('signout-tapped', (event) => {
       userAuth.removeUser();

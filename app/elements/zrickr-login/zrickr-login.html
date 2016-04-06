@@ -3,10 +3,11 @@
 <link rel="import" href="../../bower_components/paper-styles/color.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <dom-module id="zrickr-login">
-  <style include="iron-flex iron-flex-alignment">
+  <style is="custom-style" include="iron-flex iron-flex-alignment">
     :host {
       margin:auto;
       display: block;
@@ -22,26 +23,31 @@
       margin-right: 10px;
     }
 
+    #login-google-provider {
+      padding: 0 16px 0 16px;
+    }
+
+    #login-password-provider {
+      background: var(--paper-glue-grey-50);
+      padding: 16px;
+      margin: 16px;
+    }
+
     .section {
       margin-bottom: 10px;
     }
 
-    .google-signin img {
-      width: 32px;
-      height: 32px;
-      margin-right: 6px;
+    #reset-password {
+      float: right;
+      font-size: 0.8em;
+      font-style: italic;
+      color: var(--paper-teal-900);
     }
 
-    .divider::before {
-      content: '';
-      border-top: 80px solid #c5cad9;
-      margin: 0 auto;
-      position: absolute;
-      top: 6px;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: -1;
+    #create-new-account {
+      margin-top: 50px;
+      font-size: 0.8em;
+      text-decoration: underline;
     }
 
     paper-button.google-signin {
@@ -50,45 +56,70 @@
       background: var(--paper-indigo-500);
     }
 
+    paper-button.google-signin img {
+      width: 32px;
+      height: 32px;
+      margin-right: 6px;
+    }
+
+    paper-button.login {
+      margin-top: 10px;
+      text-transform: uppercase;
+      color: #fff;
+      background: var(--primary-color);
+    }
+
+    paper-button.new {
+      color: #fff;
+      background: var(--paper-teal-900);
+    }
+
 }
 
   </style>
 
   <template>
-    <header class="horizontal center center-justified layout">
+    <header class="layout horizontal center center-justified">
       <img src="../../images/touch/icon-72x72.png" alt="logo" />
       <h2>ZrickR</h2>
     </header>
-    <div class="vertical center center-justified layout">
-      <div class="section">
+    <div id="wrapper-login" class="layout vertical center-justified">
+      <div id="login-google-provider" class="section">
         <paper-button
-          class="google-signin horizontal center layout"
+          class="layout horizontal center center-justified google-signin"
           on-tap="_loginGoogleTapped">
             <img src="../../images/common/logos/google_whiteg.png"/>
             <span>Sign in with Google</span>
         </paper-button>
       </div>
-      <div class="vertical center center-justified layout section divider">
-        <span>or</span>
+      <paper-material id="login-password-provider" elevation="5" class="layout vertical center center-justified">
+        <div class="section">
+          <gold-email-input id="emailLogin"
+            required
+            size=50
+            label="email"
+            value="{{email::input}}">
+          </gold-email-input>
+          <paper-input
+            required
+            label="password"
+            type="password"
+            value="{{password::input}}">
+          </paper-input>
+          <a id="reset-password" on-tap="_resetPasswordTapped">Reset Password</a>
+        </div>
+        <paper-button
+          class="section login"
+          toggles raised
+          on-tap="_loginPasswordTapped">Login
+        </paper-button>
       </div>
-      <div class="section">
-        <gold-email-input
-          auto-validate
-          error-message=""
-          label="email"
-          value="{{email::input}}">
-        </gold-email-input>
-        <paper-input
-          label="password"
-          type="password"
-          value="{{password::input}}">
-        </paper-input>
-        <button on-tap="_loginPasswordTapped">Login</button>
-      </div>
-    </div>
-    <br></br>
-    <button on-tap="_resetPasswordTapped">Reset Password</button>
-    <button on-tap="_signinTapped">Signin</button>
+      <a
+        id="create-new-account"
+        class="layout horizontal center-justified"
+        on-tap="_signinTapped">Create New Account
+      </a>
+    </paper-material>
   </template>
 </dom-module>
 
@@ -116,7 +147,14 @@
 
     _loginPasswordTapped() {
       this.provider = 'password';
-      this.fire("login-tapped", this);
+      let emailLogin = this.$.emailLogin;
+      if (emailLogin.validate()) {
+        this.fire("login-tapped", this);
+      }
+      else {
+        emailLogin.autoValidate = true
+        emailLogin.errorMessage = "email format is incorrect.";
+      }
     },
 
     _loginGoogleTapped() {
@@ -129,7 +167,15 @@
     },
 
     _resetPasswordTapped() {
-      this.fire("reset-password-tapped", this);
+      let emailLogin = this.$.emailLogin;
+      if (emailLogin.validate()) {
+        this.fire("reset-password-tapped", this);
+      }
+      else {
+        emailLogin.autoValidate = true;
+        emailLogin.focused = true;
+        emailLogin.errorMessage = "email format is incorrect.";
+      }
     },
   });
 })();
