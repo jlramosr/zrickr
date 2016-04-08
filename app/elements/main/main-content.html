@@ -1,0 +1,45 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<dom-module id="main-content">
+  <style include="iron-flex iron-flex-alignment">
+  </style>
+
+  <template>
+    <input placeholder="old password" value="{{oldPassword::input}}">
+    <input placeholder="new password" value="{{newPassword::input}}">
+    <button on-tap="_changePasswordTapped">Change password</button>
+    <br>
+    <button on-tap="_signoutTapped">Signout</button>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+
+  Polymer({
+
+    is: "main-content",
+
+    properties: {
+      toogleDrawer: {
+        type: Boolean
+      },
+    },
+
+    attached() {
+      if (this.toogleDrawer) {
+        console.log(this.$.menuButton);
+        let paperDrawerToggle = document.createAttribute("paper-drawer-toggle");
+        this.$.menuButton.setAttributeNode(paperDrawerToggle);
+      }
+    },
+
+    _menuTapped() {
+      this.fire('menu-tapped');
+    }
+
+  });
+
+})();
+</script>

@@ -1,0 +1,49 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<dom-module id="drawer-toolbar">
+  <style include="iron-flex iron-flex-alignment">
+  </style>
+
+  <template>
+    <paper-toolbar>
+      <span id="userName" class="flex"></span>
+    </paper-toolbar>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+
+  Polymer({
+
+    is: "drawer-toolbar",
+
+    properties: {
+
+      user: {
+        type: Object,
+        readonly: true
+      }
+
+    },
+
+    attached() {
+      let userName = this.$.userName;
+      userName.innerHTML = this._getUserName();
+    },
+
+    _getUserName() {
+      if (this.user.provider == "password") {
+        return this.user.password.email;
+      }
+      else if (this.user.provider == "google") {
+        return "google";
+      }
+      return "";
+    },
+  });
+
+})();
+</script>

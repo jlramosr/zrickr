@@ -1,14 +1,66 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../elements/toolbar-main/toolbar-main.html">
+<link rel="import" href="../../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../../bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
+<link rel="import" href="../../elements/drawer/drawer-toolbar.html">
+<link rel="import" href="../../elements/drawer/drawer-content.html">
+<link rel="import" href="../../elements/main/main-toolbar.html">
+<link rel="import" href="../../elements/main/main-content.html">
 
 <dom-module id="zrickr-app">
+  <style include="iron-flex iron-flex-alignment">
+    paper-header-panel {
+      --paper-header-panel-shadow: {
+        height: 6px;
+        bottom: -6px;
+        box-shadow: inset 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
+      };
+      --paper-header-panel-standard-container: {
+        border: 1px solid gray;
+      };
+
+      --paper-header-panel-seamed-container: {
+        border: 1px solid gray;
+      };
+
+      --paper-header-panel-waterfall-container: {
+        border: 1px solid gray;
+      };
+
+      --paper-header-panel-waterfall-tall-container: {
+        border: 1px solid gray;
+      };
+
+      --paper-header-panel-scroll-container: {
+        border: 1px solid gray;
+      };
+
+      --paper-header-panel-cover-container: {
+        border: 1px solid gray;
+      };
+    }
+  </style>
+
   <template>
-    <toolbar-main id="toolbar" user={{user}}></toolbar-main>
-    <input placeholder="old password" value="{{oldPassword::input}}">
-    <input placeholder="new password" value="{{newPassword::input}}">
-    <button on-tap="_changePasswordTapped">Change password</button>
-    <br>
-    <button on-tap="_signoutTapped">Signout</button>
+    <paper-drawer-panel id="mainPanel">
+      <paper-scroll-header-panel id="drawer" drawer fixed>
+        <drawer-toolbar
+            id="drawerToolbar"
+            user={{user}}>
+        </drawer-toolbar>
+        <drawer-content
+            id="drawerContent">
+        </drawer-content>
+      </paper-scroll-header-panel>
+      <paper-scroll-header-panel id="main" main condenses keep-condensed-header>
+        <main-toolbar
+            id="mainToolbar"
+            toogle-drawer>
+        </main-toolbar>
+        <main-content
+            id="mainContent">
+        </main-content>
+      </paper-scroll-header-panel>
+    </paper-drawer-panel>
   </template>
 </dom-module>
 
@@ -21,23 +73,6 @@
       user: {
         type: Object,
       },
-
-      newPassword: {
-        type: String,
-        value: '',
-      }
-    },
-
-    _logoutTapped() {
-      this.fire("logout-tapped");
-    },
-
-    _changePasswordTapped() {
-      this.fire("change-password-tapped", this);
-    },
-
-    _signoutTapped() {
-      this.fire("signout-tapped");
     },
 
   });

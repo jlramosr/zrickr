@@ -105,6 +105,12 @@
     window.addEventListener('signout-tapped', (event) => {
       userAuth.removeUser();
     });
+    window.addEventListener('menu-tapped', (event) => {
+      let mainPanel = document.querySelector('#mainPanel');
+      if (mainPanel) {
+        mainPanel.openDrawer();
+      }
+    });
 
   });
 

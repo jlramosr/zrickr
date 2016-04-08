@@ -1,0 +1,53 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<dom-module id="main-toolbar">
+  <style include="iron-flex iron-flex-alignment">
+  </style>
+
+  <template>
+    <paper-toolbar class="layout horizontal">
+      <div class="layout flex">
+        <paper-icon-button id="menuButton" on-tap="_menuTapped" icon="icons:menu">
+        </paper-icon-button>
+      </div>
+      <div class="layout flex">
+        <paper-icon-button on-tap="" icon="icons:add-circle"></paper-icon-button>
+        <paper-icon-button on-tap="" icon="icons:settings"></paper-icon-button>
+      </div>
+    </paper-toolbar>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+
+  Polymer({
+
+    is: "main-toolbar",
+
+    properties: {
+      toogleDrawer: {
+        type: Boolean
+      },
+    },
+
+    attached() {
+      if (this.toogleDrawer) {
+        let paperDrawerToggle = document.createAttribute("paper-drawer-toggle");
+        this.$.menuButton.setAttributeNode(paperDrawerToggle);
+      }
+    },
+
+    _menuTapped() {
+      this.fire('menu-tapped');
+    }
+
+  });
+
+})();
+</script>
