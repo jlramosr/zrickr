@@ -32,6 +32,7 @@
         </paper-item>
         <paper-menu class="menu-content">
           <paper-item>SCol 1</paper-item>
+          <paper-item>SCol 2</paper-item>
         </paper-menu>
       </paper-submenu>
       <paper-item on-tap="_editProfileTapped" class="layout horizontal center">
@@ -69,8 +70,7 @@
     },
 
     _logoutTapped() {
-      console.log(this.user);
-      //this.fire('logout-tapped');
+      this.fire('logout-tapped');
     }
   });
 

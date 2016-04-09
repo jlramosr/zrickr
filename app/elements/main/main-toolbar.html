@@ -1,23 +1,39 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <dom-module id="main-toolbar">
-  <style include="iron-flex iron-flex-alignment">
+  <style is="custom-style" include="iron-flex iron-flex-alignment">
+    .right {
+      margin-left: auto;
+    }
   </style>
 
   <template>
-    <paper-toolbar class="layout horizontal">
-      <div class="layout flex">
+    <paper-toolbar>
+     <div>
         <paper-icon-button id="menuButton" on-tap="_menuTapped" icon="icons:menu">
         </paper-icon-button>
       </div>
-      <div class="layout flex">
+      <div class="right">
         <paper-icon-button on-tap="" icon="icons:add-circle"></paper-icon-button>
         <paper-icon-button on-tap="" icon="icons:settings"></paper-icon-button>
+        <paper-icon-button
+          id="userIcon"
+          on-tap="_userIconTapped"
+          src="https://assets-cdn.github.com/images/modules/logos_page/Octocat.png">
+        </paper-icon-button>
+        <paper-tooltip
+          id="userNameTooltip"
+          for="userIcon"
+          position="left"
+          animation-delay="0"
+          offset="0">{{_getUserName(user)}}
+        </paper-tooltip>
       </div>
     </paper-toolbar>
   </template>
@@ -31,9 +47,17 @@
     is: "main-toolbar",
 
     properties: {
+
+      user: {
+        type: Object,
+        notify: true,
+        readonly: true
+      },
+
       toogleDrawer: {
         type: Boolean
       },
+
     },
 
     attached() {
@@ -43,9 +67,23 @@
       }
     },
 
+    _getUserName() {
+      if (this.user.provider == "password") {
+        return this.user.password.email;
+      }
+      else if (this.user.provider == "google") {
+        return "google";
+      }
+      return "";
+    },
+
     _menuTapped() {
       this.fire('menu-tapped');
-    }
+    },
+
+    _userIconTapped() {
+      this.$.userNameTooltip.hide();
+    },
 
   });
 

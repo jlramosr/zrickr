@@ -41,7 +41,8 @@
     "platinum-push-messaging": "PolymerElements/platinum-push-messaging#^1.0.5",
     "gold-email-input": "PolymerElements/gold-email-input#^1.0.7",
     "paper-header-panel": "PolymerElements/paper-header-panel#^1.1.5",
-    "paper-menu-button": "PolymerElements/paper-menu-button#^1.1.0"
+    "paper-menu-button": "PolymerElements/paper-menu-button#^1.1.0",
+    "paper-tooltip": "PolymerElements/paper-tooltip#^1.1.2"
   },
   "devDependencies": {
     "web-component-tester": "^4.2.2"

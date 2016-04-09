@@ -33,9 +33,9 @@
       }
       else {
         currentElement = document.createElement('zrickr-login');
-        document.body.style.backgroundImage = "url('../images/background.jpg')";
+        /*document.body.style.backgroundImage = "url('../images/background.jpg')";
         document.body.style.backgroundRepeat = "no-repeat";
-        document.body.style.backgroundSize = "100% 100%";
+        document.body.style.backgroundSize = "100% 100%";*/
       }
       document.body.appendChild(currentElement);
     });
@@ -107,9 +107,7 @@
     });
     window.addEventListener('menu-tapped', (event) => {
       let mainPanel = document.querySelector('#mainPanel');
-      if (mainPanel) {
-        mainPanel.openDrawer();
-      }
+      mainPanel.openDrawer();
     });
 
   });

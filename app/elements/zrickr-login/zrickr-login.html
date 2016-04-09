@@ -5,6 +5,7 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../elements/zrickr-header/zrickr-header.html">
 
 <dom-module id="zrickr-login">
   <style is="custom-style" include="iron-flex iron-flex-alignment">
@@ -13,18 +14,9 @@
       display: block;
     }
 
-    header {
-      margin: 0 auto 20px auto;
-    }
-
-    header img {
-      width: 32px;
-      height: 32px;
-      margin-right: 10px;
-    }
-
     #loginGoogleProvider {
       padding: 0 16px 0 16px;
+      margin-top: 30px;
     }
 
     #loginPasswordProvider {
@@ -79,10 +71,7 @@
   </style>
 
   <template>
-    <header class="layout horizontal center center-justified">
-      <img src="../../images/touch/icon-72x72.png" alt="logo" />
-      <h2>ZrickR</h2>
-    </header>
+    <zrickr-header class="section"></zrickr-header>
     <div id="loginContent" class="layout vertical center-justified">
       <div id="loginGoogleProvider" class="section">
         <paper-button
@@ -147,7 +136,7 @@
 
     _loginPasswordTapped() {
       this.provider = 'password';
-      let emailLogin = this.$.emailLogin;
+      let emailLogin = this.$.loginEmail;
       if (emailLogin.validate()) {
         this.fire("login-tapped", this);
       }

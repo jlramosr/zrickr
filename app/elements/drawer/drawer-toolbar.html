@@ -1,15 +1,17 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
-<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../elements/zrickr-header/zrickr-header.html">
 
 <dom-module id="drawer-toolbar">
-  <style include="iron-flex iron-flex-alignment">
+  <style>
   </style>
 
   <template>
-    <paper-toolbar>
-      <span id="userName" class="flex"></span>
-    </paper-toolbar>
+    <paper-header>
+      <paper-toolbar>
+        <zrickr-header></zrickr-header>
+      </paper-toolbar>
+  </paper-header>
   </template>
 </dom-module>
 
@@ -18,31 +20,8 @@
 
   Polymer({
 
-    is: "drawer-toolbar",
+    is: "drawer-toolbar"
 
-    properties: {
-
-      user: {
-        type: Object,
-        readonly: true
-      }
-
-    },
-
-    attached() {
-      let userName = this.$.userName;
-      userName.innerHTML = this._getUserName();
-    },
-
-    _getUserName() {
-      if (this.user.provider == "password") {
-        return this.user.password.email;
-      }
-      else if (this.user.provider == "google") {
-        return "google";
-      }
-      return "";
-    },
   });
 
 })();

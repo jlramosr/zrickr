@@ -1,0 +1,33 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<dom-module id="zrickr-header">
+  <style is="custom-style" include="iron-flex iron-flex-alignment">
+    header {
+      margin: auto;
+    }
+
+    header img {
+      width: 32px;
+      height: 32px;
+      margin-right: 10px;
+    }
+  </style>
+
+  <template>
+    <header class="layout horizontal center center-justified">
+      <img src="../../images/touch/icon-72x72.png" alt="logo" />
+      <h2>ZrickR</h2>
+    </header>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  Polymer({
+
+    is: 'zrickr-header'
+    
+  });
+})();
+</script>

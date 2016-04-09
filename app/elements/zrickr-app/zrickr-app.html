@@ -42,10 +42,9 @@
 
   <template>
     <paper-drawer-panel id="mainPanel">
-      <paper-scroll-header-panel id="drawer" drawer fixed>
+      <paper-scroll-header-panel id="drawer" drawer mode="cover">
         <drawer-toolbar
-            id="drawerToolbar"
-            user={{user}}>
+            id="drawerToolbar">
         </drawer-toolbar>
         <drawer-content
             id="drawerContent">
@@ -54,6 +53,7 @@
       <paper-scroll-header-panel id="main" main condenses keep-condensed-header>
         <main-toolbar
             id="mainToolbar"
+            user={{user}}
             toogle-drawer>
         </main-toolbar>
         <main-content
