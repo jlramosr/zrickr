@@ -11,38 +11,96 @@
 
 <dom-module id="drawer-content">
   <style include="iron-flex iron-flex-alignment">
+    .right {
+      margin-left: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .items-title {
+    }
+
+    .item {
+      padding-left: 26px;
+      color: var(--paper-teal-700);
+      border-bottom: 1px solid var(--paper-grey-200);
+      font-size: 90%;
+    }
+
+    paper-item {
+      border-bottom: 1px solid var(--paper-grey-100);
+    }
+
+    .menu-trigger {
+      color: var(--paper-grey-700);
+    }
   </style>
 
   <template>
+    <link rel="import" href="collection/collection-new-dialog.html">
+    <collection-new-dialog
+      id="newCollectionDialog">
+    </collection-new-dialog>
     <paper-menu>
       <paper-submenu>
-        <paper-item class="menu-trigger">
-          <paper-icon-button icon="image:view-comfy"></paper-icon-button>
-          <span>My Collections</span>
+        <paper-item class="menu-trigger layout horizontal center">
+          <div class="items-title layout horizontal center">
+            <paper-icon-button icon="image:view-comfy"></paper-icon-button>
+            <span>My Collections</span>
+          </div>
+          <div class="right">
+            <paper-icon-button
+              on-tap="_addCollectionTapped"
+              icon="icons:add-circle">
+            </paper-icon-button>
+          </div>
         </paper-item>
         <paper-menu class="menu-content">
-          <paper-item>Collection 1</paper-item>
-          <paper-item>Collection 2</paper-item>
+          <paper-item class="item layout horizontal center">
+            <paper-icon-button
+              src="../images/touch/icon-72x72.png">
+            </paper-icon-button>
+            <span class="flex">Coches de carreras de papa</span>
+            <paper-icon-button
+              on-tap=""
+              icon="icons:more-vert"
+              class="right">
+            </paper-icon-button>
+          </paper-item>
+          <paper-item class="item layout horizontal center">
+            <paper-icon-button
+              src="../images/touch/icon-72x72.png">
+            </paper-icon-button>
+            <span class="flex">Clientes</span>
+            <paper-icon-button
+              on-tap=""
+              icon="icons:more-vert"
+              class="right">
+            </paper-icon-button>
+          </paper-item>
         </paper-menu>
       </paper-submenu>
       <paper-submenu>
         <paper-item class="menu-trigger">
-          <paper-icon-button icon="social:group"></paper-icon-button>
-          <span>My Shared Collections</span>
+          <div class="items-title layout horizontal center">
+            <paper-icon-button icon="social:group"></paper-icon-button>
+            <span>My Shared Collections</span>
+          </div>
         </paper-item>
         <paper-menu class="menu-content">
-          <paper-item>SCol 1</paper-item>
-          <paper-item>SCol 2</paper-item>
+          <paper-item class="item layout horizontal center">
+            <paper-icon-button
+              src="../images/touch/icon-72x72.png">
+            </paper-icon-button>
+            <span class="flex">Facturas</span>
+            <paper-icon-button
+              on-tap=""
+              icon="icons:more-vert"
+              class="right">
+            </paper-icon-button>
+          </paper-item>
         </paper-menu>
       </paper-submenu>
-      <paper-item on-tap="_editProfileTapped" class="layout horizontal center">
-        <paper-icon-button icon="icons:perm-identity"></paper-icon-button>
-        <span>Edit Profile</span>
-      </paper-item>
-      <paper-item on-tap="_logoutTapped" class="layout horizontal center">
-        <paper-icon-button icon="icons:power-settings-new"></paper-icon-button>
-        <span>Logout</span>
-      </paper-item>
     </paper-menu>
   </template>
 </dom-module>
@@ -61,6 +119,10 @@
       }
     },
 
+    _addCollectionTapped() {
+      this.fire("add-collection-tapped");
+    },
+
     _changePasswordTapped() {
       this.fire("change-password-tapped", this);
     },
@@ -68,10 +130,6 @@
     _signoutTapped() {
       this.fire("signout-tapped");
     },
-
-    _logoutTapped() {
-      this.fire('logout-tapped');
-    }
   });
 
 })();

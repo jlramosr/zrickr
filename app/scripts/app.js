@@ -93,6 +93,14 @@
     });
 
     //User App Events
+    window.addEventListener('add-collection-tapped', (event) => {
+      let newCollectionDialog = document.createElement('collection-new-dialog');
+      let id = document.createAttribute("id");
+      id.value = "newCollectionDialog";
+      newCollectionDialog.setAttributeNode(id);
+      document.body.appendChild(newCollectionDialog);
+      newCollectionDialog.toggle();
+    });
     window.addEventListener('logout-tapped', (event) => {
       userAuth.logout();
     });
