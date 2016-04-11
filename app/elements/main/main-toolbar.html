@@ -11,7 +11,7 @@
 
 <dom-module id="main-toolbar">
   <style is="custom-style" include="iron-flex iron-flex-alignment">
-    .right {
+    .right-icons {
       margin-left: auto;
     }
   </style>
@@ -22,9 +22,9 @@
         <paper-icon-button id="menuButton" on-tap="_menuTapped" icon="icons:menu">
         </paper-icon-button>
       </div>
-      <div class="right">
-        <paper-icon-button on-tap="" icon="icons:add-circle"></paper-icon-button>
-        <paper-icon-button on-tap="" icon="icons:settings"></paper-icon-button>
+      <div class="right-icons">
+        <paper-icon-button on-tap="" icon="icons:create"></paper-icon-button>
+        <paper-icon-button on-tap="" icon="icons:home"></paper-icon-button>
         <paper-menu-button vertical-offset="50" horizontal-offset="-90">
           <paper-tooltip
             id="userNameTooltip"

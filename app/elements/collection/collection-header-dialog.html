@@ -1,0 +1,62 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icons/icons-icons.html">
+<link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<dom-module id="collection-header-dialog">
+  <template>
+    <style include="iron-flex iron-flex-alignment">
+      :host {
+        --iron-icon-fill-color: var(--paper-blue-grey-500);
+        --paper-progress-active-color: var(--paper-blue-grey-500);
+      }
+
+      .header {
+        margin-top: 16px;
+
+      }
+
+      paper-progress {
+        width: 100%;
+      }
+
+      iron-icon {
+        margin-right: 20px;
+      }
+    </style>
+
+
+    <div class="layout horizontal center header">
+      <iron-icon icon="icons:donut-small"></iron-icon>
+      <h1>{{name}}</h1>
+    </div>
+    <paper-progress value="{{valueProgress}}"></paper-progress>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  'use strict';
+
+  Polymer({
+
+    is: "collection-header-dialog",
+
+    properties: {
+      name: String,
+      currentStep: Number,
+      numberSteps: Number,
+      valueProgress: {
+        type: Number,
+        computed: '_computeValueProgress(currentStep, numberSteps)',
+        value: 0,
+      },
+    },
+
+    _computeValueProgress(first, last) {
+      return this.currentStep*100/this.numberSteps;
+    },
+
+  });
+}());
+</script>

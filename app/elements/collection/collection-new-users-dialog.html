@@ -7,7 +7,7 @@
 <link rel="import" href="collection-edit-shared.html">
 <link rel="import" href="collection-new-buttons.html">
 
-<dom-module id="collection-new-custom-dialog">
+<dom-module id="collection-new-users-dialog">
   <template>
     <style include="iron-flex iron-flex-alignment">
       :host {
@@ -23,31 +23,27 @@
         margin-left: 4px;
       }
 
-      #fields paper-input {
+      #collections paper-input {
         margin-right: 16px;
       }
     </style>
 
     <paper-dialog modal id="dialog" class="layout vertical">
       <collection-header-dialog
-        name="New Custom Collection"
+        name="New User Collection"
         current-step="2"
         number-steps="4">
       </collection-header-dialog>
       <paper-dialog-scrollable>
-        <div id="fields" class="layout horizontal center">
-          <paper-input label="Field" value="{{name}}"></paper-input>
-          <paper-input label="Type" value="{{type}}"></paper-input>
-          <paper-icon-button  class="layout left center"
-                              icon="icons:add-circle"
-                              on-tap="_addNewField">
-          </paper-icon-button>
+        <div id="collections" class="layout horizontal center">
+          <paper-input label="Name" value="{{name}}"></paper-input>
+          <paper-input label="Auhotr" value="{{author}}"></paper-input>
         </div>
       </paper-dialog-scrollable>
       <collection-edit-shared></collection-edit-shared>
       <collection-new-buttons
         back
-        parent-dialog="custom"
+        parent-dialog="users"
         label-ok="Create">
       </collection-new-buttons>
     </paper-dialog>
@@ -61,7 +57,7 @@
 
   Polymer({
 
-    is: "collection-new-custom-dialog",
+    is: "collection-new-users-dialog",
 
     toggle() {
       this.$.dialog.toggle();

@@ -3,6 +3,7 @@
 <link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../../bower_components/paper-menu/paper-submenu.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-ripple/paper-ripple.html">
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/iron-icons/social-icons.html">
 <link rel="import" href="../../bower_components/iron-icons/image-icons.html">
@@ -11,16 +12,23 @@
 
 <dom-module id="drawer-content">
   <style include="iron-flex iron-flex-alignment">
-    .right {
-      margin-left: auto;
-      position: relative;
-      z-index: 1;
+    .right-button {
+      position: absolute;
+      right: 3px;
+      top: 3px;
     }
 
-    .items-title {
+    .item-title {
+      color: var(--paper-grey-700);
     }
 
-    .item {
+    .secondary-options {
+      position: absolute;
+      width: 100%;
+      bottom: 5px;
+    }
+
+    .subitem {
       padding-left: 26px;
       color: var(--paper-teal-700);
       border-bottom: 1px solid var(--paper-grey-200);
@@ -31,76 +39,80 @@
       border-bottom: 1px solid var(--paper-grey-100);
     }
 
-    .menu-trigger {
-      color: var(--paper-grey-700);
-    }
   </style>
 
   <template>
-    <link rel="import" href="collection/collection-new-dialog.html">
-    <collection-new-dialog
-      id="newCollectionDialog">
-    </collection-new-dialog>
     <paper-menu>
       <paper-submenu>
         <paper-item class="menu-trigger layout horizontal center">
-          <div class="items-title layout horizontal center">
+          <div class="item-title layout horizontal center">
             <paper-icon-button icon="image:view-comfy"></paper-icon-button>
             <span>My Collections</span>
           </div>
-          <div class="right">
+          <div class="right-button">
             <paper-icon-button
-              on-tap="_addCollectionTapped"
-              icon="icons:add-circle">
+              on-tap="_addItemTapped"
+              icon="icons:add">
             </paper-icon-button>
           </div>
         </paper-item>
         <paper-menu class="menu-content">
-          <paper-item class="item layout horizontal center">
+          <paper-item class="subitem layout horizontal center">
             <paper-icon-button
               src="../images/touch/icon-72x72.png">
             </paper-icon-button>
             <span class="flex">Coches de carreras de papa</span>
             <paper-icon-button
-              on-tap=""
+              on-tap="_toggleSubItemActions"
               icon="icons:more-vert"
-              class="right">
+              class="right-button">
             </paper-icon-button>
+            <paper-ripple id="ripple" style="pointer-events: none;"></paper-ripple>
           </paper-item>
-          <paper-item class="item layout horizontal center">
+          <paper-item class="subitem layout horizontal center">
             <paper-icon-button
               src="../images/touch/icon-72x72.png">
             </paper-icon-button>
             <span class="flex">Clientes</span>
             <paper-icon-button
-              on-tap=""
+              on-tap="_toggleSubItemActions"
               icon="icons:more-vert"
-              class="right">
+              class="right-button">
             </paper-icon-button>
           </paper-item>
         </paper-menu>
       </paper-submenu>
       <paper-submenu>
         <paper-item class="menu-trigger">
-          <div class="items-title layout horizontal center">
+          <div class="item-title layout horizontal center">
             <paper-icon-button icon="social:group"></paper-icon-button>
             <span>My Shared Collections</span>
           </div>
         </paper-item>
         <paper-menu class="menu-content">
-          <paper-item class="item layout horizontal center">
+          <paper-item class="subitem layout horizontal center">
             <paper-icon-button
               src="../images/touch/icon-72x72.png">
             </paper-icon-button>
             <span class="flex">Facturas</span>
             <paper-icon-button
-              on-tap=""
+              on-tap="_toggleSubItemActions"
               icon="icons:more-vert"
-              class="right">
+              class="right-button">
             </paper-icon-button>
           </paper-item>
         </paper-menu>
       </paper-submenu>
+      <paper-menu class="secondary-options">
+        <paper-item class="item-title layout horizontal center">
+          <paper-icon-button icon="icons:settings"></paper-icon-button>
+          <span>Settings</span>
+        </paper-item>
+        <paper-item class="item-title layout horizontal center">
+          <paper-icon-button icon="icons:delete"></paper-icon-button>
+          <span>Recycle Bin</span>
+        </paper-item>
+      </paper-menu>
     </paper-menu>
   </template>
 </dom-module>
@@ -119,8 +131,16 @@
       }
     },
 
-    _addCollectionTapped() {
-      this.fire("add-collection-tapped");
+    _addItemTapped() {
+      this.fire("add-item-tapped");
+    },
+
+    _toggleSubItemActions() {
+
+    },
+
+    _addSubItemTapped() {
+      this.fire("add-subitem-tapped");
     },
 
     _changePasswordTapped() {

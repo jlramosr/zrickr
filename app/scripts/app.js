@@ -93,13 +93,37 @@
     });
 
     //User App Events
-    window.addEventListener('add-collection-tapped', (event) => {
+    window.addEventListener('add-item-tapped', (event) => {
       let newCollectionDialog = document.createElement('collection-new-dialog');
       let id = document.createAttribute("id");
       id.value = "newCollectionDialog";
       newCollectionDialog.setAttributeNode(id);
+      let optionSelected = event.detail.optionSelected;
+      if (optionSelected) {
+        let selectedItem = document.createAttribute("selected");
+        selectedItem.value = optionSelected;
+        newCollectionDialog.setAttributeNode(selectedItem);
+      }
       document.body.appendChild(newCollectionDialog);
       newCollectionDialog.toggle();
+    });
+    window.addEventListener('new-collection-dialog-next-tapped', (event) => {
+      let newNextCollectionDialog;
+      let id = document.createAttribute("id");
+      let optionSelected = event.detail.optionSelected;
+      if (optionSelected == 'users-check') {
+        newNextCollectionDialog = document.createElement('collection-new-users-dialog');
+        id.value = "newUsersCollectionDialog";
+      }
+      else if (optionSelected == 'custom-check') {
+        newNextCollectionDialog = document.createElement('collection-new-custom-dialog');
+        id.value = "newCustomCollectionDialog";
+      }
+      if (newNextCollectionDialog) {
+        newNextCollectionDialog.setAttributeNode(id);
+        document.body.appendChild(newNextCollectionDialog);
+        newNextCollectionDialog.toggle();
+      }
     });
     window.addEventListener('logout-tapped', (event) => {
       userAuth.logout();

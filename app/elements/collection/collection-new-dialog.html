@@ -3,45 +3,52 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-radio-group/paper-radio-group.html">
 <link rel="import" href="../../bower_components/paper-radio-button/paper-radio-button.html">
-<link rel="import" href="../../bower_components/iron-icons/image-icons.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="collection-header-dialog.html">
 
 <dom-module id="collection-new-dialog">
   <template>
     <style include="iron-flex iron-flex-alignment">
       :host {
-        --iron-icon-fill-color: var(--paper-amber-700);
+        --iron-icon-fill-color: var(--paper-amber-900);
       }
 
       paper-dialog {
-        padding-left: 20px;
+        padding: 0 30px 10px 30px;
       }
 
-      iron-icon {
-        margin-right: 2px;
-        margin-left: 4px;
+      paper-radio-group {
+        margin: 16px auto 16px auto;
       }
+
+      paper-radio-group {
+        font-size: 18px;
+        font-weight: bold;
+      }
+
     </style>
 
     <paper-dialog modal id="dialog" class="layout vertical">
-      <header>New Collection</header>
-      <paper-radio-group selected="custom-check">
-        <paper-radio-button name="custom-check">
+      <collection-header-dialog
+        name="New Collection"
+        current-step="1"
+        number-steps="4">
+      </collection-header-dialog>
+      <paper-radio-group id="options" selected="{{selected}}" class="layout vertical">
+        <paper-radio-button noink name="custom-check">
           <div class="layout horizontal center">
-            <iron-icon icon="image:edit"></iron-icon>
-            <h3>CUSTOM COLLECTION</h3>
+            <span>Custom Collection</span>
           </div>
         </paper-radio-button>
-        <paper-radio-button name="users-check">
+        <paper-radio-button noink name="users-check">
           <div class="layout horizontal center">
-            <iron-icon icon="image:photo-size-select-small"></iron-icon>
-            <h3>From others users</h3>
+            <span>From other users</span>
           </div>
         </paper-radio-button>
       </paper-radio-group>
       <div class="buttons">
         <paper-button label="Cancel" dialog-dismiss>Cancel</paper-button>
-        <paper-button label="Next" dialog-confirm autofocus>Next</paper-button>
+        <paper-button label="Next" dialog-confirm>Next</paper-button>
       </div>
     </paper-dialog>
 
@@ -55,6 +62,28 @@
   Polymer({
 
     is: "collection-new-dialog",
+
+    properties: {
+
+      selected: {
+        type: String,
+        value: 'custom-check',
+      },
+
+    },
+
+    listeners: {
+      'iron-overlay-closed': '_newCollectionDialogClosed',
+    },
+
+    _newCollectionDialogClosed(event) {
+      if (event.detail.confirmed) {
+        let params = {};
+        let itemSelected = this.$.options.selectedItem;
+        params.optionSelected = itemSelected.name;
+        this.fire('new-collection-dialog-next-tapped', params);
+      }
+    },
 
     toggle() {
       this.$.dialog.toggle();
