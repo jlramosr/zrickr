@@ -1,5 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/iron-icons/icons-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
@@ -12,8 +12,11 @@
       }
 
       .header {
-        margin-top: 16px;
+        margin: 0px 10px 6px 10px;
+      }
 
+      .header h2 {
+        color: var(--paper-blue-grey-500);
       }
 
       paper-progress {
@@ -21,16 +24,23 @@
       }
 
       iron-icon {
-        margin-right: 20px;
+        margin-right: 10px;
+      }
+
+      .description {
+        font-size: 10px;
+        color: var(--paper-blue-grey-500);
+        font-style: italic;
       }
     </style>
 
 
     <div class="layout horizontal center header">
       <iron-icon icon="icons:donut-small"></iron-icon>
-      <h1>{{name}}</h1>
+      <h2>{{name}}</h2>
     </div>
     <paper-progress value="{{valueProgress}}"></paper-progress>
+    <span class="description">{{description}}</span>
   </template>
 </dom-module>
 
@@ -44,6 +54,7 @@
 
     properties: {
       name: String,
+      description: String,
       currentStep: Number,
       numberSteps: Number,
       valueProgress: {

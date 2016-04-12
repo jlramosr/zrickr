@@ -3,7 +3,7 @@
 <link rel="import" href="../../bower_components/iron-icons/social-icons.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
-<dom-module id="collection-edit-shared">
+<dom-module id="collection-shared-edit">
   <template>
     <style include="iron-flex iron-flex-alignment">
       :host {
@@ -16,12 +16,10 @@
       }
     </style>
 
-    <paper-dialog-scrollable>
-      <div class="layout horizontal center">
-        <iron-icon icon="social:share"></iron-icon>
-        <h3>SHARE WITH</h3>
-      </div>
-    </paper-dialog-scrollable>
+    <div class="layout horizontal center">
+      <iron-icon icon="social:share"></iron-icon>
+      <h3>SHARE WITH</h3>
+    </div>
 
   </template>
 </dom-module>
@@ -32,7 +30,7 @@
 
   Polymer({
 
-    is: "collection-edit-shared",
+    is: "collection-shared-edit",
 
   });
 }());

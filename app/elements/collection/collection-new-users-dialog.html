@@ -4,7 +4,6 @@
 <link rel="import" href="../../bower_components/iron-icons/social-icons.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="collection-header-dialog.html">
-<link rel="import" href="collection-edit-shared.html">
 <link rel="import" href="collection-new-buttons.html">
 
 <dom-module id="collection-new-users-dialog">
@@ -37,10 +36,9 @@
       <paper-dialog-scrollable>
         <div id="collections" class="layout horizontal center">
           <paper-input label="Name" value="{{name}}"></paper-input>
-          <paper-input label="Auhotr" value="{{author}}"></paper-input>
+          <paper-input label="Author" value="{{author}}"></paper-input>
         </div>
       </paper-dialog-scrollable>
-      <collection-edit-shared></collection-edit-shared>
       <collection-new-buttons
         back
         parent-dialog="users"

@@ -1,50 +1,27 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../bower_components/iron-icons/social-icons.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="collection-header-dialog.html">
-<link rel="import" href="collection-edit-shared.html">
+<link rel="import" href="collection-fields-edit.html">
 <link rel="import" href="collection-new-buttons.html">
 
 <dom-module id="collection-new-custom-dialog">
   <template>
     <style include="iron-flex iron-flex-alignment">
       :host {
-        --iron-icon-fill-color: var(--paper-amber-700);
-      }
-
-      paper-dialog {
-        padding-left: 20px;
-      }
-
-      iron-icon {
-        margin-right: 2px;
-        margin-left: 4px;
-      }
-
-      #fields paper-input {
-        margin-right: 16px;
       }
     </style>
 
     <paper-dialog modal id="dialog" class="layout vertical">
       <collection-header-dialog
         name="New Custom Collection"
+        description="Define the fields of the collection and their properties"
         current-step="2"
         number-steps="4">
       </collection-header-dialog>
       <paper-dialog-scrollable>
-        <div id="fields" class="layout horizontal center">
-          <paper-input label="Field" value="{{name}}"></paper-input>
-          <paper-input label="Type" value="{{type}}"></paper-input>
-          <paper-icon-button  class="layout left center"
-                              icon="icons:add-circle"
-                              on-tap="_addNewField">
-          </paper-icon-button>
-        </div>
+        <collection-fields-edit></collection-fields-edit>
       </paper-dialog-scrollable>
-      <collection-edit-shared></collection-edit-shared>
       <collection-new-buttons
         back
         parent-dialog="custom"
