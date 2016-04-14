@@ -3,7 +3,7 @@
 <link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
-<dom-module id="collection-header-dialog">
+<dom-module id="zrickr-dialog-header">
   <template>
     <style include="iron-flex iron-flex-alignment">
       :host {
@@ -37,7 +37,7 @@
 
     <div class="layout horizontal center header">
       <iron-icon icon="icons:donut-small"></iron-icon>
-      <h2>{{name}}</h2>
+      <h2>{{title}}</h2>
     </div>
     <paper-progress value="{{valueProgress}}"></paper-progress>
     <span class="description">{{description}}</span>
@@ -50,10 +50,10 @@
 
   Polymer({
 
-    is: "collection-header-dialog",
+    is: "zrickr-dialog-header",
 
     properties: {
-      name: String,
+      title: String,
       description: String,
       currentStep: {
         type: Number,

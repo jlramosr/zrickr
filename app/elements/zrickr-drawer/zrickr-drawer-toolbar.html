@@ -2,8 +2,14 @@
 <link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../../elements/zrickr-header/zrickr-header.html">
 
-<dom-module id="drawer-toolbar">
+<dom-module id="zrickr-drawer-toolbar">
   <style>
+    :host {
+      --paper-toolbar-color:
+          var(--drawer-toolbar-color, #FFF);
+      --paper-toolbar-background:
+          var(--drawer-toolbar-background, var(--paper-blue-grey-500));
+    }
   </style>
 
   <template>
@@ -11,7 +17,7 @@
       <paper-toolbar>
         <zrickr-header></zrickr-header>
       </paper-toolbar>
-  </paper-header>
+    </paper-header>
   </template>
 </dom-module>
 
@@ -20,7 +26,7 @@
 
   Polymer({
 
-    is: "drawer-toolbar"
+    is: "zrickr-drawer-toolbar"
 
   });
 

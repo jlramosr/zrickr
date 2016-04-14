@@ -1,64 +1,21 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-drawer-panel/paper-drawer-panel.html">
 <link rel="import" href="../../bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
-<link rel="import" href="../../elements/drawer/drawer-toolbar.html">
-<link rel="import" href="../../elements/drawer/drawer-content.html">
-<link rel="import" href="../../elements/main/main-toolbar.html">
-<link rel="import" href="../../elements/main/main-content.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../elements/zrickr-drawer/zrickr-drawer.html">
+<link rel="import" href="../../elements/zrickr-main/zrickr-main.html">
 
 <dom-module id="zrickr-app">
   <style include="iron-flex iron-flex-alignment">
-    paper-header-panel {
-      --paper-header-panel-shadow: {
-        height: 6px;
-        bottom: -6px;
-        box-shadow: inset 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
-      };
-      --paper-header-panel-standard-container: {
-        border: 1px solid gray;
-      };
-
-      --paper-header-panel-seamed-container: {
-        border: 1px solid gray;
-      };
-
-      --paper-header-panel-waterfall-container: {
-        border: 1px solid gray;
-      };
-
-      --paper-header-panel-waterfall-tall-container: {
-        border: 1px solid gray;
-      };
-
-      --paper-header-panel-scroll-container: {
-        border: 1px solid gray;
-      };
-
-      --paper-header-panel-cover-container: {
-        border: 1px solid gray;
-      };
-    }
   </style>
 
   <template>
     <paper-drawer-panel id="mainPanel">
       <paper-scroll-header-panel id="drawer" drawer mode="cover">
-        <drawer-toolbar
-            id="drawerToolbar">
-        </drawer-toolbar>
-        <drawer-content
-            id="drawerContent">
-        </drawer-content>
+        <zrickr-drawer><zrickr-drawer>
       </paper-scroll-header-panel>
       <paper-scroll-header-panel id="main" main condenses keep-condensed-header>
-        <main-toolbar
-            id="mainToolbar"
-            user={{user}}
-            toogle-drawer>
-        </main-toolbar>
-        <main-content
-            id="mainContent">
-        </main-content>
+        <zrickr-main user={{user}}><zrickr-main>
       </paper-scroll-header-panel>
     </paper-drawer-panel>
   </template>

@@ -1,0 +1,93 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="zrickr-dialog-header.html">
+<link rel="import" href="zrickr-dialog-buttons.html">
+
+<dom-module id="zrickr-dialog">
+  <template>
+    <style include="iron-flex iron-flex-alignment">
+      :host {
+        --iron-icon-fill-color: var(--paper-amber-900);
+      }
+
+      paper-dialog {
+        padding: 0 30px 10px 30px;
+      }
+
+      paper-radio-group {
+        margin: 16px auto 16px auto;
+      }
+
+      paper-radio-group {
+        font-size: 14px;
+      }
+
+      iron-image {
+        height: 48px;
+        width: 48px;
+        background-repeat: no-repeat;
+        background-position: 50%;
+        border-radius: 50%;
+        border: 1px solid var(--paper-amber-900);
+        background-size: 100% auto;
+      }
+
+    </style>
+
+    <paper-dialog modal id="dialog" class="layout vertical">
+      <zrickr-dialog-header
+        title="New Collection"
+        description="Indicate how the collection will be created"
+        current-step="1"
+        number-steps="4">
+      </zrickr-dialog-header>
+      <content></content>
+      <zrickr-dialog-buttons
+        back
+        back-dialog="custom"
+        label-ok="Create">
+      </zrickr-dialog-buttons>
+    </paper-dialog>
+
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  'use strict';
+
+  Polymer({
+
+    is: "zrickr-dialog",
+
+    properties: {
+    },
+
+    listeners: {
+      'iron-overlay-closed': '_zrickrDialogClosed',
+    },
+
+    ready() {
+    },
+
+    toggle() {
+      this.$.dialog.toggle();
+    },
+
+    _zrickrDialogClosed(event) {
+      if (event.detail.confirmed) {
+        this.fire('zrickr-dialog-confirm-tapped', this);
+      }
+    },
+
+    _validate() {
+    }
+
+  });
+}());
+</script>

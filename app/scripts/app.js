@@ -94,16 +94,16 @@
 
     //User App Events
     window.addEventListener('add-item-tapped', (event) => {
-      let newCollectionDialog = document.createElement('collection-new-dialog');
+      let newCollectionDialog = document.createElement('zrickr-dialog');
       let id = document.createAttribute("id");
       id.value = "newCollectionDialog";
       newCollectionDialog.setAttributeNode(id);
-      let optionSelected = event.detail.optionSelected;
+      /*let optionSelected = event.detail.optionSelected;
       if (optionSelected) {
         let selectedItem = document.createAttribute("selected");
         selectedItem.value = optionSelected;
         newCollectionDialog.setAttributeNode(selectedItem);
-      }
+      }*/
       document.body.appendChild(newCollectionDialog);
       newCollectionDialog.toggle();
     });

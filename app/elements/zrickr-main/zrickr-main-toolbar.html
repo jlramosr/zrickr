@@ -9,8 +9,15 @@
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
-<dom-module id="main-toolbar">
-  <style is="custom-style" include="iron-flex iron-flex-alignment">
+<dom-module id="zrickr-main-toolbar">
+  <style include="iron-flex iron-flex-alignment">
+    :host {
+      --paper-toolbar-color:
+          var(--main-toolbar-color, #FFF);
+      --paper-toolbar-background:
+          var(--main-toolbar-background, var(--paper-blue-grey-500));
+    }
+
     .right-icons {
       margin-left: auto;
     }
@@ -62,7 +69,7 @@
 
   Polymer({
 
-    is: "main-toolbar",
+    is: "zrickr-main-toolbar",
 
     properties: {
 

@@ -1,0 +1,24 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="zrickr-main-content.html">
+<link rel="import" href="zrickr-main-toolbar.html">
+
+<dom-module id="zrickr-main">
+  <template>
+    <zrickr-main-toolbar
+      id="mainToolbar"
+      user={{user}}
+      toogle-drawer>
+    </zrickr-main-toolbar>
+    <zrickr-main-content id="mainContent"></main-content>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+
+  Polymer({
+    is: "zrickr-main"
+  });
+
+})();
+</script>
