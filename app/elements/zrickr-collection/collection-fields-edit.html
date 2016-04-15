@@ -1,0 +1,129 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="collection-fields-types-list.html">
+
+<dom-module id="collection-fields-edit">
+  <template>
+    <style include="iron-flex iron-flex-alignment">
+      :host {
+        --iron-icon-fill-color: var(--paper-amber-900);
+      }
+
+      .delete {
+        --iron-icon-fill-color: var(--paper-blue-grey-700);
+      }
+
+      iron-icon {
+        margin-right: 2px;
+        margin-left: 4px;
+      }
+
+      .field paper-input {
+        margin-right: 10px;
+      }
+
+      paper-icon-button {
+        margin-top: 16px;
+      }
+
+    </style>
+
+    <template is="dom-repeat" id="fieldsList" items={{fields}}>
+      <div class="layout horizontal center field">
+        <paper-input
+          focused
+          label="Field Name"
+          value="{{item.name}}"
+          required
+          auto-validate
+          error-message="Field name required"
+          char-counter maxlength="15"></paper-input>
+        <paper-dropdown-menu
+          no-animations
+          horizontal-align="right"
+          class="layout horizontal center-center"
+          label="Type">
+          <paper-menu
+              class="dropdown-content"
+              selected="{{item.type}}"
+              attr-for-selected="value">
+                <paper-item value="text">Text</paper-item>
+                <paper-item value="number">Number</paper-item>
+                <paper-item value="date">Date</paper-item>
+            </paper-menu>
+        </paper-dropdown-menu>
+        <paper-icon-button
+          class="delete"
+          icon="icons:clear"
+          on-tap="_removeField">
+        </paper-icon-button>
+      </div>
+    </template>
+    <div class="layout horizontal center end-justified">
+      <paper-icon-button
+        icon="icons:add-circle"
+        on-tap="_addField">
+      </paper-icon-button>
+    </div>
+
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  'use strict';
+
+  Polymer({
+
+    is: "collection-fields-edit",
+
+    properties: {
+      fields: {
+        type: Array,
+        value: []
+      }
+    },
+
+    observers: [
+      'fieldsAddedOrRemoved(fields.splices)'
+    ],
+
+    ready() {
+      this.fields = [
+        {name: 'Title', type: 'text'}
+      ];
+    },
+
+    fieldsAddedOrRemoved(changeRecord) {
+      if (changeRecord) {
+        console.log("fields",this.fields.length);
+        changeRecord.indexSplices.forEach((s) => {
+          s.removed.forEach((field) => {
+            console.log(field.name + ' was removed');
+          });
+          console.log(s.addedCount + ' field were added');
+        }, this);
+      }
+    },
+
+    _addField() {
+      this.push('fields', {name: '', type: ''});
+    },
+
+    _removeField(event) {
+      let field = event.model.item;
+      let index = this.fields.indexOf(field);
+      this.splice('fields', index, 1);
+    }
+
+  });
+}());
+</script>

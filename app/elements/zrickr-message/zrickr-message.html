@@ -1,0 +1,60 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
+
+<dom-module id="zrickr-message">
+  <style>
+    paper-toast.error {
+      --paper-toast-background-color: var(--message-error-background-color, var(--paper-red-900));
+      --paper-toast-color: #F1F1F1;
+    }
+    paper-toast.success {
+      --paper-toast-background-color: var(--message-success-background-color, var(--paper-green-900));
+      --paper-toast-color: #F1F1F1;
+    }
+    paper-toast.info {
+      --paper-toast-background-color: var(--message-info-background-color, var(--paper-cyan-900));
+      --paper-toast-color: #F1F1F1;
+    }
+  </style>
+
+  <template>
+    <paper-toast
+      text="{{text}}"
+      duration="{{duration}}"
+      class$="{{type}}"
+      id="message">
+    </paper-toast>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'zrickr-message',
+
+    listeners: {
+      'iron-overlay-closed': '_messageClosed'
+    },
+
+    properties: {
+      text: String,
+      duration: {
+        type: Number,
+        duration: 5000
+      },
+      type: {
+        type: String,
+        value: 'info'
+      }
+    },
+
+    open() {
+      console.log(this.$.message);
+      this.$.message.open();
+    },
+
+    _zrickrMessageClosed() {
+      this.fire('message-closed', this);
+    }
+
+  });
+</script>

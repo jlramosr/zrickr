@@ -1,0 +1,78 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../elements/zrickr-dialog/zrickr-dialog.html">
+
+<dom-module id="zrickr-collection-new-dialog">
+  <template>
+    <style include="iron-flex iron-flex-alignment">
+    </style>
+
+    <zrickr-dialog id="dialog">
+      <paper-input
+        label="Collection Name"
+        value="{{collectionName}}"
+        id="nameCollection"
+        required
+        pattern="^[A-Za-z0-9][A-Za-z0-9'\s-]*$"
+        error-message="Only letters, number, spaces and dash are allowed"
+        char-counter maxlength="20">
+      </paper-input>
+      <iron-image src="../../images/touch/apple-touch-icon.png"></iron-image>
+      <paper-radio-group id="options" selected="{{selected}}" class="layout vertical">
+        <paper-radio-button noink name="custom-check">
+          <div class="layout horizontal center">
+            <span>Custom Collection</span>
+          </div>
+        </paper-radio-button>
+        <paper-radio-button noink name="users-check">
+          <div class="layout horizontal center">
+            <span>From other users</span>
+          </div>
+        </paper-radio-button>
+      </paper-radio-group>
+    </zrickr-dialog>
+
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  'use strict';
+
+  Polymer({
+
+    is: "zrickr-collection-new-dialog",
+
+    properties: {
+
+      collectionName: String,
+
+      selected: {
+        type: String,
+        value: 'custom-check'
+      }
+
+    },
+
+    listeners: {
+      'zrickr-dialog-confirm-tapped': '_next'
+    },
+
+    _next(event) {
+      let params = {};
+      let itemSelected = this.$.options.selectedItem;
+      params.optionSelected = itemSelected.name;
+      this.fire('zrickr-collection-new-dialog-next-tapped', params);
+    },
+
+    toggle() {
+      this.$.dialog.toggle();
+    }
+
+  });
+}());
+</script>

@@ -1,0 +1,79 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<dom-module id="collection-header-dialog">
+  <template>
+    <style include="iron-flex iron-flex-alignment">
+      :host {
+        --iron-icon-fill-color: var(--paper-blue-grey-500);
+        --paper-progress-active-color: var(--paper-blue-grey-500);
+      }
+
+      .header {
+        margin: 0px 10px 6px 10px;
+      }
+
+      .header h2 {
+        color: var(--paper-blue-grey-500);
+      }
+
+      paper-progress {
+        width: 100%;
+      }
+
+      iron-icon {
+        margin-right: 10px;
+      }
+
+      .description {
+        font-size: 10px;
+        color: var(--paper-blue-grey-500);
+        font-style: italic;
+      }
+    </style>
+
+
+    <div class="layout horizontal center header">
+      <iron-icon icon="icons:donut-small"></iron-icon>
+      <h2>{{name}}</h2>
+    </div>
+    <paper-progress value="{{valueProgress}}"></paper-progress>
+    <span class="description">{{description}}</span>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  'use strict';
+
+  Polymer({
+
+    is: "collection-header-dialog",
+
+    properties: {
+      name: String,
+      description: String,
+      currentStep: {
+        type: Number,
+        value: 1
+      },
+      numberSteps: {
+        type: Number,
+        value: 1
+      },
+      valueProgress: {
+        type: Number,
+        computed: '_computeValueProgress(currentStep, numberSteps)',
+        value: 0,
+      },
+    },
+
+    _computeValueProgress(first, last) {
+      return this.currentStep*100/this.numberSteps;
+    },
+
+  });
+}());
+</script>

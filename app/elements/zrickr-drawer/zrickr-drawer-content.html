@@ -12,14 +12,52 @@
 
 <dom-module id="zrickr-drawer-content">
   <style include="iron-flex iron-flex-alignment">
+    :host {
+      --drawer-content-item: {
+        color:
+          var(--drawer-content-item-text-color, var(--primary-text-color));
+        background:
+          var(--drawer-content-item-background-color, var(--paper-grey-50));
+        border-bottom:
+          1px solid
+          var(--drawer-content-item-border-color, var(--divider-color));
+      };
+      --drawer-content-subitem: {
+        color:
+          var(--drawer-content-subitem-text-color, var(--secondary-text-color));
+        background:
+          var(--drawer-content-subitem-background-color, var(--paper-grey-50));
+        border-bottom:
+          1px solid
+          var(--drawer-content-subitem-border-color, var(--divider-color));
+        padding-left: 24px;
+        font-size: 90%;
+      };
+    }
+
+    paper-menu {
+      background: var(--drawer-background-color, var(--paper-grey-50));
+      padding-top: 0px;
+    }
+
+    .item {
+      @apply(--drawer-content-item);
+    }
+
+    .item paper-icon-button {
+      color:
+        var(--drawer-content-item-icon-color,
+            var(--drawer-content-subitem-text-color));
+    }
+
+    .subitem {
+      @apply(--drawer-content-subitem);
+    }
+
     .right-button {
       position: absolute;
       right: 3px;
       top: 3px;
-    }
-
-    .item-title {
-      color: var(--paper-grey-700);
     }
 
     .secondary-options {
@@ -28,24 +66,13 @@
       bottom: 5px;
     }
 
-    .subitem {
-      padding-left: 26px;
-      color: var(--paper-teal-700);
-      border-bottom: 1px solid var(--paper-grey-200);
-      font-size: 90%;
-    }
-
-    paper-item {
-      border-bottom: 1px solid var(--paper-grey-100);
-    }
-
   </style>
 
   <template>
     <paper-menu>
       <paper-submenu>
-        <paper-item class="menu-trigger layout horizontal center">
-          <div class="item-title layout horizontal center">
+        <paper-item class="item menu-trigger layout horizontal center">
+          <div class="layout horizontal center">
             <paper-icon-button icon="image:view-comfy"></paper-icon-button>
             <span>My Collections</span>
           </div>
@@ -83,8 +110,8 @@
         </paper-menu>
       </paper-submenu>
       <paper-submenu>
-        <paper-item class="menu-trigger">
-          <div class="item-title layout horizontal center">
+        <paper-item class="item menu-trigger">
+          <div class="layout horizontal center">
             <paper-icon-button icon="social:group"></paper-icon-button>
             <span>My Shared Collections</span>
           </div>
@@ -104,15 +131,15 @@
         </paper-menu>
       </paper-submenu>
       <paper-menu class="secondary-options">
-        <paper-item class="item-title layout horizontal center">
+        <paper-item class="item layout horizontal center">
           <paper-icon-button icon="icons:settings"></paper-icon-button>
           <span>Settings</span>
         </paper-item>
-        <paper-item class="item-title layout horizontal center">
+        <paper-item class="item layout horizontal center">
           <paper-icon-button icon="icons:delete"></paper-icon-button>
           <span>Recycle Bin</span>
         </paper-item>
-        <paper-item class="item-title layout horizontal center">
+        <paper-item class="item layout horizontal center">
           <paper-icon-button icon="icons:help"></paper-icon-button>
           <span>Help and Suggestions</span>
         </paper-item>

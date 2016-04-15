@@ -1,0 +1,53 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+
+<dom-module id="collection-item">
+  <template>
+    <style>
+    </style>
+
+    <p>Hello, <b>{{user}}</b>, you have a collection called <b>{{name}}</b> </p>
+    <paper-input label="Nombre" value="{{name}}"></paper-input>
+    <span id="name"></span>
+    <button on-tap="handleTap">Kick me</button>
+  </template>
+</dom-module>
+
+<script>
+
+  Polymer({
+
+    is: "collection-item",
+
+    properties: {
+      name: {type: String, value: "Balones"},
+      user: {type: String, value: "Josito"}
+    },
+
+    handleTap: function() {
+      alert("HOLA");
+    },
+
+    created: function() {
+      console.log(this.localName + '#' + this.id + ' was created');
+    },
+
+    ready: function() {
+      console.log(this.localName + '#' + this.id + ' has local DOM initialized');
+    },
+
+    attached: function() {
+      console.log(this.localName + '#' + this.id + ' was attached');
+    },
+
+    detached: function() {
+      console.log(this.localName + '#' + this.id + ' was detached');
+    },
+
+    attributeChanged: function(name, type) {
+      console.log(this.localName + '#' + this.id + ' attribute ' + name +
+        ' was changed to ' + this.getAttribute(name));
+    }
+
+  });
+</script>

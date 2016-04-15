@@ -1,8 +1,11 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
-<dom-module id="zrickr-dialog-buttons">
+<dom-module id="collection-new-buttons">
   <template>
+    <style>
+    </style>
+
     <div class="buttons">
       <paper-button
         label="{{labelCancel}}"
@@ -15,8 +18,8 @@
         dialog-dismiss>Back
       </paper-button>
       <paper-button
-        label="{{labelConfirm}}"
-        dialog-confirm>{{labelConfirm}}
+        label="{{labelOk}}"
+        dialog-confirm>{{labelOk}}
       </paper-button>
     </div>
 
@@ -29,13 +32,13 @@
 
   Polymer({
 
-    is: "zrickr-dialog-buttons",
+    is: "collection-new-buttons",
 
     properties: {
-      backDialog: String,
-      labelConfirm: {
+      parentDialog: String,
+      labelOk: {
         type: String,
-        value: 'Confirm',
+        value: 'Next',
       },
       labelCancel: {
         type: String,
@@ -49,7 +52,7 @@
 
     _backTapped() {
       let params = {};
-      params.optionSelected = this.backDialog + "-check";
+      params.optionSelected = this.parentDialog + "-check";
       this.fire('add-item-tapped', params);
     }
 

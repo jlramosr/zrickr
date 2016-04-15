@@ -97,13 +97,13 @@
       let params = {};
       params.message = "Error: " + event.detail.message;
       params.error = true;
-      this.fire('show-message', params);
+      this.fire('message-opened', params);
     },
 
     _userSuccessHandler(event) {
       /*let params = {};
       params.message = event.type + " success!";
-      params.sucess = true;
+      params.success = true;
       this.fire('show-message', params);*/
     },
 
@@ -111,7 +111,7 @@
       let params = {};
       params.message = "An email has been sent to " + this.email;
       params.info = true;
-      this.fire('show-message', params);
+      this.fire('message-opened', params);
     },
 
     _passwordChangedHandler(event) {
@@ -119,7 +119,7 @@
       console.log("HOLA" + event.detail);
       params.message = "Your password has been changed correctly";
       params.info = true;
-      this.fire('show-message', params);
+      this.fire('message-opened', params);
     },
 
   });

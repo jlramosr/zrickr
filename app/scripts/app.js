@@ -41,34 +41,28 @@
     });
 
     //Show Message
-    window.addEventListener('show-message', (event) => {
-      let messageElement = document.createElement('paper-toast');
-      let text = document.createAttribute("text");
-      let id = document.createAttribute("id");
-      let duration = document.createAttribute("duration");
+    window.addEventListener('message-opened', (event) => {
+      let message = document.createElement('zrickr-message');
+      let text = document.createAttribute('text');
       text.value = event.detail.message;
-      id.value = "message";
-      duration.value = "5000";
-      messageElement.setAttributeNode(text);
-      messageElement.setAttributeNode(id);
-      messageElement.setAttributeNode(duration);
+      message.setAttributeNode(text);
+      let type = document.createAttribute('type');
       if (event.detail.error) {
-        messageElement.className = 'error';
+        type.value = 'error'
+        message.setAttributeNode(type);
       }
-      else if (event.detail.sucess) {
-        messageElement.className = 'success';
+      else if (event.detail.success) {
+        type.value = 'success'
+        message.setAttributeNode(type);
       }
-      else if (event.detail.info) {
-        messageElement.className = 'info';
-      }
-      document.body.appendChild(messageElement);
-      messageElement.open();
+      document.body.appendChild(message);
+      message.open();
     });
     //Remove Message from DOM
-    window.addEventListener('iron-overlay-closed', (event) => {
-      let messageElement = document.querySelector('#message');
-      if (messageElement) {
-        messageElement.remove();
+    window.addEventListener('message-closed', (event) => {
+      let message = document.querySelector('zrickr-message');
+      if (message) {
+        message.remove();
       }
     });
 
@@ -94,21 +88,21 @@
 
     //User App Events
     window.addEventListener('add-item-tapped', (event) => {
-      let newCollectionDialog = document.createElement('zrickr-dialog');
+      let newCollectionDialog = document.createElement('zrickr-collection-new-dialog');
       let id = document.createAttribute("id");
       id.value = "newCollectionDialog";
       newCollectionDialog.setAttributeNode(id);
-      /*let optionSelected = event.detail.optionSelected;
+      let optionSelected = event.detail.optionSelected;
       if (optionSelected) {
         let selectedItem = document.createAttribute("selected");
         selectedItem.value = optionSelected;
         newCollectionDialog.setAttributeNode(selectedItem);
-      }*/
+      }
       document.body.appendChild(newCollectionDialog);
       newCollectionDialog.toggle();
     });
     window.addEventListener('new-collection-dialog-next-tapped', (event) => {
-      let newNextCollectionDialog;
+      /*let newNextCollectionDialog;
       let id = document.createAttribute("id");
       let optionSelected = event.detail.optionSelected;
       if (optionSelected == 'users-check') {
@@ -123,7 +117,7 @@
         newNextCollectionDialog.setAttributeNode(id);
         document.body.appendChild(newNextCollectionDialog);
         newNextCollectionDialog.toggle();
-      }
+      }*/
     });
     window.addEventListener('logout-tapped', (event) => {
       userAuth.logout();
