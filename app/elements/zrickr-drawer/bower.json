@@ -1,0 +1,27 @@
+{
+  "name": "zrickr-drawer",
+  "version": "1.0.0",
+  "authors": [
+    "José Luis Ramos (jlramosr@gmail.com)"
+  ],
+  "description": "An element providing a solution to no problem in particular.",
+  "keywords": [
+    "drawer",
+    "lateral"
+  ],
+  "main": "zrickr-drawer.html",
+  "license": "",
+  "homepage": "",
+  "ignore": [
+    "/.*",
+    "/test/",
+    "/demo/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#~1.4.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.1.5",
+    "web-component-tester": "*"
+  }
+}

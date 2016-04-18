@@ -156,12 +156,20 @@
     is: "zrickr-drawer-content",
 
     properties: {
+      /**
+       * Indicate the new password that the user wants to change
+       */
       newPassword: {
         type: String,
         value: '',
       }
     },
 
+
+    /**
+     * When the user tap on the add item button.
+     * @event add-item-tapped
+     */
     _addItemTapped() {
       this.fire("add-item-tapped");
     },
@@ -170,6 +178,10 @@
 
     },
 
+    /**
+     * When the user tap on the right button for each subitem.
+     * @event add-subitem-tapped
+     */
     _addSubItemTapped() {
       this.fire("add-subitem-tapped");
     },

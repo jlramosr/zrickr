@@ -2,11 +2,30 @@
 <link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../../elements/zrickr-header/zrickr-header.html">
 
+<!--
+`<zrickr-drawer-toolbar>` implements a toolbar for a drawer
+
+### Styling
+
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--paper-toolbar-color`| Elements color of the toolbar| `#FFFFFF`
+`--paper-toolbar-background`| Toolbar background color| `--primary-color`
+
+### Accessibility
+
+@element zrickr-drawer-toolbar
+@demo demo/toolbar.html
+-->
+
+
 <dom-module id="zrickr-drawer-toolbar">
   <style>
     :host {
       --paper-toolbar-color:
-          var(--drawer-toolbar-color, #FFF);
+          var(--drawer-toolbar-color, #FFFFFF);
       --paper-toolbar-background:
           var(--drawer-toolbar-background, var(--primary-color));
     }
@@ -25,9 +44,7 @@
 (function() {
 
   Polymer({
-
     is: "zrickr-drawer-toolbar"
-
   });
 
 })();
