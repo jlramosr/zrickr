@@ -3,7 +3,7 @@
   "version": "0.0.3",
   "private": true,
   "authors": [
-    "jlramosr <jlramosr@gmail.com>"
+    "Jose Ramos <jlramosr@gmail.com>"
   ],
   "description": "My Collections",
   "main": "app/index.html",

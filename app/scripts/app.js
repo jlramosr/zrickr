@@ -17,11 +17,11 @@
   // Listen for template bound event to know when bindings
   // have resolved and content has been stamped to the page
   zrickr.addEventListener('dom-change', () => {
-    let userAuth = document.querySelector('user-auth');
+    let zrickrAuth = document.querySelector('zrickr-auth');
     let currentElement;
 
     //Main Switched Event
-    userAuth.addEventListener('user-changed', (event) => {
+    zrickrAuth.addEventListener('user-changed', (event) => {
       if (currentElement) {
         currentElement.remove();
         currentElement = null;
@@ -69,21 +69,21 @@
     //User Login Events
     window.addEventListener('login-tapped', (event) => {
       let zrickrLogin = event.detail;
-      userAuth.provider = zrickrLogin.provider;
-      userAuth.email = zrickrLogin.email;
-      userAuth.password = zrickrLogin.password;
-      userAuth.login();
+      zrickrAuth.provider = zrickrLogin.provider;
+      zrickrAuth.email = zrickrLogin.email;
+      zrickrAuth.password = zrickrLogin.password;
+      zrickrAuth.login();
     });
     window.addEventListener('signin-tapped', (event) => {
       let zrickrLogin = event.detail;
-      userAuth.provider = zrickrLogin.provider;
-      userAuth.email = zrickrLogin.email;
-      userAuth.password = zrickrLogin.password;
-      userAuth.createUser();
+      zrickrAuth.provider = zrickrLogin.provider;
+      zrickrAuth.email = zrickrLogin.email;
+      zrickrAuth.password = zrickrLogin.password;
+      zrickrAuth.createUser();
     });
     window.addEventListener('reset-password-tapped', (event) => {
-      userAuth.email = event.detail.email;
-      userAuth.resetPassword();
+      zrickrAuth.email = event.detail.email;
+      zrickrAuth.resetPassword();
     });
 
     //User App Events
@@ -120,16 +120,16 @@
       }*/
     });
     window.addEventListener('logout-tapped', (event) => {
-      userAuth.logout();
+      zrickrAuth.logout();
     });
     window.addEventListener('change-password-tapped', (event) => {
       let zrickr = event.detail;
       let infoUser = zrickr.user.password;
-      userAuth.email = infoUser.email;
-      userAuth.changePassword(zrickr.oldPassword, zrickr.newPassword);
+      zrickrAuth.email = infoUser.email;
+      zrickrAuth.changePassword(zrickr.oldPassword, zrickr.newPassword);
     });
     window.addEventListener('signout-tapped', (event) => {
-      userAuth.removeUser();
+      zrickrAuth.removeUser();
     });
     window.addEventListener('menu-tapped', (event) => {
       let mainPanel = document.querySelector('#mainPanel');
