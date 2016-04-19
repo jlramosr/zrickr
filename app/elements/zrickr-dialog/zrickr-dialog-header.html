@@ -3,39 +3,66 @@
 <link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
+<!--
+`<zrickr-dialog-header>` is the header element of a dialog
+
+    <zrickr-dialog-header
+      title="Dialog Title"
+      description="Dialog Description">
+    </zrickr-dialog-header>
+
+When a dialog belongs to a workflow, it be able to add a progress bar
+indicating the current step and the number total of the workflow steps
+
+    <zrickr-dialog-header
+      title="Dialog Title"
+      description="Dialog Description"
+      current-step="1"
+      number-steps="3">
+    </zrickr-dialog-header>
+
+### Styling
+
+The following custom properties are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--dialog-header-icon-color`| Icon color of the header| `--primary-color`
+`--dialog-header-text-color`| Text color of the header title| `--primary-color`
+`--dialog-header-progress-color`| Main color of the progress bar| `--primary-color`
+`--dialog-header-description-color`| Text color of the header description| `--primary-color`
+
+@element zrickr-dialog-header
+@demo demo/index.html
+-->
+
 <dom-module id="zrickr-dialog-header">
   <template>
     <style include="iron-flex iron-flex-alignment">
       :host {
-        --iron-icon-fill-color: var(--paper-blue-grey-500);
-        --paper-progress-active-color: var(--paper-blue-grey-500);
-      }
-
-      .header {
-        margin: 0px 10px 6px 10px;
-      }
-
-      .header h2 {
-        color: var(--paper-blue-grey-500);
-      }
-
-      paper-progress {
-        width: 100%;
+        --iron-icon-fill-color:
+          var(--dialog-header-icon-color,--primary-color);
+        --paper-progress-active-color:
+          var(--dialog-header-progress-color,--primary-color);
       }
 
       iron-icon {
         margin-right: 10px;
       }
 
+      .header h2 {
+        color: var(--dialog-header-text-color, --primary-color);
+        padding-bottom: 2px;
+      }
+
       .description {
         font-size: 10px;
-        color: var(--paper-blue-grey-500);
+        color: var(--dialog-header-description-color, --primary-color);
         font-style: italic;
       }
     </style>
 
-
-    <div class="layout horizontal center header">
+    <div class=" header layout horizontal center center-justified">
       <iron-icon icon="icons:donut-small"></iron-icon>
       <h2>{{title}}</h2>
     </div>
@@ -53,26 +80,45 @@
     is: "zrickr-dialog-header",
 
     properties: {
+      /**
+       * Header title of the dialog
+       */
       title: String,
+      /**
+       * Header description of the dialog
+       */
       description: String,
+      /**
+       * If the dialog is part of a workflow, it indicates the current step
+       * of the process
+       */
       currentStep: {
         type: Number,
         value: 1
       },
+      /**
+       * If the dialog is part of a workflow, it indicates the total number
+       * of process steps
+       */
       numberSteps: {
         type: Number,
         value: 1
       },
+      /**
+       * Filled percentage of the progress bar
+       */
       valueProgress: {
         type: Number,
         computed: '_computeValueProgress(currentStep, numberSteps)',
-        value: 0,
-      },
+        readOnly: true,
+        value: 0
+      }
     },
 
-    _computeValueProgress(first, last) {
+    _computeValueProgress() {
+      if (this.numberSteps <= 0) return 0;
       return this.currentStep*100/this.numberSteps;
-    },
+    }
 
   });
 }());

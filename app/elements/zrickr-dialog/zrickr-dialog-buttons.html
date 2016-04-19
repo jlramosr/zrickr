@@ -1,8 +1,33 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
+<!--
+`<zrickr-dialog-buttons>` is the footer element of a dialog and it contains
+the buttons that interact with it
+
+    <zrickr-dialog-buttons back label-confirm="OK!"></zrickr-dialog-buttons>
+
+### Styling
+
+The following custom properties are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--dialog-buttons-color`| Buttons color| `--secondary-text-color`
+
+@element zrickr-dialog-buttons
+@demo demo/index.html
+-->
+
 <dom-module id="zrickr-dialog-buttons">
+  <style>
+    .buttons {
+      color: var(--dialog-buttons-color, --secondary-text-color);
+    }
+  </style>
+
   <template>
+
     <div class="buttons">
       <paper-button
         label="{{labelCancel}}"
@@ -32,25 +57,30 @@
     is: "zrickr-dialog-buttons",
 
     properties: {
-      backDialog: String,
-      labelConfirm: {
-        type: String,
-        value: 'Confirm',
-      },
-      labelCancel: {
-        type: String,
-        value: 'Cancel',
-      },
+      /**
+       * label for the confirm or accept button
+       */
+      labelConfirm: String,
+      /**
+       * label for the cancel button
+       */
+      labelCancel: String,
+      /**
+       * If it should be a back button
+       */
       back: {
         type:Boolean,
         value: false,
-      },
+      }
     },
 
+    /**
+     * Fired when the dialog closes with the back button.
+     * @event zrickr-dialog-buttons-back-tapped
+     * @detail {{backDialog: String}}
+     */
     _backTapped() {
-      let params = {};
-      params.optionSelected = this.backDialog + "-check";
-      this.fire('add-item-tapped', params);
+      this.fire('zrickr-dialog-buttons-back-tapped');
     }
 
   });

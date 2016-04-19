@@ -1,4 +1,4 @@
-# Zrickr Frontend
+# Zrickr
 
 Zrickr Fontend using Polymer to organizate films, series, books, etc.
 

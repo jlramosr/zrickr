@@ -13,7 +13,7 @@
   ],
   "license": "MIT",
   "homepage": "",
-  "dependencies": {
+  "dependencies": {    
     "polymer": "Polymer/polymer#~1.4.0",
     "paper-toolbar": "PolymerElements/paper-toolbar#~1.1.4",
     "paper-input": "PolymerElements/paper-input#~1.1.10",

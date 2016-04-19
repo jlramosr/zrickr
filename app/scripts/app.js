@@ -101,23 +101,23 @@
       document.body.appendChild(newCollectionDialog);
       newCollectionDialog.toggle();
     });
-    window.addEventListener('new-collection-dialog-next-tapped', (event) => {
-      /*let newNextCollectionDialog;
+    window.addEventListener('collection-new-dialog-next-tapped', (event) => {
+      let newNextCollectionDialog;
       let id = document.createAttribute("id");
       let optionSelected = event.detail.optionSelected;
       if (optionSelected == 'users-check') {
-        newNextCollectionDialog = document.createElement('collection-new-users-dialog');
+        newNextCollectionDialog = document.createElement('zrickr-collection-new-users-dialog');
         id.value = "newUsersCollectionDialog";
       }
       else if (optionSelected == 'custom-check') {
-        newNextCollectionDialog = document.createElement('collection-new-custom-dialog');
+        newNextCollectionDialog = document.createElement('zrickr-collection-new-custom-dialog');
         id.value = "newCustomCollectionDialog";
       }
       if (newNextCollectionDialog) {
         newNextCollectionDialog.setAttributeNode(id);
         document.body.appendChild(newNextCollectionDialog);
         newNextCollectionDialog.toggle();
-      }*/
+      }
     });
     window.addEventListener('logout-tapped', (event) => {
       zrickrAuth.logout();

@@ -5,10 +5,22 @@
 <link rel="import" href="../../elements/zrickr-drawer/zrickr-drawer.html">
 <link rel="import" href="../../elements/zrickr-main/zrickr-main.html">
 
+<!--
+`<zrickr-app>` provides a web main structure with a drawer
+and a main content
+
+Example:
+
+    <zrickr-app></zrickr-app>
+
+@element zrickr-app
+@demo demo/index.html
+-->
+
 <dom-module id="zrickr-app">
   <style include="iron-flex iron-flex-alignment">
     #drawer {
-      background: var(--drawer-background-color, var(--paper-grey-50));
+      background: var(--drawer-background-color, --paper-grey-50);
     }
   </style>
 
@@ -30,10 +42,21 @@
     is: 'zrickr-app',
 
     properties: {
+      positionDrawer: {
+        type: String,
+        value: 'left'
+      },
       user: {
         type: Object,
-      },
+      }
     },
+
+    attached() {
+      let mainPanel = this.$.mainPanel;
+      if (this.positionDrawer == 'right') {
+        mainPanel.rightDrawer = true;
+      }
+    }
 
   });
 })();

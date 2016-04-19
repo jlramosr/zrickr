@@ -11,17 +11,23 @@
     <style include="iron-flex iron-flex-alignment">
     </style>
 
-    <zrickr-dialog id="dialog">
+    <zrickr-dialog
+      id="dialog"
+      title="New Collection"
+      description="Indicate how the collection will be created"
+      current-step="1"
+      number-steps="4"
+      label-confirm="Next">
       <paper-input
+        id="nameCollection"
         label="Collection Name"
         value="{{collectionName}}"
-        id="nameCollection"
         required
         pattern="^[A-Za-z0-9][A-Za-z0-9'\s-]*$"
         error-message="Only letters, number, spaces and dash are allowed"
         char-counter maxlength="20">
       </paper-input>
-      <iron-image src="../../images/touch/apple-touch-icon.png"></iron-image>
+      
       <paper-radio-group id="options" selected="{{selected}}" class="layout vertical">
         <paper-radio-button noink name="custom-check">
           <div class="layout horizontal center">
@@ -59,14 +65,14 @@
     },
 
     listeners: {
-      'zrickr-dialog-confirm-tapped': '_next'
+      'dialog-confirm-tapped': '_next'
     },
 
     _next(event) {
       let params = {};
       let itemSelected = this.$.options.selectedItem;
       params.optionSelected = itemSelected.name;
-      this.fire('zrickr-collection-new-dialog-next-tapped', params);
+      this.fire('collection-new-dialog-next-tapped', params);
     },
 
     toggle() {

@@ -6,6 +6,27 @@
 <link rel="import" href="../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../elements/zrickr-header/zrickr-header.html">
+<!--
+`<zrickr-login>` implements a main structure and design for login screen
+
+Example:
+
+    <zrickr-login></zrickr-login>
+
+### Styling
+
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--login-reset-password-color`| Reset password text color| `--paper-teal-900`
+`--login-login-password-background-color`| Main login box background color| `--primary-background-color`
+`--login-password-button-background-color`| Login button background color| `--primary-color`
+`--login-google-button-background-color`| Google login button background color| `--primary-color`
+
+@element zrickr-login
+@demo demo/index.html
+-->
 
 <dom-module id="zrickr-login">
   <style is="custom-style" include="iron-flex iron-flex-alignment">
@@ -20,7 +41,7 @@
     }
 
     #loginPasswordProvider {
-      background: var(--primary-color);
+      background: var(--login-login-password-background-color,--primary-background-color);
       padding: 16px;
       margin: 16px;
     }
@@ -33,7 +54,7 @@
       float: right;
       font-size: 0.8em;
       font-style: italic;
-      color: var(--paper-teal-900);
+      color: var(--login-reset-password-color,--paper-teal-900);
     }
 
     #createNewAccount {
@@ -45,7 +66,7 @@
     paper-button.google-signin {
       text-transform: none;
       color: #fff;
-      background: var(--primary-color);
+      background: var(--login-google-button-background-color,--primary-color);
     }
 
     paper-button.google-signin img {
@@ -58,12 +79,7 @@
       margin-top: 10px;
       text-transform: uppercase;
       color: #fff;
-      background: var(--primary-color);
-    }
-
-    paper-button.new {
-      color: #fff;
-      background: var(--paper-teal-900);
+      background: var(--login-password-button-background-color,--primary-color);
     }
 
 }
@@ -155,6 +171,10 @@
       this.fire("signin-tapped", this);
     },
 
+    /**
+     * This event is fired when the user tap on reset password button
+     * @event reset-password-tapped
+     */
     _resetPasswordTapped() {
       let emailLogin = this.$.emailLogin;
       if (emailLogin.validate()) {

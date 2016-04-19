@@ -4,23 +4,49 @@
 <link rel="import" href="zrickr-dialog-header.html">
 <link rel="import" href="zrickr-dialog-buttons.html">
 
+<!--
+`<zrickr-dialog>` provides a general structure for all dialogs of the
+application, with a common header and footer.
+
+    <zrickr-dialog
+      title="New Collection"
+      description="Indicate how the collection will be created">
+        CONTENT DIALOG
+    </zrickr-dialog>
+
+When the dialog belongs to a workflow, it be able to add a progress bar
+indicating the current step and the number total of the workflow steps.
+
+    <zrickr-dialog
+      title="Dialog Title"
+      description="Dialog Description"
+      current-step="1"
+      number-steps="3">
+        CONTENT DIALOG
+    </zrickr-dialog>
+
+@element zrickr-dialog
+@demo demo/index.html
+-->
+
 <dom-module id="zrickr-dialog">
   <template>
+
     <style include="iron-flex iron-flex-alignment">
     </style>
 
     <paper-dialog modal id="dialog" class="layout vertical">
       <zrickr-dialog-header
-        title="New Collection"
-        description="Indicate how the collection will be created"
-        current-step="1"
-        number-steps="4">
+        title="{{title}}"
+        description="{{description}}"
+        current-step="{{currentStep}}"
+        number-steps="{{numberSteps}}">
       </zrickr-dialog-header>
       <content></content>
       <zrickr-dialog-buttons
-        back
-        back-dialog="custom"
-        label-confirm="Create">
+        id="buttons"
+        label-cancel="{{labelCancel}}"
+        label-confirm="{{labelConfirm}}">
       </zrickr-dialog-buttons>
     </paper-dialog>
 
@@ -36,22 +62,82 @@
     is: "zrickr-dialog",
 
     properties: {
+      /**
+       * Header title of the dialog
+       */
+      title: String,
+      /**
+       * Header description of the dialog
+       */
+      description: String,
+      /**
+       * If the dialog is part of a workflow, it indicates the current step
+       * of the process
+       */
+      currentStep: {
+        type: Number,
+        value: 1
+      },
+      /**
+       * If the dialog is part of a workflow, it indicates the total number
+       * of process steps
+       */
+      numberSteps: {
+        type: Number,
+        value: 1
+      },
+      /**
+       * If the dialog is part of a workflow, it indicates the id of the
+       * previous dialog
+       */
+      backDialog: String,
+      /**
+       * label for the confirm or accept the dialog
+       */
+      labelConfirm: {
+        type: String,
+        value: 'Confirm',
+      },
+      /**
+       * Label for the cancel button
+       */
+      labelCancel: {
+        type: String,
+        value: 'Cancel',
+      }
     },
 
     listeners: {
-      'iron-overlay-closed': '_zrickrDialogClosed'
+      'iron-overlay-closed': '_closed',
+      'zrickr-dialog-buttons-back-tapped': '_back'
     },
 
+    /**
+     * Throw the dialog
+     */
     toggle() {
       this.$.dialog.toggle();
     },
 
-    _zrickrDialogClosed(event) {
+    /**
+     * Fired when the dialog closes confirming or accepting it
+     * @event dialog-confirm-tapped
+     * @detail {{zrickrDialog}}
+     */
+    _closed(event) {
       if (event.detail.confirmed) {
-        this.fire('zrickr-dialog-confirm-tapped', this);
+        this.fire('dialog-confirm-tapped', this);
       }
     },
 
+    /**
+     * Fired when the dialog closes with the back button.
+     * @event dialog-back-tapped
+     * @detail {{zrickrDialog}}
+     */
+    _back(event) {
+      this.fire('dialog-back-tapped', this);
+    }
   });
 }());
 </script>

@@ -15,29 +15,29 @@
     :host {
       --drawer-content-item: {
         color:
-          var(--drawer-content-item-text-color, var(--primary-text-color));
+          var(--drawer-content-item-text-color, --primary-text-color);
         background:
-          var(--drawer-content-item-background-color, var(--paper-grey-50));
+          var(--drawer-content-item-background-color, --paper-grey-50);
         border-bottom:
           1px solid
-          var(--drawer-content-item-border-color, var(--divider-color));
+          var(--drawer-content-item-border-color, --divider-color);
       };
       --drawer-content-subitem: {
         color:
-          var(--drawer-content-subitem-text-color, var(--secondary-text-color));
+          var(--drawer-content-subitem-text-color, --secondary-text-color);
         background:
-          var(--drawer-content-subitem-background-color, var(--paper-grey-50));
+          var(--drawer-content-subitem-background-color, --paper-grey-50);
         border-bottom:
           1px solid
-          var(--drawer-content-subitem-border-color, var(--divider-color));
+          var(--drawer-content-subitem-border-color, --divider-color);
         padding-left: 24px;
         font-size: 90%;
       };
     }
 
     paper-menu {
-      background: var(--drawer-background-color, var(--paper-grey-50));
-      padding-top: 0px;
+      background: var(--drawer-background-color, --paper-grey-50);
+      padding: 0px;
     }
 
     .item {
@@ -47,7 +47,7 @@
     .item paper-icon-button {
       color:
         var(--drawer-content-item-icon-color,
-            var(--drawer-content-subitem-text-color));
+            --drawer-content-subitem-text-color);
     }
 
     .subitem {
@@ -96,7 +96,7 @@
             </paper-icon-button>
             <paper-ripple id="ripple" style="pointer-events: none;"></paper-ripple>
           </paper-item>
-          <paper-item class="subitem layout horizontal center">
+          <paper-item class="subitem layout horizontal center" focused>
             <paper-icon-button
               src="../images/touch/icon-72x72.png">
             </paper-icon-button>

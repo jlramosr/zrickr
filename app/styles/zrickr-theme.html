@@ -6,30 +6,44 @@
   :root {
     /***** MAIN DEFAULT *****/
     --primary-color: var(--paper-blue-grey-700);
-    --primary-text-color: var(--paper-blue-grey-600);
+    --primary-text-color: var(--paper-blue-grey-800);
     --secondary-text-color: var(--paper-pink-900);
-    --primary-background-color: #FFFFFF;
+    --primary-background-color: #FAFAFA;
     --divider-color: var(--paper-amber-100);
     --disabled-text-color: #9b9b9b;
     --accent-color: var(--paper-pink-a200);
     /***** MAIN CUSTOM *****/
+    --secondary-color: var(--paper-blue-grey-500);
     --tertiary-text-color: var(--paper-pink-900);
     --secondary-background-color: var(--paper-amber-50);
     --secondary-divider-color: var(--paper-grey-100);
 
 
+    /* Main */
 
     /* Drawer */
     --drawer-content-subitem-border-color: var(--secondary-divider-color);
 
-    /* Main */
-
+    /* Dialogs */
+    --dialog-header-progress-color: var(--secondary-color);
   }
 
 
   body {
     @apply(--layout-fullbleed);
     @apply(--layout-vertical);
+    @apply(--paper-font-common-base);
+    background: var(--primary-background-color);
+    color: #333;
+    padding: 0px !important;
+  }
+
+  #zrickr-drawer-content {
+    @apply(--paper-font-code1);
+  }
+
+  .content {
+    padding: 25px;
   }
 
   .space {
