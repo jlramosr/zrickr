@@ -1,0 +1,71 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="zrickr-collection-new-behavior.html">
+<link rel="import" href="collection-header-dialog.html">
+<link rel="import" href="collection-new-buttons.html">
+
+<dom-module id="zrickr-collection-new-users-dialog">
+  <template>
+    <style include="iron-flex iron-flex-alignment">
+      :host {
+        --iron-icon-fill-color: var(--paper-amber-700);
+      }
+
+      paper-dialog {
+        padding-left: 20px;
+      }
+
+      iron-icon {
+        margin-right: 2px;
+        margin-left: 4px;
+      }
+
+      #collections paper-input {
+        margin-right: 16px;
+      }
+    </style>
+
+    <zrickr-dialog
+      title="{{collectionName}}"
+      description="Indicate who want to share the collection with"
+      current-step="{{currentStep}}"
+      number-steps="{{numberSteps}}">
+      <paper-dialog modal id="dialog" class="layout vertical">
+        <collection-header-dialog
+          name="New User Collection"
+          current-step="{{currentStep}}"
+          number-steps="{{numberSteps}}">
+        </collection-header-dialog>
+        <paper-dialog-scrollable>
+          <div id="collections" class="layout horizontal center">
+            <paper-input label="Name" value="{{name}}"></paper-input>
+            <paper-input label="Author" value="{{author}}"></paper-input>
+          </div>
+        </paper-dialog-scrollable>
+        <collection-new-buttons
+          back
+          parent-dialog="users"
+          label-ok="Create">
+        </collection-new-buttons>
+      </paper-dialog>
+    </zrickr-dialog>
+
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  'use strict';
+
+  Polymer({
+
+    is: "zrickr-collection-new-users-dialog",
+
+    behaviors: [ZrickrCollectionNewBehavior]
+
+  });
+}());
+</script>

@@ -1,11 +1,17 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
 <!--
 `<zrickr-dialog-buttons>` is the footer element of a dialog and it contains
-the buttons that interact with it
+the buttons that interact with it.
 
-    <zrickr-dialog-buttons back label-confirm="OK!"></zrickr-dialog-buttons>
+    <zrickr-dialog-buttons label-confirm="OK!"></zrickr-dialog-buttons>
+
+If we'd want add a back button (totally different to cancel button) to go
+back a previous dialog, we just add `back` property.
+
+    <zrickr-dialog-buttons back></zrickr-dialog-buttons>
 
 ### Styling
 
@@ -13,38 +19,62 @@ The following custom properties are available for styling:
 
 Custom property | Description | Default
 ----------------|-------------|----------
-`--dialog-buttons-color`| Buttons color| `--secondary-text-color`
+`--dialog-buttons-background-color`| Background buttons color| `--primary-color`
+`--dialog-buttons-background-cancel color`| Background cancel buttons color| `--primary-color`
+`--dialog-buttons-color`| Text buttons color| #FFFFFF
+`--dialog-buttons-cancel-color`| Text buttons cancel color| #FFFFFF
 
 @element zrickr-dialog-buttons
 @demo demo/index.html
 -->
 
 <dom-module id="zrickr-dialog-buttons">
-  <style>
-    .buttons {
-      color: var(--dialog-buttons-color, --secondary-text-color);
+  <style include="iron-flex iron-flex-alignment">
+    :host {
+      margin-top: 14px;
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+      @apply(--layout-end-justified);
+    }
+    paper-button.cancel {
+      background-color:
+        var(--dialog-buttons-cancel-background-color, --primary-color);
+      color:
+        var(--dialog-buttons-cancel-color, #FFFFFF);
+    }
+    paper-button.nocancel {
+      background-color:
+        var(--dialog-buttons-background-color, --primary-color);
+      color:
+        var(--dialog-buttons-color, #FFFFFF);
+      font-weight: bold;
     }
   </style>
 
   <template>
-
-    <div class="buttons">
-      <paper-button
-        label="{{labelCancel}}"
-        dialog-dismiss>{{labelCancel}}
-      </paper-button>
-      <paper-button
-        hidden="{{!back}}"
-        on-tap="_backTapped"
-        label="Back"
-        dialog-dismiss>Back
-      </paper-button>
-      <paper-button
-        label="{{labelConfirm}}"
-        dialog-confirm>{{labelConfirm}}
-      </paper-button>
-    </div>
-
+    <paper-button
+      class="cancel"
+      raised
+      label="{{labelCancel}}"
+      dialog-dismiss>
+        {{labelCancel}}
+    </paper-button>
+    <paper-button
+      class="nocancel"
+      raised
+      hidden="{{!back}}"
+      on-tap="_backTapped"
+      label="Back"
+      dialog-dismiss>
+        <iron-icon icon="icons:chevron-left"></iron-icon>Back
+    </paper-button>
+    <paper-button
+      class="nocancel"
+      raised
+      label="{{labelConfirm}}"
+      dialog-confirm>
+        {{labelConfirm}}<iron-icon icon="icons:chevron-right"></iron-icon>
+    </paper-button>
   </template>
 </dom-module>
 

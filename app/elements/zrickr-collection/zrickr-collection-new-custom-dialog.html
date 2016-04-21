@@ -1,20 +1,18 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../elements/zrickr-dialog/zrickr-dialog.html">
+<link rel="import" href="zrickr-collection-new-behavior.html">
 <link rel="import" href="collection-fields-edit.html">
 
 <dom-module id="zrickr-collection-new-custom-dialog">
   <template>
-
     <zrickr-dialog
-      id="dialog"
-      title="{{collectionName}}"
-      description="Indicate how the collection will be created"
-      current-step="2"
-      number-steps="4"
-      label-confirm="Next">
+      id="newCollectionCustom"
+      title="[[collectionName]]"
+      description="Define the collection structure and all its fields"
+      current-step="[[currentStep]]"
+      number-steps="[[numberSteps]]">
       <collection-fields-edit></collection-fields-edit>
     </zrickr-dialog>
-
   </template>
 </dom-module>
 
@@ -26,16 +24,15 @@
 
     is: "zrickr-collection-new-custom-dialog",
 
-    properties: {
-      collectionName: {
-        type: String,
-        readonly: true
-      }
+    behaviors: [ZrickrCollectionNewBehavior],
+
+    nextStep(event) {
+      this._toggleNextDialog('zrickr-collection-shared-dialog');
     },
 
-    toggle() {
-      this.$.dialog.toggle();
-    },
+    previousStep(event) {
+      this._toggleNextDialog('zrickr-collection-new-dialog', true);
+    }
 
   });
 }());

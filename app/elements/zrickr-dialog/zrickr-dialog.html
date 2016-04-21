@@ -1,5 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="zrickr-dialog-header.html">
 <link rel="import" href="zrickr-dialog-buttons.html">
@@ -31,25 +31,36 @@ indicating the current step and the number total of the workflow steps.
 
 <dom-module id="zrickr-dialog">
   <template>
-
     <style include="iron-flex iron-flex-alignment">
+      paper-dialog {
+        @apply(--layout-vertical);
+      }
+      paper-dialog paper-dialog-scrollable {
+        margin-top: 0px;
+        --paper-dialog-scrollable: {
+          box-sizing: border-box;
+          max-height: 300px;
+          max-width: 500px;
+        }
+      }
     </style>
 
-    <paper-dialog modal id="dialog" class="layout vertical">
+    <paper-dialog modal>
       <zrickr-dialog-header
         title="{{title}}"
         description="{{description}}"
         current-step="{{currentStep}}"
         number-steps="{{numberSteps}}">
       </zrickr-dialog-header>
-      <content></content>
+      <paper-dialog-scrollable>
+        <content></content>
+      </paper-dialog-scrollable>
       <zrickr-dialog-buttons
         id="buttons"
         label-cancel="{{labelCancel}}"
         label-confirm="{{labelConfirm}}">
       </zrickr-dialog-buttons>
     </paper-dialog>
-
   </template>
 </dom-module>
 
@@ -87,11 +98,6 @@ indicating the current step and the number total of the workflow steps.
         value: 1
       },
       /**
-       * If the dialog is part of a workflow, it indicates the id of the
-       * previous dialog
-       */
-      backDialog: String,
-      /**
        * label for the confirm or accept the dialog
        */
       labelConfirm: {
@@ -112,11 +118,20 @@ indicating the current step and the number total of the workflow steps.
       'zrickr-dialog-buttons-back-tapped': '_back'
     },
 
+    attached() {
+      this.$$('paper-dialog').refit();
+      this.$$('paper-dialog').center();
+      this.$$('paper-dialog').constrain();
+      if (this.currentStep > 1) {
+        this.$.buttons.back = true;
+      }
+    },
+
     /**
      * Throw the dialog
      */
     toggle() {
-      this.$.dialog.toggle();
+      this.$$('paper-dialog').toggle();
     },
 
     /**
@@ -138,6 +153,7 @@ indicating the current step and the number total of the workflow steps.
     _back(event) {
       this.fire('dialog-back-tapped', this);
     }
+
   });
 }());
 </script>

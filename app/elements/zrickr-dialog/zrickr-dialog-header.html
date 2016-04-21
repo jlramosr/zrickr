@@ -46,8 +46,10 @@ Custom property | Description | Default
           var(--dialog-header-progress-color,--primary-color);
       }
 
-      iron-icon {
-        margin-right: 10px;
+      .header {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-center-justified);
       }
 
       .header h2 {
@@ -55,14 +57,22 @@ Custom property | Description | Default
         padding-bottom: 2px;
       }
 
+      iron-icon {
+        margin-right: 10px;
+      }
+
       .description {
         font-size: 10px;
         color: var(--dialog-header-description-color, --primary-color);
         font-style: italic;
       }
+
+      paper-progress {
+        width: 100%;
+      }
     </style>
 
-    <div class=" header layout horizontal center center-justified">
+    <div class="header">
       <iron-icon icon="icons:donut-small"></iron-icon>
       <h2>{{title}}</h2>
     </div>

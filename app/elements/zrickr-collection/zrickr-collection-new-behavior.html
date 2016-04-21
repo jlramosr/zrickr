@@ -1,0 +1,67 @@
+<script>
+  ZrickrCollectionNewBehavior = {
+
+    properties: {
+      collectionName: String,
+      optionSelected: {
+        type: String,
+        value: 'custom'
+      },
+      currentStep: Number,
+      numberSteps: {
+        type: Number,
+        value: 4,
+        readonly: true
+      }
+    },
+
+    listeners: {
+      'dialog-confirm-tapped': '_nextStep',
+      'dialog-back-tapped': '_previousStep'
+    },
+
+    attached() {
+      if (this.currentStep < this.numberSteps) {
+        this.$$('zrickr-dialog').labelConfirm = "Next";
+      }
+    },
+
+    toggle() {
+      this.$$('zrickr-dialog').toggle();
+    },
+
+    _nextStep(event) {
+      if (this.$.nameCollection.validate()) {
+        if (this.$$('zrickr-dialog').id == event.detail.id) {
+          this.nextStep();
+        }
+      }
+      else {
+        event.stopPropagation();
+      }
+    },
+
+    _previousStep(event) {
+      if (this.$$('zrickr-dialog').id == event.detail.id) {
+        this.previousStep();
+      }
+    },
+
+    _toggleNextDialog(selectorDialog, back=false) {
+      newDialog = document.createElement(selectorDialog);
+      if (newDialog) {
+        if (back) {
+          this.parentElement.toggle();
+          this.remove();
+        }
+        else {
+          newDialog.optionSelected = this.optionSelected;
+          newDialog.collectionName = this.collectionName;
+          newDialog.currentStep = this.currentStep + 1;
+          this.appendChild(newDialog);
+          newDialog.toggle();
+        }
+      }
+    }
+  };
+</script>
