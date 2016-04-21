@@ -9,10 +9,22 @@
 <link rel="import" href="zrickr-collection-new-custom-dialog.html">
 <link rel="import" href="zrickr-collection-new-users-dialog.html">
 
+<!--
+`<zrickr-collection-new-dialog>` is the first dialog in the process of
+a collection creation.
+
+    <zrickr-collection-new-dialog></zrickr-collection-new-dialog>
+
+@element zrickr-collection-new-dialog
+@demo demo/index.html
+-->
+
 <dom-module id="zrickr-collection-new-dialog">
   <template>
     <style include="iron-flex iron-flex-alignment">
-
+      paper-radio-group {
+        @apply(--layout-vertical);
+      }
     </style>
 
     <zrickr-dialog
@@ -52,6 +64,12 @@
 
     behaviors: [ZrickrCollectionNewBehavior],
 
+    /**
+     * Executed when the user tap on next button (it's always included in
+     * the callback of `dialog-confirm-tapped` listener). This function
+     * toggle `zrickr-collection-new-users-dialog` or
+     * `zrickr-collection-new-custom-dialog` depending on the selected option
+     */
     nextStep() {
       if (this.$.nameCollection.validate()) {
         if (this.optionSelected == 'users') {

@@ -1,13 +1,36 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
 <script>
+  /**
+  `ZrickrCollectionNewBehavior` enables all common properties and behaviors
+  of the new collection creation process.
+
+  @demo demo/index.html
+  @polymerBehavior ZrickrCollectionNewBehavior
+  */
   ZrickrCollectionNewBehavior = {
 
     properties: {
+      /**
+       * Name of the collection will be created.
+       */
       collectionName: String,
+      /**
+       * Type of collection (`custom` if it will be a custom collection or
+       * `users` if the fields and properties of the new collection will get
+       * by other public collection schemas).
+       */
       optionSelected: {
         type: String,
         value: 'custom'
       },
+      /**
+       * Current step of the creation process.
+       */
       currentStep: Number,
+      /**
+       * Total number of steps in the creation process.
+       */
       numberSteps: {
         type: Number,
         value: 4,
@@ -26,10 +49,16 @@
       }
     },
 
+    /**
+     * Throw the dialog
+     */
     toggle() {
       this.$$('zrickr-dialog').toggle();
     },
 
+    /**
+     * Function called when the user tap on the 'confirm' or 'next' button.
+     */
     _nextStep(event) {
       if (this.$.nameCollection.validate()) {
         if (this.$$('zrickr-dialog').id == event.detail.id) {
@@ -41,12 +70,22 @@
       }
     },
 
+    /**
+     * Function called when the user tap on the 'back'' button.
+     */
     _previousStep(event) {
       if (this.$$('zrickr-dialog').id == event.detail.id) {
         this.previousStep();
       }
     },
 
+    /**
+     * Throw the next dialog in the creation process. If `back` parameter is
+     * equal to true, the next dialog is the parent of current dialog.
+     *
+     * @param {string} selectorDialog Next dialog identified by selector.
+     * @param {boolean} back Previous dialog identified by selector.
+     */
     _toggleNextDialog(selectorDialog, back=false) {
       newDialog = document.createElement(selectorDialog);
       if (newDialog) {

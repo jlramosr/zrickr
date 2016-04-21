@@ -32,35 +32,43 @@ indicating the current step and the number total of the workflow steps.
 <dom-module id="zrickr-dialog">
   <template>
     <style include="iron-flex iron-flex-alignment">
-      paper-dialog {
-        @apply(--layout-vertical);
-      }
+
       paper-dialog paper-dialog-scrollable {
-        margin-top: 0px;
         --paper-dialog-scrollable: {
-          box-sizing: border-box;
-          max-height: 300px;
-          max-width: 500px;
+          @apply(--layout-vertical);
+          box-sizing: content-box;
+          width: 520px;
+          min-width: 240px;
         }
       }
+
+      .contents {
+        @apply(--layout-vertical);
+        @apply(--layout-center);
+      }
+
     </style>
 
     <paper-dialog modal>
-      <zrickr-dialog-header
-        title="{{title}}"
-        description="{{description}}"
-        current-step="{{currentStep}}"
-        number-steps="{{numberSteps}}">
-      </zrickr-dialog-header>
       <paper-dialog-scrollable>
-        <content></content>
-      </paper-dialog-scrollable>
-      <zrickr-dialog-buttons
-        id="buttons"
-        label-cancel="{{labelCancel}}"
-        label-confirm="{{labelConfirm}}">
-      </zrickr-dialog-buttons>
-    </paper-dialog>
+        <zrickr-dialog-header
+          title="{{title}}"
+          description="{{description}}"
+          current-step="{{currentStep}}"
+          number-steps="{{numberSteps}}">
+        </zrickr-dialog-header>
+        <div>
+          <div class="contents">
+            <content></content>
+          </div>
+          <zrickr-dialog-buttons
+            id="buttons"
+            label-cancel="{{labelCancel}}"
+            label-confirm="{{labelConfirm}}">
+          </zrickr-dialog-buttons>
+        </div>
+      </paper-dialog>
+    </paper-dialog-scrollable>
   </template>
 </dom-module>
 
@@ -74,23 +82,23 @@ indicating the current step and the number total of the workflow steps.
 
     properties: {
       /**
-       * Header title of the dialog
+       * Header title of the dialog.
        */
       title: String,
       /**
-       * Header description of the dialog
+       * Header description of the dialog.
        */
       description: String,
       /**
        * If the dialog is part of a workflow, it indicates the current step
-       * of the process
+       * of the process.
        */
       currentStep: {
         type: Number,
         value: 1
       },
       /**
-       * If the dialog is part of a workflow, it indicates the total number
+       * If the dialog is part of a workflow, it indicates the total number.
        * of process steps
        */
       numberSteps: {
@@ -98,14 +106,14 @@ indicating the current step and the number total of the workflow steps.
         value: 1
       },
       /**
-       * label for the confirm or accept the dialog
+       * label for the confirm or accept the dialog.
        */
       labelConfirm: {
         type: String,
         value: 'Confirm',
       },
       /**
-       * Label for the cancel button
+       * Label for the cancel button.
        */
       labelCancel: {
         type: String,
@@ -128,7 +136,7 @@ indicating the current step and the number total of the workflow steps.
     },
 
     /**
-     * Throw the dialog
+     * Throw the dialog.
      */
     toggle() {
       this.$$('paper-dialog').toggle();
