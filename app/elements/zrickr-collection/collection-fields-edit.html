@@ -13,31 +13,19 @@
 <dom-module id="collection-fields-edit">
   <template>
     <style include="iron-flex iron-flex-alignment">
-      :host {
-        --iron-icon-fill-color: var(--paper-amber-900);
+      .field {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
       }
-
-      .delete {
-        --iron-icon-fill-color: var(--paper-blue-grey-700);
+      .add {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-end-justified);
       }
-
-      iron-icon {
-        margin-right: 2px;
-        margin-left: 4px;
-      }
-
-      .field paper-input {
-        margin-right: 10px;
-      }
-
-      paper-icon-button {
-        margin-top: 16px;
-      }
-
     </style>
 
     <template is="dom-repeat" id="fieldsList" items={{fields}}>
-      <div class="layout horizontal center field">
+      <div class="field">
         <paper-input
           focused
           label="Field Name"
@@ -49,7 +37,6 @@
         <paper-dropdown-menu
           no-animations
           horizontal-align="right"
-          class="layout horizontal center-center"
           label="Type">
           <paper-menu
               class="dropdown-content"
@@ -67,7 +54,7 @@
         </paper-icon-button>
       </div>
     </template>
-    <div class="layout horizontal center end-justified">
+    <div class="add">
       <paper-icon-button
         icon="icons:add-circle"
         on-tap="_addField">

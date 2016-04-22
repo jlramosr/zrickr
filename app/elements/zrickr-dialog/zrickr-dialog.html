@@ -32,43 +32,38 @@ indicating the current step and the number total of the workflow steps.
 <dom-module id="zrickr-dialog">
   <template>
     <style include="iron-flex iron-flex-alignment">
+      paper-dialog {
+        @apply(--layout-vertical);
+      }
 
       paper-dialog paper-dialog-scrollable {
         --paper-dialog-scrollable: {
           @apply(--layout-vertical);
-          box-sizing: content-box;
-          width: 520px;
-          min-width: 240px;
+          @apply(--layout-center);
+
         }
       }
-
-      .contents {
-        @apply(--layout-vertical);
-        @apply(--layout-center);
-      }
-
     </style>
 
+    <!--max-width: 500px;
+    min-width: 240px;-->
+
     <paper-dialog modal>
+      <zrickr-dialog-header
+        title="{{title}}"
+        description="{{description}}"
+        current-step="{{currentStep}}"
+        number-steps="{{numberSteps}}">
+      </zrickr-dialog-header>
       <paper-dialog-scrollable>
-        <zrickr-dialog-header
-          title="{{title}}"
-          description="{{description}}"
-          current-step="{{currentStep}}"
-          number-steps="{{numberSteps}}">
-        </zrickr-dialog-header>
-        <div>
-          <div class="contents">
-            <content></content>
-          </div>
-          <zrickr-dialog-buttons
-            id="buttons"
-            label-cancel="{{labelCancel}}"
-            label-confirm="{{labelConfirm}}">
-          </zrickr-dialog-buttons>
-        </div>
-      </paper-dialog>
-    </paper-dialog-scrollable>
+        <content></content>
+      </paper-dialog-scrollable>
+      <zrickr-dialog-buttons
+        id="buttons"
+        label-cancel="{{labelCancel}}"
+        label-confirm="{{labelConfirm}}">
+      </zrickr-dialog-buttons>
+    </paper-dialog>
   </template>
 </dom-module>
 
@@ -123,13 +118,14 @@ indicating the current step and the number total of the workflow steps.
 
     listeners: {
       'iron-overlay-closed': '_closed',
-      'zrickr-dialog-buttons-back-tapped': '_back'
+      'zrickr-dialog-buttons-back-tapped': '_back',
+      'zrickr-dialog-buttons-confirm-tapped': '_confirm'
     },
 
     attached() {
       this.$$('paper-dialog').refit();
       this.$$('paper-dialog').center();
-      this.$$('paper-dialog').constrain();
+      /*this.$$('paper-dialog').constrain();*/
       if (this.currentStep > 1) {
         this.$.buttons.back = true;
       }
@@ -143,14 +139,37 @@ indicating the current step and the number total of the workflow steps.
     },
 
     /**
+     * Open the dialog.
+     */
+    open() {
+      this.$$('paper-dialog').open();
+    },
+
+    /**
+     * Close the dialog.
+     */
+    close() {
+      this.$$('paper-dialog').close();
+    },
+
+    /**
      * Fired when the dialog closes confirming or accepting it
      * @event dialog-confirm-tapped
      * @detail {{zrickrDialog}}
      */
     _closed(event) {
-      if (event.detail.confirmed) {
+      /*if (event.detail.confirmed) {
         this.fire('dialog-confirm-tapped', this);
-      }
+      }*/
+    },
+
+    /**
+     * Fired when the dialog closes with the confirm button.
+     * @event dialog-confirm-tapped
+     * @detail {{zrickrDialog}}
+     */
+    _confirm(event) {
+      this.fire('dialog-confirm-tapped', this);
     },
 
     /**

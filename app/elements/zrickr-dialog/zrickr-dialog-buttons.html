@@ -64,15 +64,14 @@ Custom property | Description | Default
       raised
       hidden="{{!back}}"
       on-tap="_backTapped"
-      label="Back"
-      dialog-dismiss>
+      label="Back">
         <iron-icon icon="icons:chevron-left"></iron-icon>Back
     </paper-button>
     <paper-button
       class="nocancel"
       raised
-      label="{{labelConfirm}}"
-      dialog-confirm>
+      on-tap="_confirmTapped"
+      label="{{labelConfirm}}">
         {{labelConfirm}}<iron-icon icon="icons:chevron-right"></iron-icon>
     </paper-button>
   </template>
@@ -105,9 +104,16 @@ Custom property | Description | Default
     },
 
     /**
+     * Fired when the dialog closes with the confirm button.
+     * @event zrickr-dialog-buttons-confirm-tapped
+     */
+    _confirmTapped() {
+      this.fire('zrickr-dialog-buttons-confirm-tapped');
+    },
+
+    /**
      * Fired when the dialog closes with the back button.
      * @event zrickr-dialog-buttons-back-tapped
-     * @detail {{backDialog: String}}
      */
     _backTapped() {
       this.fire('zrickr-dialog-buttons-back-tapped');

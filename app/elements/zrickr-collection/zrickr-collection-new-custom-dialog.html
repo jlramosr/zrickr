@@ -7,8 +7,8 @@
   <template>
     <zrickr-dialog
       id="newCollectionCustom"
-      title="New User Collection <b>[[collectionName]]</b>"
-      description="Define the collection structure and all its fields"
+      title="Custom Collection"
+      description="Define the [[collectionName]] collection structure and all its fields"
       current-step="[[currentStep]]"
       number-steps="[[numberSteps]]">
       <collection-fields-edit></collection-fields-edit>
@@ -28,6 +28,7 @@
 
     nextStep(event) {
       this._toggleNextDialog('zrickr-collection-shared-dialog');
+      return true;
     },
 
     previousStep(event) {

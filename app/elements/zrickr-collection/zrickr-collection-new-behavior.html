@@ -60,13 +60,10 @@
      * Function called when the user tap on the 'confirm' or 'next' button.
      */
     _nextStep(event) {
-      if (this.$.nameCollection.validate()) {
-        if (this.$$('zrickr-dialog').id == event.detail.id) {
-          this.nextStep();
+      if (this.$$('zrickr-dialog').id == event.detail.id) {
+        if (this.nextStep()) {
+          this.$$('zrickr-dialog').close();
         }
-      }
-      else {
-        event.stopPropagation();
       }
     },
 
