@@ -1,0 +1,36 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../elements/zrickr-dialog/zrickr-dialog.html">
+<link rel="import" href="zrickr-collection-new-behavior.html">
+<link rel="import" href="zrickr-collection-edit-share.html">
+<link rel="import" href="zrickr-collection-new-finish-dialog.html">
+
+<dom-module id="zrickr-collection-new-share-dialog">
+  <template>
+    <zrickr-dialog
+      id="newCollectionShare"
+      title="Share Options"
+      description="Select who you want to share the [[collectionName]] collection with"
+      current-step="[[currentStep]]"
+      number-steps="[[numberSteps]]">
+      <zrickr-collection-edit-share></zrickr-collection-edit-share>
+    </zrickr-dialog>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  'use strict';
+
+  Polymer({
+
+    is: "zrickr-collection-new-share-dialog",
+
+    behaviors: [ZrickrCollectionNewBehavior],
+
+    nextStep(event) {
+      this._toggleNextDialog('zrickr-collection-new-finish-dialog');
+      return true;
+    }
+  });
+}());
+</script>

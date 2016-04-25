@@ -1,7 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../elements/zrickr-dialog/zrickr-dialog.html">
 <link rel="import" href="zrickr-collection-new-behavior.html">
-<link rel="import" href="collection-fields-edit.html">
+<link rel="import" href="zrickr-collection-edit-fields.html">
+<link rel="import" href="zrickr-collection-new-share-dialog.html">
 
 <dom-module id="zrickr-collection-new-custom-dialog">
   <template>
@@ -11,7 +12,8 @@
       description="Define the [[collectionName]] collection structure and all its fields"
       current-step="[[currentStep]]"
       number-steps="[[numberSteps]]">
-      <collection-fields-edit></collection-fields-edit>
+      {{fields}}
+      <zrickr-collection-edit-fields fields={{fields}}></zrickr-collection-edit-fields>
     </zrickr-dialog>
   </template>
 </dom-module>
@@ -27,14 +29,9 @@
     behaviors: [ZrickrCollectionNewBehavior],
 
     nextStep(event) {
-      this._toggleNextDialog('zrickr-collection-shared-dialog');
+      this._toggleNextDialog('zrickr-collection-new-share-dialog');
       return true;
-    },
-
-    previousStep(event) {
-      this._toggleNextDialog('zrickr-collection-new-dialog', true);
     }
-
   });
 }());
 </script>

@@ -10,7 +10,7 @@
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="collection-fields-types-list.html">
 
-<dom-module id="collection-fields-edit">
+<dom-module id="zrickr-collection-edit-fields">
   <template>
     <style include="iron-flex iron-flex-alignment">
       .field {
@@ -21,6 +21,11 @@
         @apply(--layout-horizontal);
         @apply(--layout-center);
         @apply(--layout-end-justified);
+      }
+      paper-icon-button {
+        height: 42px;
+        width: 42px;
+        color: var(--secondary-text-color);
       }
     </style>
 
@@ -39,12 +44,12 @@
           horizontal-align="right"
           label="Type">
           <paper-menu
-              class="dropdown-content"
-              selected="{{item.type}}"
-              attr-for-selected="value">
-                <paper-item value="text">Text</paper-item>
-                <paper-item value="number">Number</paper-item>
-                <paper-item value="date">Date</paper-item>
+            class="dropdown-content"
+            selected="{{item.type}}"
+            attr-for-selected="value">
+              <paper-item value="text">Text</paper-item>
+              <paper-item value="number">Number</paper-item>
+              <paper-item value="date">Date</paper-item>
             </paper-menu>
         </paper-dropdown-menu>
         <paper-icon-button
@@ -70,7 +75,7 @@
 
   Polymer({
 
-    is: "collection-fields-edit",
+    is: "zrickr-collection-edit-fields",
 
     properties: {
       fields: {

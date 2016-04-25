@@ -1,0 +1,36 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../elements/zrickr-dialog/zrickr-dialog.html">
+<link rel="import" href="zrickr-collection-new-behavior.html">
+
+<dom-module id="zrickr-collection-new-finish-dialog">
+  <template>
+    <zrickr-dialog
+      id="newCollectionFinish"
+      title="Collection Create Confirm"
+      description="Confirm the [[collectionName]] collection creation"
+      current-step="[[currentStep]]"
+      number-steps="[[numberSteps]]"
+      label-confirm="Create">
+      <h2>Create the [[collectionName]] Collection!!!!!</h2>
+      {{fields}}
+    </zrickr-dialog>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  'use strict';
+
+  Polymer({
+
+    is: "zrickr-collection-new-finish-dialog",
+
+    behaviors: [ZrickrCollectionNewBehavior],
+
+    nextStep(event) {
+      alert("COLLECION CREATED");
+      return true;
+    }
+  });
+}());
+</script>

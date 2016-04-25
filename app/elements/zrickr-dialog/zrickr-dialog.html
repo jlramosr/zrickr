@@ -25,6 +25,14 @@ indicating the current step and the number total of the workflow steps.
         CONTENT DIALOG
     </zrickr-dialog>
 
+### Styling
+
+The following custom properties are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--dialog-background-color`| Background of the dialog| `--primary-background-color`
+
 @element zrickr-dialog
 @demo demo/index.html
 -->
@@ -33,20 +41,58 @@ indicating the current step and the number total of the workflow steps.
   <template>
     <style include="iron-flex iron-flex-alignment">
       paper-dialog {
-        @apply(--layout-vertical);
+        background: var(--dialog-background-color, --primary-background-color);
+        opacity: 0.94;
+        height: 65%;
+        width: 50%;
       }
 
       paper-dialog paper-dialog-scrollable {
         --paper-dialog-scrollable: {
           @apply(--layout-vertical);
           @apply(--layout-center);
+          min-height: 200px;
+          margin: 0px auto;
+        }
+      }
 
+      @media screen and (max-width: 800px), screen and (max-height: 600px) {
+        paper-dialog {
+          height: 98%;
+          width: 98%;
+        }
+      }
+
+      @media screen and (min-height: 500px) {
+        paper-dialog paper-dialog-scrollable {
+          min-height: 310px;
+        }
+      }
+
+      @media screen and (min-height: 600px) {
+        paper-dialog paper-dialog-scrollable {
+          min-height: 410px;
+        }
+      }
+
+      @media screen and (min-height: 700px) {
+        paper-dialog paper-dialog-scrollable {
+          min-height: 510px;
+        }
+      }
+
+      @media screen and (min-height: 800px) {
+        paper-dialog paper-dialog-scrollable {
+          min-height: 610px;
+        }
+      }
+
+      @media screen and (min-width: 800px) {
+        paper-dialog paper-dialog-scrollable {
+          min-height: 200px;
         }
       }
     </style>
-
-    <!--max-width: 500px;
-    min-width: 240px;-->
 
     <paper-dialog modal>
       <zrickr-dialog-header
@@ -105,27 +151,33 @@ indicating the current step and the number total of the workflow steps.
        */
       labelConfirm: {
         type: String,
-        value: 'Confirm',
+        value: 'Confirm'
+      },
+      /**
+       * True if confirm button is disabled, false in other case
+       */
+      confirmDisabled: {
+        type: Boolean,
+        value: false
       },
       /**
        * Label for the cancel button.
        */
       labelCancel: {
         type: String,
-        value: 'Cancel',
+        value: 'Cancel'
       }
     },
 
     listeners: {
       'iron-overlay-closed': '_closed',
-      'zrickr-dialog-buttons-back-tapped': '_back',
-      'zrickr-dialog-buttons-confirm-tapped': '_confirm'
+      'zrickr-dialog-buttons-back-tapped': '_backed',
+      'zrickr-dialog-buttons-confirm-tapped': '_confirmed'
     },
 
     attached() {
       this.$$('paper-dialog').refit();
       this.$$('paper-dialog').center();
-      /*this.$$('paper-dialog').constrain();*/
       if (this.currentStep > 1) {
         this.$.buttons.back = true;
       }
@@ -168,7 +220,7 @@ indicating the current step and the number total of the workflow steps.
      * @event dialog-confirm-tapped
      * @detail {{zrickrDialog}}
      */
-    _confirm(event) {
+    _confirmed(event) {
       this.fire('dialog-confirm-tapped', this);
     },
 
@@ -177,7 +229,7 @@ indicating the current step and the number total of the workflow steps.
      * @event dialog-back-tapped
      * @detail {{zrickrDialog}}
      */
-    _back(event) {
+    _backed(event) {
       this.fire('dialog-back-tapped', this);
     }
 

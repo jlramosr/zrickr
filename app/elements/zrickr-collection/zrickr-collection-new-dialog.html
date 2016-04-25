@@ -22,6 +22,13 @@ a collection creation.
 <dom-module id="zrickr-collection-new-dialog">
   <template>
     <style include="iron-flex iron-flex-alignment">
+      :host {
+        --paper-input-error: {
+          width: 90%;
+          white-space: normal;
+          font-size: 9px;
+        }
+      }
       paper-radio-group {
         @apply(--layout-vertical);
         margin-top: 10px;
@@ -33,13 +40,13 @@ a collection creation.
       title="New Collection"
       description="Indicate the collection name and how it will be created"
       number-steps="[[numberSteps]]">
+      {{fields}}
       <paper-input
         id="nameCollection"
         label="Collection Name"
         value="{{collectionName}}"
         required
-        pattern="^[A-Za-z0-9][A-Za-z0-9'\s-]*$"
-        error-message="Only letters, number, spaces and dash are allowed"
+        pattern="^[A-Za-z][A-Za-z0-9'\s-]*$"
         char-counter maxlength="20">
       </paper-input>
       <paper-radio-group selected="{{optionSelected}}">
@@ -66,14 +73,14 @@ a collection creation.
     behaviors: [ZrickrCollectionNewBehavior],
 
     /**
-     * Executed when the user tap on next button (it's always included in
-     * the callback of `dialog-confirm-tapped` listener). This function
-     * toggle `zrickr-collection-new-users-dialog` or
-     * `zrickr-collection-new-custom-dialog` depending on the selected option
-     * @return {boolean} If all inputs have been correctly validated
+     * Validate this dialog and toggle `zrickr-collection-new-users-dialog` or
+     * `zrickr-collection-new-custom-dialog` depending on the selected option.
+     * See ZrickrCollectionNewBehavior.
      */
     nextStep() {
-      if (this.$.nameCollection.validate()) {
+      let nameCollection = this.$.nameCollection;
+      let nameCollectionValue = nameCollection.value.trim();
+      if (nameCollection.validate()) {
         if (this.optionSelected == 'users') {
           this._toggleNextDialog('zrickr-collection-new-users-dialog');
         }
@@ -81,6 +88,12 @@ a collection creation.
           this._toggleNextDialog('zrickr-collection-new-custom-dialog');
         }
         return true;
+      }
+      if (nameCollectionValue == "") {
+        nameCollection.errorMessage = "Name collection can not be empty!";
+      }
+      else {
+        nameCollection.errorMessage ="Only letters,numbers,spaces and dashes!"
       }
       return false;
     }

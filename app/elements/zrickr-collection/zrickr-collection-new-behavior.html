@@ -35,7 +35,9 @@
         type: Number,
         value: 4,
         readonly: true
-      }
+      },
+
+      share: Array
     },
 
     listeners: {
@@ -54,6 +56,25 @@
      */
     toggle() {
       this.$$('zrickr-dialog').toggle();
+    },
+
+    /**
+    * Included in the callback of `dialog-confirm-tapped` listener. All
+    * elements have this behavior would have to implement this method.
+    * @return {boolean} If all inputs have been correctly validated
+    */
+    nextStep() {
+      return false;
+    },
+
+    /**
+    * Included in the callback of `dialog-back-tapped` listener.
+    * @return {boolean} If all inputs have been correctly validated
+    */
+
+    previousStep(event) {
+      this._toggleBackDialog();
+      return true;
     },
 
     /**
@@ -77,27 +98,30 @@
     },
 
     /**
-     * Throw the next dialog in the creation process. If `back` parameter is
-     * equal to true, the next dialog is the parent of current dialog.
-     *
+     * Throw the next dialog in the creation process.
      * @param {string} selectorDialog Next dialog identified by selector.
-     * @param {boolean} back Previous dialog identified by selector.
      */
-    _toggleNextDialog(selectorDialog, back=false) {
+    _toggleNextDialog(selectorDialog) {
       newDialog = document.createElement(selectorDialog);
-      if (newDialog) {
-        if (back) {
-          this.parentElement.toggle();
-          this.remove();
-        }
-        else {
-          newDialog.optionSelected = this.optionSelected;
-          newDialog.collectionName = this.collectionName;
-          newDialog.currentStep = this.currentStep + 1;
-          this.appendChild(newDialog);
-          newDialog.toggle();
-        }
-      }
+      newDialog.optionSelected = this.optionSelected;
+      newDialog.collectionName = this.collectionName;
+      newDialog.currentStep = this.currentStep + 1;
+      newDialog.fields = this.fields;
+      /*newDialog.share = this.share,*/
+      this.appendChild(newDialog);
+      newDialog.toggle();
+    },
+
+    /**
+     * Throw the back dialog in the creation process.
+     */
+    _toggleBackDialog() {
+      parentDialog = this.parentElement;
+      parentDialog.toggle();
+      /*parentDialog.fields = this.fields;*/
+      /*console.log("NEXTnewDialog". parentDialog.fields);
+      console.log("NEXTthisDialog". this.fields);*/
+      this.remove();
     }
   };
 </script>
