@@ -76,26 +76,23 @@
   Polymer({
 
     is: "zrickr-collection-edit-fields",
-
     properties: {
+      /**
+      * All the fields will be included in the collection with its properties
+      */
       fields: {
         type: Array,
-        value: []
+        notify: true
       }
     },
 
-    observers: [
+  /*  observers: [
       'fieldsAddedOrRemoved(fields.splices)'
     ],
 
-    ready() {
-      this.fields = [
-        {name: 'Title', type: 'text'}
-      ];
-    },
-
     fieldsAddedOrRemoved(changeRecord) {
       if (changeRecord) {
+        console.log("changeRecord", changeRecord.indexSplices);
         console.log("fields",this.fields.length);
         changeRecord.indexSplices.forEach((s) => {
           s.removed.forEach((field) => {
@@ -104,7 +101,7 @@
           console.log(s.addedCount + ' field were added');
         }, this);
       }
-    },
+    },*/
 
     _addField() {
       this.push('fields', {name: '', type: ''});

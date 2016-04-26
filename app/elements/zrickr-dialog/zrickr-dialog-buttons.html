@@ -56,7 +56,7 @@ Custom property | Description | Default
       class="cancel"
       raised
       label="{{labelCancel}}"
-      dialog-dismiss>
+      on-tap="_cancelTapped">
         {{labelCancel}}
     </paper-button>
     <paper-button
@@ -73,7 +73,15 @@ Custom property | Description | Default
       disabled={{confirmDisabled}}
       on-tap="_confirmTapped"
       label="{{labelConfirm}}">
-        {{labelConfirm}}<iron-icon icon="icons:chevron-right"></iron-icon>
+        {{labelConfirm}}
+        <iron-icon
+          hidden="{{_iconNextHidden(labelConfirm)}}"
+          icon="icons:chevron-right">
+        </iron-icon>
+        <iron-icon
+          hidden="{{_iconConfirmHidden(labelConfirm)}}"
+          icon="icons:check">
+        </iron-icon>
     </paper-button>
   </template>
 </dom-module>
@@ -85,6 +93,14 @@ Custom property | Description | Default
   Polymer({
 
     is: "zrickr-dialog-buttons",
+
+    _iconNextHidden() {
+      return !(this.labelConfirm == 'Next');
+    },
+
+    _iconConfirmHidden() {
+      return !(this.labelConfirm != 'Next');
+    },
 
     properties: {
       /**
@@ -125,8 +141,15 @@ Custom property | Description | Default
      */
     _backTapped() {
       this.fire('zrickr-dialog-buttons-back-tapped');
-    }
+    },
 
+    /**
+     * Fired when the dialog closes with the cancel button.
+     * @event zrickr-dialog-buttons-cancel-tapped
+     */
+    _cancelTapped() {
+      this.fire('zrickr-dialog-buttons-cancel-tapped');
+    }
 
   });
 }());

@@ -172,7 +172,8 @@ Custom property | Description | Default
     listeners: {
       'iron-overlay-closed': '_closed',
       'zrickr-dialog-buttons-back-tapped': '_backed',
-      'zrickr-dialog-buttons-confirm-tapped': '_confirmed'
+      'zrickr-dialog-buttons-confirm-tapped': '_confirmed',
+      'zrickr-dialog-buttons-cancel-tapped': '_canceled'
     },
 
     attached() {
@@ -231,7 +232,16 @@ Custom property | Description | Default
      */
     _backed(event) {
       this.fire('dialog-back-tapped', this);
-    }
+    },
+
+    /**
+     * Fired when the dialog closes with the cancel button.
+     * @event dialog-cancel-tapped
+     * @detail {{zrickrDialog}}
+     */
+    _canceled(event) {
+      this.fire('dialog-cancel-tapped', this);
+    },
 
   });
 }());

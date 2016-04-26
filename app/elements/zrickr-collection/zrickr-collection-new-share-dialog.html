@@ -1,6 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../elements/zrickr-dialog/zrickr-dialog.html">
-<link rel="import" href="zrickr-collection-new-behavior.html">
+<link rel="import" href="zrickr-collection-new.html">
 <link rel="import" href="zrickr-collection-edit-share.html">
 <link rel="import" href="zrickr-collection-new-finish-dialog.html">
 
@@ -9,10 +9,16 @@
     <zrickr-dialog
       id="newCollectionShare"
       title="Share Options"
-      description="Select who you want to share the [[collectionName]] collection with"
+      description="Select who you want to share the [[collectionName]]
+                  collection with and if you want to make public your
+                  field definitions (users will be able to create
+                  collections from your structure created previously)"
       current-step="[[currentStep]]"
       number-steps="[[numberSteps]]">
-      <zrickr-collection-edit-share></zrickr-collection-edit-share>
+      <zrickr-collection-edit-share
+        shared="{{shared}}"
+        public="{{public}}">
+      </zrickr-collection-edit-share>
     </zrickr-dialog>
   </template>
 </dom-module>
@@ -25,12 +31,24 @@
 
     is: "zrickr-collection-new-share-dialog",
 
-    behaviors: [ZrickrCollectionNewBehavior],
-
-    nextStep(event) {
-      this._toggleNextDialog('zrickr-collection-new-finish-dialog');
-      return true;
+    properties: {
+      /**
+       * All the users will be shared the collection with
+       */
+      shared: {
+        type: Array,
+        notify: true
+      },
+      /**
+       * If the collection definition will be public, so other users will be
+       * able to create collections from the current structure.
+       */
+      public: {
+        type: Boolean,
+        notify: true
+      }
     }
+
   });
 }());
 </script>

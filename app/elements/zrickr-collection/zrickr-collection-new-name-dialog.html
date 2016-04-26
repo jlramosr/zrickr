@@ -5,21 +5,18 @@
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../elements/zrickr-dialog/zrickr-dialog.html">
-<link rel="import" href="zrickr-collection-new-behavior.html">
-<link rel="import" href="zrickr-collection-new-custom-dialog.html">
-<link rel="import" href="zrickr-collection-new-users-dialog.html">
 
 <!--
-`<zrickr-collection-new-dialog>` is the first dialog in the process of
+`<zrickr-collection-new-name-dialog>` is the first dialog in the process of
 a collection creation.
 
-    <zrickr-collection-new-dialog></zrickr-collection-new-dialog>
+    <zrickr-collection-new-name-dialog></zrickr-collection-new-name-dialog>
 
-@element zrickr-collection-new-dialog
+@element zrickr-collection-new-name-dialog
 @demo demo/index.html
 -->
 
-<dom-module id="zrickr-collection-new-dialog">
+<dom-module id="zrickr-collection-new-name-dialog">
   <template>
     <style include="iron-flex iron-flex-alignment">
       :host {
@@ -36,11 +33,11 @@ a collection creation.
     </style>
 
     <zrickr-dialog
-      id="newCollection"
+      id="newCollectionName"
       title="New Collection"
       description="Indicate the collection name and how it will be created"
+      current-step="[[currentStep]]"
       number-steps="[[numberSteps]]">
-      {{fields}}
       <paper-input
         id="nameCollection"
         label="Collection Name"
@@ -49,7 +46,7 @@ a collection creation.
         pattern="^[A-Za-z][A-Za-z0-9'\s-]*$"
         char-counter maxlength="20">
       </paper-input>
-      <paper-radio-group selected="{{optionSelected}}">
+      <paper-radio-group selected="{{option}}">
         <paper-radio-button noink name="custom">
           <span>Custom Collection</span>
         </paper-radio-button>
@@ -68,34 +65,44 @@ a collection creation.
 
   Polymer({
 
-    is: "zrickr-collection-new-dialog",
+    is: "zrickr-collection-new-name-dialog",
 
-    behaviors: [ZrickrCollectionNewBehavior],
+    properties: {
+      /**
+       * Name of the collection will be created.
+       */
+      collectionName: {
+        type: String,
+        notify: true
+      },
+      /**
+       * Type of collection (`custom` if it will be a custom collection or
+       * `users` if the fields and properties of the new collection will get
+       * by other public collection schemas).
+       */
+      option: {
+        type: String,
+        notify: true
+      }
+    },
 
     /**
-     * Validate this dialog and toggle `zrickr-collection-new-users-dialog` or
-     * `zrickr-collection-new-custom-dialog` depending on the selected option.
-     * See ZrickrCollectionNewBehavior.
+     * Validate the dialog.
+     * @return {boolean} True if all validations are correct.
      */
-    nextStep() {
+    validate() {
       let nameCollection = this.$.nameCollection;
       let nameCollectionValue = nameCollection.value.trim();
-      if (nameCollection.validate()) {
-        if (this.optionSelected == 'users') {
-          this._toggleNextDialog('zrickr-collection-new-users-dialog');
+      if (!nameCollection.validate()) {
+        if (nameCollectionValue == "") {
+          nameCollection.errorMessage = "Name collection can not be empty!";
         }
-        else if (this.optionSelected == 'custom') {
-          this._toggleNextDialog('zrickr-collection-new-custom-dialog');
+        else {
+          nameCollection.errorMessage ="Only letters,numbers,spaces and dashes!"
         }
-        return true;
+        return false;
       }
-      if (nameCollectionValue == "") {
-        nameCollection.errorMessage = "Name collection can not be empty!";
-      }
-      else {
-        nameCollection.errorMessage ="Only letters,numbers,spaces and dashes!"
-      }
-      return false;
+      return true;
     }
 
   });

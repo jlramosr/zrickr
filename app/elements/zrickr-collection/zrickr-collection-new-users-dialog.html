@@ -1,7 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../elements/zrickr-dialog/zrickr-dialog.html">
-<link rel="import" href="zrickr-collection-new-behavior.html">
+<link rel="import" href="zrickr-collection-new.html">
 <link rel="import" href="zrickr-collection-new-share-dialog.html">
 
 <dom-module id="zrickr-collection-new-users-dialog">
@@ -29,14 +29,7 @@
 
   Polymer({
 
-    is: "zrickr-collection-new-users-dialog",
-
-    behaviors: [ZrickrCollectionNewBehavior],
-
-    nextStep(event) {
-      this._toggleNextDialog('zrickr-collection-new-share-dialog');
-      return true;
-    }
+    is: "zrickr-collection-new-users-dialog"
 
   });
 }());

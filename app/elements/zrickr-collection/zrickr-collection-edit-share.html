@@ -5,8 +5,40 @@
 <dom-module id="zrickr-collection-edit-share">
   <template>
     <style include="iron-flex iron-flex-alignment">
+      paper-toggle-button {
+        --paper-toggle-button-checked-bar-color:  var(--secondary-text-color);
+        --paper-toggle-button-checked-button-color:  var(--secondary-text-color);
+        --paper-toggle-button-checked-ink-color: var(--secondary-text-color);
+      }
+
+      #container {
+        @apply(--layout-vertical);
+        @apply(--layout-left);
+      }
+
+      #shareOption {
+        @apply(--layout-horizontal);
+      }
+
+      #publicDefinition {
+        @apply(--layout-horizontal);
+        margin-top: 30px;
+      }
     </style>
-      <paper-toggle-button></paper-toggle-button>
+
+    <div id="container">
+      <div id="shareOption">
+        <paper-toggle-button id="shareButton"></paper-toggle-button>
+        Share
+      </div>
+      <div id="sharedUsers">
+      </div>
+      <div id="publicDefinition">
+        <paper-toggle-button id="publicButton" checked="{{public}}"></paper-toggle-button>
+        Make public your collection structure
+      </div>
+    </div>
+
   </template>
 </dom-module>
 
@@ -16,8 +48,33 @@
 
   Polymer({
 
-    is: "zrickr-collection-edit-share"
+    is: "zrickr-collection-edit-share",
 
+    properties: {
+      /**
+       * All the users will be shared the collection with
+       */
+      shared: {
+        type: Array,
+        notify: true
+      },
+      /**
+       * If the collection definition will be public, so other users will be
+       * able to create collections from the current structure.
+       */
+      public: {
+        type: Boolean,
+        notify: true
+      }
+    },
+
+    listeners: {
+      'change': '_changeToggleButton'
+    },
+
+    _changeToggleButton(event) {
+      this.public = this.$.publicButton.checked;
+    }
   });
 }());
 </script>

@@ -88,10 +88,8 @@
 
     //User App Events
     window.addEventListener('add-item-tapped', (event) => {
-      let newCollectionDialog = document.createElement('zrickr-collection-new-dialog');
-      newCollectionDialog.currentStep = 1;
-      document.body.appendChild(newCollectionDialog);
-      newCollectionDialog.toggle();
+      let newCollection = document.createElement('zrickr-collection-new');
+      document.body.appendChild(newCollection);
     });
     window.addEventListener('logout-tapped', (event) => {
       zrickrAuth.logout();

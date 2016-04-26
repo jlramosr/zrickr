@@ -1,0 +1,198 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="zrickr-collection-new-name-dialog.html">
+<link rel="import" href="zrickr-collection-new-custom-dialog.html">
+<link rel="import" href="zrickr-collection-new-users-dialog.html">
+<link rel="import" href="zrickr-collection-new-share-dialog.html">
+<link rel="import" href="zrickr-collection-new-finish-dialog.html">
+
+<!--
+`<zrickr-collection-new>` is the main handler of the new collection creation
+process and enables all common properties and main functions.
+
+@demo demo/index.html
+@polymerBehavior zrickr-collection-new
+-->
+
+<dom-module id="zrickr-collection-new">
+  <template>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  'use strict';
+
+  Polymer({
+
+    is: "zrickr-collection-new",
+
+    properties: {
+      /**
+       * Name of the collection will be created.
+       */
+      collectionName: {
+        type: String,
+        value: ''
+      },
+      /**
+       * Type of collection (`custom` if it will be a custom collection or
+       * `users` if the fields and properties of the new collection will get
+       * by other public collection schemas).
+       */
+      type: {
+        type: String,
+        value: 'custom'
+      },
+      /**
+       * Total number of steps in the creation process.
+       */
+      numberSteps: {
+        type: Number,
+        value: 4,
+        readonly: true
+      },
+      /**
+       * Current step of the creation process.
+       */
+      currentStep: {
+        type: Number,
+        value: 1,
+        observer: '_stepChanged'
+      },
+      /**
+       * All the fields will be included in the collection with its properties.
+       */
+      fields: {
+        type: Array,
+        value: [{'name': 'Title', 'type': 'text'}, {}]
+      },
+      /**
+       * All the users will be shared the collection with.
+       */
+      shared: {
+        type: Array,
+        value: []
+      },
+      /**
+       * If the collection definition will be public, so other users will be
+       * able to create collections from the current structure.
+       */
+      public: {
+        type: Boolean,
+        value: false
+      }
+    },
+
+    listeners: {
+      'dialog-confirm-tapped': '_nextStep',
+      'dialog-back-tapped': '_previousStep',
+      'dialog-cancel-tapped': '_cancel'
+    },
+
+    /**
+     * Function called when the user tap on the 'confirm' or 'next' button.
+     * If the validations are correct, it jump to then next step.
+     */
+    _nextStep(event) {
+      if (this.firstChild.validate !== undefined) {
+        if (this.firstChild.validate()) {
+          this.currentStep += 1;
+        }
+      }
+      else {
+        this.currentStep += 1;
+      }
+    },
+
+    /**
+     * Function called when the user tap on the 'back' button.
+     * It back to then previous step.
+     */
+    _previousStep(event) {
+      this.currentStep -= 1;
+    },
+
+    /**
+     * Function called when the user tap on the 'cancel' button.
+     */
+    _cancel(event) {
+      this.remove();
+    },
+
+    /**
+     * When the step number change, this function executes to throw the
+     * corresponding dialog. Any changes that may be in the current step/dialog
+     * must jump from the dialog child to this parent element with property
+     * change events (and notify in the child).
+     * @param  {number} step The current step in the creation process
+     */
+    _stepChanged(step) {
+      let newDialog;
+      switch (step) {
+        case 1:
+          newDialog = this._toggleDialog('zrickr-collection-new-name-dialog');
+          newDialog.addEventListener("option-changed", (event) => {
+            this.type = newDialog.option;
+          });
+          newDialog.addEventListener("collection-name-changed", (event) => {
+            this.collectionName = newDialog.collectionName;
+          });
+          break;
+        case 2:
+          if (this.type == 'users') {
+            newDialog = this._toggleDialog('zrickr-collection-new-users-dialog');
+          }
+          else {
+            newDialog = this._toggleDialog('zrickr-collection-new-custom-dialog');
+            newDialog.addEventListener("fields-changed", (event) => {
+              this.fields = newDialog.fields;
+            });
+          }
+          break;
+        case 3:
+          newDialog = this._toggleDialog('zrickr-collection-new-share-dialog');
+          newDialog.addEventListener("shared-changed", (event) => {
+            this.shared = newDialog.shared;
+          });
+          newDialog.addEventListener("public-changed", (event) => {
+            this.public = newDialog.public;
+          });
+          break;
+        case 4:
+          newDialog = this._toggleDialog('zrickr-collection-new-finish-dialog');
+          break;
+        default:
+          /**
+           * TODO
+           * CREATE COLLECTION
+           */
+          break;
+      }
+    },
+
+    /**
+     * Create and throw the next dialog in the creation process.
+     * @param {string} selectorDialog Next dialog identified by selector.
+     * @return {object} The new dialog element created.
+     */
+    _toggleDialog(selectorDialog) {
+      let newDialog = document.createElement(selectorDialog);
+      newDialog.currentStep = this.currentStep;
+      newDialog.numberSteps = this.numberSteps;
+      if (this.currentStep < this.numberSteps) {
+        newDialog.$$('zrickr-dialog').labelConfirm = "Next";
+      }
+      newDialog.option = this.type;
+      newDialog.collectionName = this.collectionName;
+      newDialog.fields = this.fields;
+      newDialog.shared = this.shared;
+      newDialog.public = this.public;
+      this.firstChild.remove();
+      Polymer.dom(this.root).appendChild(newDialog);
+      newDialog.$$('zrickr-dialog').toggle();
+      return newDialog;
+    }
+
+  });
+}());
+</script>
