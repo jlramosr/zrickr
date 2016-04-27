@@ -69,12 +69,13 @@
   </style>
 
   <template>
+    {{collections}}
     <paper-menu>
       <paper-submenu>
         <paper-item class="item menu-trigger layout horizontal center">
           <div class="layout horizontal center">
             <paper-icon-button icon="image:view-comfy"></paper-icon-button>
-            <span>My Collections</span>
+            <span>{{itemName}}</span>
           </div>
           <div class="right-button">
             <paper-icon-button
@@ -84,36 +85,27 @@
           </div>
         </paper-item>
         <paper-menu class="menu-content">
-          <paper-item class="subitem layout horizontal center">
-            <paper-icon-button
-              src="../images/touch/icon-72x72.png">
-            </paper-icon-button>
-            <span class="flex">Coches de carreras de papa</span>
-            <paper-icon-button
-              on-tap="_toggleSubItemActions"
-              icon="icons:more-vert"
-              class="right-button">
-            </paper-icon-button>
-            <paper-ripple id="ripple" style="pointer-events: none;"></paper-ripple>
-          </paper-item>
-          <paper-item class="subitem layout horizontal center" focused>
-            <paper-icon-button
-              src="../images/touch/icon-72x72.png">
-            </paper-icon-button>
-            <span class="flex">Clientes</span>
-            <paper-icon-button
-              on-tap="_toggleSubItemActions"
-              icon="icons:more-vert"
-              class="right-button">
-            </paper-icon-button>
-          </paper-item>
+          <template is="dom-repeat" items="[[collections]]" as="collection">
+            <paper-item class="subitem layout horizontal center">
+              <paper-icon-button
+                src="../images/touch/icon-72x72.png">
+              </paper-icon-button>
+              <span class="flex">[[collection.name]]</span>
+              <paper-icon-button
+                on-tap="_toggleSubItemActions"
+                icon="icons:more-vert"
+                class="right-button">
+              </paper-icon-button>
+              <paper-ripple id="ripple" style="pointer-events: none;"></paper-ripple>
+            </paper-item>
+          </template>
         </paper-menu>
       </paper-submenu>
       <paper-submenu>
         <paper-item class="item menu-trigger">
           <div class="layout horizontal center">
             <paper-icon-button icon="social:group"></paper-icon-button>
-            <span>My Shared Collections</span>
+            <span>{{subitemName}}</span>
           </div>
         </paper-item>
         <paper-menu class="menu-content">
@@ -162,6 +154,10 @@
       newPassword: {
         type: String,
         value: '',
+      },
+      collections: {
+        type: Array,
+        readonly: true
       }
     },
 

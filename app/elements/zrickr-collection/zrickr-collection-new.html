@@ -10,7 +10,7 @@
 process and enables all common properties and main functions.
 
 @demo demo/index.html
-@polymerBehavior zrickr-collection-new
+@element zrickr-collection-new
 -->
 
 <dom-module id="zrickr-collection-new">
@@ -124,7 +124,9 @@ process and enables all common properties and main functions.
      * corresponding dialog. Any changes that may be in the current step/dialog
      * must jump from the dialog child to this parent element with property
      * change events (and notify in the child).
-     * @param  {number} step The current step in the creation process
+     * @param {number} step The current step in the creation process
+     * @event finish-create-new-collection
+     * @detail {{zrickrCollectionNew}}
      */
     _stepChanged(step) {
       let newDialog;
@@ -162,10 +164,8 @@ process and enables all common properties and main functions.
           newDialog = this._toggleDialog('zrickr-collection-new-finish-dialog');
           break;
         default:
-          /**
-           * TODO
-           * CREATE COLLECTION
-           */
+          this.fire('finish-create-new-collection', this);
+          this.remove();
           break;
       }
     },
@@ -187,7 +187,7 @@ process and enables all common properties and main functions.
       newDialog.fields = this.fields;
       newDialog.shared = this.shared;
       newDialog.public = this.public;
-      this.firstChild.remove();
+      this.lastChild.remove();
       Polymer.dom(this.root).appendChild(newDialog);
       newDialog.$$('zrickr-dialog').toggle();
       return newDialog;

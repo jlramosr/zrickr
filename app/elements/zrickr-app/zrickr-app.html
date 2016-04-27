@@ -4,6 +4,7 @@
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../elements/zrickr-drawer/zrickr-drawer.html">
 <link rel="import" href="../../elements/zrickr-main/zrickr-main.html">
+<link rel="import" href="../../elements/zrickr-collection/zrickr-collection.html">
 
 <!--
 `<zrickr-app>` provides a web main structure with a drawer
@@ -25,9 +26,14 @@ Example:
   </style>
 
   <template>
+    <zrickr-collection
+      id="collectionHandler"
+      location="{{location}}"
+      collections="{{collections}}">
+    </zrickr-collection>
     <paper-drawer-panel id="mainPanel">
       <paper-scroll-header-panel id="drawer" drawer mode="cover">
-        <zrickr-drawer><zrickr-drawer>
+        <zrickr-drawer collections="{{collections}}"><zrickr-drawer>
       </paper-scroll-header-panel>
       <paper-scroll-header-panel id="main" main condenses keep-condensed-header>
         <zrickr-main user={{user}}><zrickr-main>
@@ -48,7 +54,16 @@ Example:
       },
       user: {
         type: Object,
+      },
+      collections: {
+        type: Array,
+        readonly: true
       }
+    },
+
+    listeners: {
+      'add-item-tapped': '_newCollectionProcess',
+      'add-item-finish': '_addCollection'
     },
 
     attached() {
@@ -56,6 +71,21 @@ Example:
       if (this.positionDrawer == 'right') {
         mainPanel.rightDrawer = true;
       }
+    },
+
+    /**
+     * Fired when the user taps on add a new item in drawer
+     */
+    _newCollectionProcess(event) {
+      this.$.collectionHandler.new();
+    },
+
+    /**
+     * Fires when the process of creation has finished
+     */
+    _addCollection(event) {
+      let collection = event.detail;
+      this.$.collectionHandler.add(collection);
     }
 
   });

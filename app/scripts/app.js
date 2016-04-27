@@ -30,6 +30,7 @@
       if (event.detail.value) {
         currentElement = document.createElement('zrickr-app');
         currentElement.user = zrickr.user;
+        currentElement.location = zrickr.location;
       }
       else {
         currentElement = document.createElement('zrickr-login');
@@ -87,10 +88,6 @@
     });
 
     //User App Events
-    window.addEventListener('add-item-tapped', (event) => {
-      let newCollection = document.createElement('zrickr-collection-new');
-      document.body.appendChild(newCollection);
-    });
     window.addEventListener('logout-tapped', (event) => {
       zrickrAuth.logout();
     });

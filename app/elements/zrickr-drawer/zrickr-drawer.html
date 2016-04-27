@@ -24,8 +24,12 @@ Example:
 
 <dom-module id="zrickr-drawer">
   <template>
+    {{collections}}
     <zrickr-drawer-toolbar id="drawerToolbar"></zrickr-drawer-toolbar>
-    <zrickr-drawer-content id="drawerContent"> </zrickr-drawer-content>
+    <zrickr-drawer-content
+      id="drawerContent"
+      collections="{{collections}}">
+    </zrickr-drawer-content>
   </template>
 </dom-module>
 
@@ -33,7 +37,14 @@ Example:
 (function() {
 
   Polymer({
-    is: "zrickr-drawer"
+    is: "zrickr-drawer",
+
+    properties: {
+      collections: {
+        type: Array,
+        readonly: true
+      }
+    }
   });
 
 })();
