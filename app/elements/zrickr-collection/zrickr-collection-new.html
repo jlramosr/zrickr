@@ -125,7 +125,7 @@ process and enables all common properties and main functions.
      * must jump from the dialog child to this parent element with property
      * change events (and notify in the child).
      * @param {number} step The current step in the creation process
-     * @event finish-create-new-collection
+     * @event create-item
      * @detail {{zrickrCollectionNew}}
      */
     _stepChanged(step) {
@@ -164,7 +164,11 @@ process and enables all common properties and main functions.
           newDialog = this._toggleDialog('zrickr-collection-new-finish-dialog');
           break;
         default:
-          this.fire('finish-create-new-collection', this);
+          let newCollection = {
+            'name': this.collectionName,
+            'public': this.public
+          }
+          this.fire('add-item', newCollection);
           this.remove();
           break;
       }

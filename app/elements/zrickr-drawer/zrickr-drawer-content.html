@@ -10,6 +10,20 @@
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
+<!--
+`<zrickr-drawer-content>` is the element of the drawer content
+
+Example:
+
+  <zrickr-drawer-content
+    item-name="My Collections"
+    subitem-name="My Shared Collections">
+  </zrickr-drawer-content>
+
+@element zrickr-drawer-content
+@demo ../../elements/zrickr-drawer/demo/index.html
+-->
+
 <dom-module id="zrickr-drawer-content">
   <style include="iron-flex iron-flex-alignment">
     :host {
@@ -35,9 +49,36 @@
       };
     }
 
+    .main {
+      @apply(--layout-vertical);
+    }
+
+    .primary-section {
+    }
+
+    .space-section {
+      @apply(--layout-flex);
+      background-color: red;
+      height: 50px;
+    }
+
+    .secondary-section {
+      @apply(--layout-end);
+    }
+
     paper-menu {
       background: var(--drawer-background-color, --paper-grey-50);
       padding: 0px;
+    }
+
+    .menu-content {
+      overflow: scroll;
+      height: 250px;
+    }
+
+    paper-item {
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
     }
 
     .item {
@@ -59,20 +100,13 @@
       right: 3px;
       top: 3px;
     }
-
-    .secondary-options {
-      position: absolute;
-      width: 100%;
-      bottom: 5px;
-    }
-
   </style>
 
   <template>
-    {{collections}}
-    <paper-menu>
-      <paper-submenu>
-        <paper-item class="item menu-trigger layout horizontal center">
+    <paper-menu class="main">
+
+      <paper-submenu class="primary-section">
+        <paper-item class="item menu-trigger">
           <div class="layout horizontal center">
             <paper-icon-button icon="image:view-comfy"></paper-icon-button>
             <span>{{itemName}}</span>
@@ -86,7 +120,7 @@
         </paper-item>
         <paper-menu class="menu-content">
           <template is="dom-repeat" items="[[collections]]" as="collection">
-            <paper-item class="subitem layout horizontal center">
+            <paper-item class="subitem">
               <paper-icon-button
                 src="../images/touch/icon-72x72.png">
               </paper-icon-button>
@@ -101,7 +135,8 @@
           </template>
         </paper-menu>
       </paper-submenu>
-      <paper-submenu>
+
+      <paper-submenu class="primary-section">
         <paper-item class="item menu-trigger">
           <div class="layout horizontal center">
             <paper-icon-button icon="social:group"></paper-icon-button>
@@ -109,7 +144,7 @@
           </div>
         </paper-item>
         <paper-menu class="menu-content">
-          <paper-item class="subitem layout horizontal center">
+          <paper-item class="subitem">
             <paper-icon-button
               src="../images/touch/icon-72x72.png">
             </paper-icon-button>
@@ -122,20 +157,24 @@
           </paper-item>
         </paper-menu>
       </paper-submenu>
-      <paper-menu class="secondary-options">
-        <paper-item class="item layout horizontal center">
+
+      <div class="space-section"></div>
+
+      <paper-menu class="secondary-section">
+        <paper-item class="item">
           <paper-icon-button icon="icons:settings"></paper-icon-button>
           <span>Settings</span>
         </paper-item>
-        <paper-item class="item layout horizontal center">
+        <paper-item class="item">
           <paper-icon-button icon="icons:delete"></paper-icon-button>
           <span>Recycle Bin</span>
         </paper-item>
-        <paper-item class="item layout horizontal center">
+        <paper-item class="item">
           <paper-icon-button icon="icons:help"></paper-icon-button>
           <span>Help and Suggestions</span>
         </paper-item>
       </paper-menu>
+
     </paper-menu>
   </template>
 </dom-module>
@@ -155,6 +194,23 @@
         type: String,
         value: '',
       },
+      /**
+       * Items title
+       */
+      itemName: {
+        type: String,
+        readonly: true
+      },
+      /**
+       * Subitems title
+       */
+      subitemName: {
+        type: String,
+        readonly: true
+      },
+      /**
+       * Array of main items
+       */
       collections: {
         type: Array,
         readonly: true

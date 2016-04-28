@@ -11,7 +11,10 @@ Example:
 
     <paper-drawer-panel id="mainPanel">
       <paper-scroll-header-panel id="drawer" drawer mode="cover">
-        <zrickr-drawer><zrickr-drawer>
+        <zrickr-drawer
+          item-name="{{itemName}}"
+          subitem-name="{{subitemName}}">
+        <zrickr-drawer>
       </paper-scroll-header-panel>
       <paper-scroll-header-panel id="main" main condenses keep-condensed-header>
         MAIN CONTENT
@@ -24,11 +27,12 @@ Example:
 
 <dom-module id="zrickr-drawer">
   <template>
-    {{collections}}
     <zrickr-drawer-toolbar id="drawerToolbar"></zrickr-drawer-toolbar>
     <zrickr-drawer-content
       id="drawerContent"
-      collections="{{collections}}">
+      collections="{{collections}}"
+      item-name="{{itemName}}"
+      subitem-name="{{subitemName}}">
     </zrickr-drawer-content>
   </template>
 </dom-module>
@@ -40,6 +44,23 @@ Example:
     is: "zrickr-drawer",
 
     properties: {
+      /**
+       * Items title
+       */
+      itemName: {
+        type: String,
+        readonly: true
+      },
+      /**
+       * Subitems title
+       */
+      subitemName: {
+        type: String,
+        readonly: true
+      },
+      /**
+      * Array of main items
+      */
       collections: {
         type: Array,
         readonly: true

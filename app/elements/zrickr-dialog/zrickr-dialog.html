@@ -41,55 +41,35 @@ Custom property | Description | Default
   <template>
     <style include="iron-flex iron-flex-alignment">
       paper-dialog {
+        @apply(--layout-vertical);
         background: var(--dialog-background-color, --primary-background-color);
         opacity: 0.94;
         height: 65%;
         width: 50%;
       }
 
+      paper-dialog zrickr-dialog-header {
+        height: 10%;
+      }
+
       paper-dialog paper-dialog-scrollable {
+        @apply(--layout-flex);
         --paper-dialog-scrollable: {
           @apply(--layout-vertical);
           @apply(--layout-center);
-          min-height: 200px;
+          max-height: 500px;
           margin: 0px auto;
         }
+      }
+
+      paper-dialog zrickr-dialog-buttons {
+        height: 10%;
       }
 
       @media screen and (max-width: 800px), screen and (max-height: 600px) {
         paper-dialog {
           height: 98%;
           width: 98%;
-        }
-      }
-
-      @media screen and (min-height: 500px) {
-        paper-dialog paper-dialog-scrollable {
-          min-height: 310px;
-        }
-      }
-
-      @media screen and (min-height: 600px) {
-        paper-dialog paper-dialog-scrollable {
-          min-height: 410px;
-        }
-      }
-
-      @media screen and (min-height: 700px) {
-        paper-dialog paper-dialog-scrollable {
-          min-height: 510px;
-        }
-      }
-
-      @media screen and (min-height: 800px) {
-        paper-dialog paper-dialog-scrollable {
-          min-height: 610px;
-        }
-      }
-
-      @media screen and (min-width: 800px) {
-        paper-dialog paper-dialog-scrollable {
-          min-height: 200px;
         }
       }
     </style>

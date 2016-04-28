@@ -100,11 +100,6 @@
     window.addEventListener('signout-tapped', (event) => {
       zrickrAuth.removeUser();
     });
-    window.addEventListener('menu-tapped', (event) => {
-      let mainPanel = document.querySelector('#mainPanel');
-      mainPanel.openDrawer();
-    });
-
   });
 
   // See https://github.com/Polymer/polymer/issues/1381

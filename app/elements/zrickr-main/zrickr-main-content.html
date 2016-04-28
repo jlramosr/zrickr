@@ -6,6 +6,7 @@
   </style>
 
   <template>
+    {{collections}}
     <input placeholder="old password" value="{{oldPassword::input}}">
     <input placeholder="new password" value="{{newPassword::input}}">
     <button on-tap="_changePasswordTapped">Change password</button>

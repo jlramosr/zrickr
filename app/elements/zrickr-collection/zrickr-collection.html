@@ -1,7 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/firebase-element/firebase-document.html">
 <link rel="import" href="../../bower_components/firebase-element/firebase-collection.html">
-<link rel="import" href="../../elements/zrickr-collection/zrickr-collection-new.html">
 
 <!--
 `<zrickr-collection>` is the main handler of a collection with the basic
@@ -40,36 +39,12 @@ methods (add, modify, remove a collection)
       },
     },
 
-    listeners: {
-      'finish-create-new-collection': '_finishCreation'
-    },
-
-    /**
-     * Fires when the process of creation has finished
-     * @event add-item-finish
-     * @detail {{zrickrCollectionNew}}
-     */
-    _finishCreation(event) {
-      this.fire('add-item-finish', event.detail);
-    },
-
-    /**
-     * Enables the process of a new collection creation
-     */
-    new(collection) {
-      let newCollection = document.createElement('zrickr-collection-new');
-      this.appendChild(newCollection);
-    },
-
     /**
      * Add a collection
+     * @param {object} The collection to add
      */
     add(collection) {
-      let newCollection = {
-        'name': collection.collectionName,
-        'public': collection.public
-      }
-      this.$$('firebase-collection').add(newCollection);
+      this.$$('firebase-collection').add(collection);
     }
   });
 }());

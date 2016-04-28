@@ -5,6 +5,7 @@
 <link rel="import" href="../../elements/zrickr-drawer/zrickr-drawer.html">
 <link rel="import" href="../../elements/zrickr-main/zrickr-main.html">
 <link rel="import" href="../../elements/zrickr-collection/zrickr-collection.html">
+<link rel="import" href="../../elements/zrickr-collection/zrickr-collection-new.html">
 
 <!--
 `<zrickr-app>` provides a web main structure with a drawer
@@ -20,25 +21,36 @@ Example:
 
 <dom-module id="zrickr-app">
   <style include="iron-flex iron-flex-alignment">
+    #mainPanel {
+      background: var(--main-panel-background-color, --primary-background-color);
+    }
     #drawer {
-      background: var(--drawer-background-color, --paper-grey-50);
+      background: var(--drawer-background-color, --primary-background-color);
+      height: 100%;
+    }
+    #main {
+      background: var(--main-background-color, --primary-background-color);
     }
   </style>
 
   <template>
+    <paper-drawer-panel id="mainPanel">
+      <paper-scroll-header-panel id="drawer" condenses drawer mode="cover">
+        <zrickr-drawer
+          collections="{{collections}}"
+          item-name="My Collections"
+          subitem-name="My Shared Items">
+        <zrickr-drawer>
+      </paper-scroll-header-panel>
+      <paper-scroll-header-panel id="main" main condenses keep-condensed-header>
+        <zrickr-main user={{user}} collections="{{collections}}"><zrickr-main>
+      </paper-scroll-header-panel>
+    </paper-drawer-panel>
     <zrickr-collection
       id="collectionHandler"
       location="{{location}}"
       collections="{{collections}}">
     </zrickr-collection>
-    <paper-drawer-panel id="mainPanel">
-      <paper-scroll-header-panel id="drawer" drawer mode="cover">
-        <zrickr-drawer collections="{{collections}}"><zrickr-drawer>
-      </paper-scroll-header-panel>
-      <paper-scroll-header-panel id="main" main condenses keep-condensed-header>
-        <zrickr-main user={{user}}><zrickr-main>
-      </paper-scroll-header-panel>
-    </paper-drawer-panel>
   </template>
 </dom-module>
 
@@ -62,8 +74,9 @@ Example:
     },
 
     listeners: {
-      'add-item-tapped': '_newCollectionProcess',
-      'add-item-finish': '_addCollection'
+      'menu-tapped': '_openDrawer',
+      'add-item-tapped': '_newItemProcess',
+      'add-item': '_addItem'
     },
 
     attached() {
@@ -74,20 +87,28 @@ Example:
     },
 
     /**
+     * Fired when the user taps on menu button
+     */
+    _openDrawer(event) {
+      let mainPanel = document.querySelector('#mainPanel');
+      mainPanel.openDrawer();
+    },
+
+    /**
      * Fired when the user taps on add a new item in drawer
      */
-    _newCollectionProcess(event) {
-      this.$.collectionHandler.new();
+    _newItemProcess(event) {
+      let newCollectionProcess = document.createElement('zrickr-collection-new');
+      this.$.collectionHandler.appendChild(newCollectionProcess);
     },
 
     /**
      * Fires when the process of creation has finished
      */
-    _addCollection(event) {
+    _addItem(event) {
       let collection = event.detail;
       this.$.collectionHandler.add(collection);
     }
-
   });
 })();
 </script>
