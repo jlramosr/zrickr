@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="zrickr-drawer-content.html">
 <link rel="import" href="zrickr-drawer-toolbar.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <!--
 `<zrickr-drawer>` implements a web main structure of lateral drawer with a
@@ -26,8 +27,23 @@ Example:
 -->
 
 <dom-module id="zrickr-drawer">
+  <style include="iron-flex iron-flex-alignment">
+    :host {
+      @apply(--layout-vertical);
+      display: block;
+      height: 100%;
+    }
+
+    .paper-header {
+      position: relative;
+    }
+
+  </style>
   <template>
-    <zrickr-drawer-toolbar id="drawerToolbar"></zrickr-drawer-toolbar>
+    <zrickr-drawer-toolbar
+      class="paper-header"
+      id="drawerToolbar">
+    </zrickr-drawer-toolbar>
     <zrickr-drawer-content
       id="drawerContent"
       collections="{{collections}}"

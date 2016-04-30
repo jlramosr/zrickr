@@ -29,7 +29,12 @@ Example:
   <style include="iron-flex iron-flex-alignment">
     :host {
       @apply(--layout-vertical);
+      height: 100%;
       --drawer-content-item: {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        padding-left: 14px;
+        padding-right: 0px;
         color:
           var(--drawer-content-item-text-color, --primary-text-color);
         background:
@@ -39,6 +44,8 @@ Example:
           var(--drawer-content-item-border-color, --divider-color);
       };
       --drawer-content-subitem: {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
         color:
           var(--drawer-content-subitem-text-color, --secondary-text-color);
         background:
@@ -46,12 +53,14 @@ Example:
         border-bottom:
           1px solid
           var(--drawer-content-subitem-border-color, --divider-color);
-        padding-left: 24px;
+        padding-left: 28px;
         font-size: 90%;
+        font-weight: normal;
       };
+    }
 
-      height: calc(100% - 64px);
-
+    paper-menu {
+      padding: 0px;
     }
 
     .main {
@@ -59,23 +68,8 @@ Example:
     }
 
     .secondary {
+      @apply(--layout-vertical);
       margin-top: auto;
-    }
-
-    paper-menu {
-      background: var(--drawer-background-color, --paper-grey-50);
-      padding: 0px;
-    }
-
-    paper-item {
-      @apply(--layout-horizontal);
-      @apply(--layout-center);
-    }
-
-    .right-button {
-      position: absolute;
-      right: 3px;
-      top: 3px;
     }
 
     iron-image {
@@ -88,15 +82,20 @@ Example:
       @apply(--drawer-content-item);
     }
 
-    .item-menu {
+    .item-title {
+      @apply(--layout-flex);
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+      padding-right: 14px;
+    }
+
+    .item-list {
       @apply(--layout-vertical);
       overflow: scroll;
-      height: 250px;
+      height: 198px;
     }
 
     .subitem {
-      @apply(--layout-horizontal);
-      @apply(--layout-center);
       @apply(--drawer-content-subitem);
     }
 
@@ -106,48 +105,48 @@ Example:
       margin-right: 8px;
     }
 
-    .subitem-menu-button {
+    .menu-button {
       color:
         var(--drawer-content-item-icon-color,
             --drawer-content-subitem-text-color);
       margin-right: 4px;
+      opacity: 0.50;
     }
   </style>
 
   <template>
     <paper-menu class="main">
-      <paper-submenu class="primary-section">
-        <paper-item class="item menu-trigger">
-          <div class="layout horizontal center">
+
+      <paper-submenu>
+        <a class="menu-trigger item">
+          <div class="item-title">
             <paper-icon-button icon="image:view-comfy"></paper-icon-button>
             <span>{{itemName}}</span>
           </div>
-          <div class="right-button">
-            <paper-icon-button
-              on-tap="_addItemTapped"
-              icon="icons:add">
-            </paper-icon-button>
-          </div>
-        </paper-item>
-        <paper-menu class="menu-content item-menu">
+          <paper-icon-button
+            icon="icons:add"
+            on-tap="_addItemTapped"
+            class="menu-button">
+            <paper-ripple></paper-ripple>
+          </paper-icon-button>
+        </a>
+        <paper-menu class="menu-content item-list">
           <template is="dom-repeat" items="[[collections]]" as="collection">
             <a class="subitem">
-              <div class="subitem-title" on-tap="_toggleSubItemActions">
+              <div class="subitem-title" on-tap="_menuSubitemTapped">
                 <iron-image sizing="contain" src="../../images/zrickr.png"></iron-image>
                 <span>[[collection.name]]</span>
               </div>
               <paper-icon-button
                 icon="icons:more-vert"
-                class="subitem-menu-button">
-                <paper-ripple id="ripple">
-                </paper-ripple>
+                class="menu-button">
+                <paper-ripple></paper-ripple>
               </paper-icon-button>
             </a>
           </template>
         </paper-menu>
       </paper-submenu>
-
-      <paper-submenu class="primary-section">
+      <paper-submenu>
         <paper-item class="item menu-trigger">
           <div class="layout horizontal center">
             <paper-icon-button icon="social:group"></paper-icon-button>

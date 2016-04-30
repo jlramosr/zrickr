@@ -14,7 +14,7 @@ The following custom properties are available for styling:
 Custom property | Description | Default
 ----------------|-------------|----------
 `--paper-toolbar-color`| Elements color of the toolbar| `#FFFFFF`
-`--paper-toolbar-background`| Toolbar background color| `--primary-color`
+`--paper-toolbar-background-color`| Toolbar background color| `--primary-color`
 
 @element zrickr-drawer-toolbar
 @demo demo/toolbar.html
@@ -24,19 +24,18 @@ Custom property | Description | Default
 <dom-module id="zrickr-drawer-toolbar">
   <style>
     :host {
+      display: block;
       --paper-toolbar-color:
           var(--drawer-toolbar-color, #FFFFFF);
       --paper-toolbar-background:
-          var(--drawer-toolbar-background, var(--primary-color));
+          var(--drawer-toolbar-background-color, var(--primary-color));
     }
   </style>
 
   <template>
-    <paper-header>
-      <paper-toolbar>
-        <zrickr-header></zrickr-header>
-      </paper-toolbar>
-    </paper-header>
+    <paper-toolbar>
+      <zrickr-header></zrickr-header>
+    </paper-toolbar>
   </template>
 </dom-module>
 
