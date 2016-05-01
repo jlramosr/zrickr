@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../../bower_components/paper-menu/paper-submenu.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
@@ -63,6 +64,10 @@ Example:
       padding: 0px;
     }
 
+    paper-menu-button {
+      padding: 0px;
+    }
+
     .main {
       @apply(--layout-vertical);
     }
@@ -112,6 +117,24 @@ Example:
       margin-right: 4px;
       opacity: 0.50;
     }
+
+    .menu-subitem {
+      @apply(--layout-flex);
+      display: block;
+      padding: 1px;
+    }
+
+    .menu-subitem-action {
+      @apply(--layout-flex);
+      @apply(--layout-horizontal);
+      font-size: 14px;
+      margin: 0px auto;
+      min-height: 8px;
+    }
+
+    .space {
+      border-bottom: 1px solid var(--divider-color);
+    }
   </style>
 
   <template>
@@ -137,11 +160,28 @@ Example:
                 <iron-image sizing="contain" src="../../images/zrickr.png"></iron-image>
                 <span>[[collection.name]]</span>
               </div>
-              <paper-icon-button
-                icon="icons:more-vert"
-                class="menu-button">
-                <paper-ripple></paper-ripple>
-              </paper-icon-button>
+              <paper-menu-button>
+                <paper-icon-button
+                  icon="icons:more-vert"
+                  class="dropdown-trigger menu-button"
+                  on-tap="_menuSubitemTapped">
+                  <paper-ripple></paper-ripple>
+                </paper-icon-button>
+                <paper-menu role="menu" class="dropdown-content menu-subitem">
+                  <paper-item class="menu-subitem-action space">
+                    Add a zrickr
+                  </paper-item>
+                  <paper-item class="menu-subitem-action">
+                    View collection
+                  </paper-item>
+                  <paper-item class="menu-subitem-action">
+                    Edit collection
+                  </paper-item>
+                  <paper-item class="menu-subitem-action">
+                    Delete collection
+                  </paper-item>
+                </paper-menu>
+              </paper-menu-button>
             </a>
           </template>
         </paper-menu>
@@ -234,7 +274,8 @@ Example:
       this.fire("add-item-tapped");
     },
 
-    _toggleSubItemActions() {
+    _menuSubitemTapped(event) {
+      console.log("HOLA", event.detail);
 
     },
 
