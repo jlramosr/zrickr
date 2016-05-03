@@ -1,26 +1,23 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
-<link rel="import" href="../../bower_components/paper-menu/paper-submenu.html">
-<link rel="import" href="../../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../../bower_components/paper-ripple/paper-ripple.html">
-<link rel="import" href="../../bower_components/iron-image/iron-image.html">
-<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../bower_components/iron-icons/social-icons.html">
-<link rel="import" href="../../bower_components/iron-icons/image-icons.html">
-<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="zrickr-drawer-content-item.html">
 
 <!--
-`<zrickr-drawer-content>` is the element of the drawer content
+`<zrickr-drawer-content>` is the element of the drawer content with all menus
 
 Example:
 
   <zrickr-drawer-content
-    item-name="My Collections"
-    subitem-name="My Shared Collections">
+    items="{{collections}}"
+    primary-item-menu-name="My Collections"
+    secondary-item-menu-name="My Shared Collections"
+    item-name="collection"
+    subitem-name="zrickr">
   </zrickr-drawer-content>
+
+If we don't want a secondary menu for more items we haven't put the
+`secondary-item-menu-name` property or let empty `items` array
 
 @element zrickr-drawer-content
 @demo ../../elements/zrickr-drawer/demo/index.html
@@ -31,197 +28,57 @@ Example:
     :host {
       @apply(--layout-vertical);
       height: 100%;
-      --drawer-content-item: {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
-        padding-left: 14px;
-        padding-right: 0px;
-        color:
-          var(--drawer-content-item-text-color, --primary-text-color);
-        background:
-          var(--drawer-content-item-background-color, --paper-grey-50);
-        border-bottom:
-          1px solid
-          var(--drawer-content-item-border-color, --divider-color);
-      };
-      --drawer-content-subitem: {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
-        color:
-          var(--drawer-content-subitem-text-color, --secondary-text-color);
-        background:
-          var(--drawer-content-subitem-background-color, --paper-grey-50);
-        border-bottom:
-          1px solid
-          var(--drawer-content-subitem-border-color, --divider-color);
-        padding-left: 28px;
-        font-size: 90%;
-        font-weight: normal;
-      };
+      min-height: 240px; //(48x5);
     }
 
     paper-menu {
       padding: 0px;
     }
 
-    paper-menu-button {
-      padding: 0px;
-    }
-
     .main {
       @apply(--layout-vertical);
+      display: block;
     }
 
     .secondary {
       @apply(--layout-vertical);
       margin-top: auto;
-    }
-
-    iron-image {
-      width: 18px;
-      height: 18px;
-      margin-right: 8px;
-    }
-
-    .item {
-      @apply(--drawer-content-item);
-    }
-
-    .item-title {
-      @apply(--layout-flex);
-      @apply(--layout-horizontal);
-      @apply(--layout-center);
-      padding-right: 14px;
-    }
-
-    .item-list {
-      @apply(--layout-vertical);
-      overflow: scroll;
-      height: 198px;
-    }
-
-    .subitem {
-      @apply(--drawer-content-subitem);
-    }
-
-    .subitem-title {
-      @apply(--layout-flex);
-      @apply(--layout-horizontal);
-      margin-right: 8px;
-    }
-
-    .menu-button {
-      color:
-        var(--drawer-content-item-icon-color,
-            --drawer-content-subitem-text-color);
-      margin-right: 4px;
-      opacity: 0.50;
-    }
-
-    .menu-subitem {
-      @apply(--layout-flex);
       display: block;
-      padding: 1px;
-    }
-
-    .menu-subitem-action {
-      @apply(--layout-flex);
-      @apply(--layout-horizontal);
-      font-size: 14px;
-      margin: 0px auto;
-      min-height: 8px;
-    }
-
-    .space {
-      border-bottom: 1px solid var(--divider-color);
     }
   </style>
 
   <template>
     <paper-menu class="main">
-
-      <paper-submenu>
-        <a class="menu-trigger item">
-          <div class="item-title">
-            <paper-icon-button icon="image:view-comfy"></paper-icon-button>
-            <span>{{itemName}}</span>
-          </div>
-          <paper-icon-button
-            icon="icons:add"
-            on-tap="_addItemTapped"
-            class="menu-button">
-            <paper-ripple></paper-ripple>
-          </paper-icon-button>
-        </a>
-        <paper-menu class="menu-content item-list">
-          <template is="dom-repeat" items="[[collections]]" as="collection">
-            <a class="subitem">
-              <div class="subitem-title" on-tap="_menuSubitemTapped">
-                <iron-image sizing="contain" src="../../images/zrickr.png"></iron-image>
-                <span>[[collection.name]]</span>
-              </div>
-              <paper-menu-button>
-                <paper-icon-button
-                  icon="icons:more-vert"
-                  class="dropdown-trigger menu-button"
-                  on-tap="_menuSubitemTapped">
-                  <paper-ripple></paper-ripple>
-                </paper-icon-button>
-                <paper-menu role="menu" class="dropdown-content menu-subitem">
-                  <paper-item class="menu-subitem-action space">
-                    Add a zrickr
-                  </paper-item>
-                  <paper-item class="menu-subitem-action">
-                    View collection
-                  </paper-item>
-                  <paper-item class="menu-subitem-action">
-                    Edit collection
-                  </paper-item>
-                  <paper-item class="menu-subitem-action">
-                    Delete collection
-                  </paper-item>
-                </paper-menu>
-              </paper-menu-button>
-            </a>
-          </template>
-        </paper-menu>
-      </paper-submenu>
-      <paper-submenu>
-        <paper-item class="item menu-trigger">
-          <div class="layout horizontal center">
-            <paper-icon-button icon="social:group"></paper-icon-button>
-            <span>{{subitemName}}</span>
-          </div>
-        </paper-item>
-        <paper-menu class="menu-content">
-          <paper-item class="subitem">
-            <paper-icon-button
-              src="../images/touch/icon-72x72.png">
-            </paper-icon-button>
-            <span class="flex">Facturas</span>
-            <paper-icon-button
-              on-tap="_toggleSubItemActions"
-              icon="icons:more-vert"
-              class="right-button">
-            </paper-icon-button>
-          </paper-item>
-        </paper-menu>
-      </paper-submenu>
+      <zrickr-drawer-content-item
+        icon="image:view-comfy"
+        item-menu-name="[[primaryItemMenuName]]"
+        add
+        item-name="[[itemName]]"
+        subitem-name="[[subitemName]]"
+        items="[[items]]">
+        <!--hidden="[[_notShowPrimary(primaryItemMenuName, items)]]">-->
+      </zrickr-drawer-content-item>
+      <zrickr-drawer-content-item
+        icon="social:group"
+        item-menu-name="[[secondaryItemMenuName]]"
+        items="[[items]]">
+        <!--hidden="[[_notShowSecondary(secondaryItemMenuName, items)]]">-->
+      </zrickr-drawer-content-item>
     </paper-menu>
 
     <paper-menu class="secondary">
-      <paper-item class="item">
-        <paper-icon-button icon="icons:settings"></paper-icon-button>
-        <span>Settings</span>
-      </paper-item>
-      <paper-item class="item">
-        <paper-icon-button icon="icons:delete"></paper-icon-button>
-        <span>Recycle Bin</span>
-      </paper-item>
-      <paper-item class="item">
-        <paper-icon-button icon="icons:help"></paper-icon-button>
-        <span>Help and Suggestions</span>
-      </paper-item>
+      <zrickr-drawer-content-item
+        icon="icons:settings"
+        item-menu-name="Settings">
+      </zrickr-drawer-content-item>
+      <zrickr-drawer-content-item
+        icon="icons:delete"
+        item-menu-name="Recycle Bin">
+      </zrickr-drawer-content-item>
+      <zrickr-drawer-content-item
+        icon="icons:help"
+        item-menu-name="Help and Suggestions">
+      </zrickr-drawer-content-item>
     </paper-menu>
 
   </template>
@@ -243,58 +100,67 @@ Example:
         value: '',
       },
       /**
-       * Items title
+       * Primary items menu title
        */
-      itemName: {
+      primaryItemMenuName: {
         type: String,
+        value: 'My Items',
         readonly: true
       },
       /**
-       * Subitems title
+       * Secondary items menu title
+       */
+      secondaryItemMenuName: {
+        type: String,
+        value: '',
+        readonly: true
+      },
+      /**
+       * Title of a item in singular
+       */
+      itemName: {
+        type: String,
+        value: 'item',
+        readonly: true
+      },
+      /**
+       * Title of a subitem in singular
        */
       subitemName: {
         type: String,
+        value: 'subitem',
         readonly: true
       },
       /**
        * Array of main items
        */
-      collections: {
+      items: {
         type: Array,
         readonly: true
       }
     },
 
-
     /**
-     * When the user tap on the add item button.
-     * @event add-item-tapped
+     * Calculate if not should be the primary menu item
+     * @return {boolean} Condition to appear the primary menu
      */
-    _addItemTapped() {
-      this.fire("add-item-tapped");
-    },
-
-    _menuSubitemTapped(event) {
-      console.log("HOLA", event.detail);
-
+    _notShowPrimary(primaryItemMenuName, items) {
+      console.log(items);
+      console.log(this.items);
+      console.log(items.length);
+      return (!this.items.length || !primaryItemMenuName);
     },
 
     /**
-     * When the user tap on the right button for each subitem.
-     * @event add-subitem-tapped
+     * Calculate if not should be the secondary menu item
+     * @return {boolean} Condition to appear the secondary menu
      */
-    _addSubItemTapped() {
-      this.fire("add-subitem-tapped");
-    },
+    _notShowSecondary(secondaryItemMenuName, items) {
+      console.log(items);
+      console.log(items.length);
+      return (!this.items.length || !secondaryItemMenuName);
+    }
 
-    _changePasswordTapped() {
-      this.fire("change-password-tapped", this);
-    },
-
-    _signoutTapped() {
-      this.fire("signout-tapped");
-    },
   });
-
 })();
 </script>

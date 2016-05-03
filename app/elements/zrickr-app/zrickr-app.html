@@ -39,15 +39,17 @@ Example:
 
   <template>
     <paper-drawer-panel id="mainPanel">
-      <paper-scroll-header-panel id="drawer" fixed drawer>
+      <paper-scroll-header-panel id="drawer" fixed condenses scroll-away-topbar drawer>
         <zrickr-drawer-toolbar
           class="paper-header"
           id="drawerToolbar">
         </zrickr-drawer-toolbar>
         <zrickr-drawer-content
-          collections="{{collections}}"
-          item-name="My Collections"
-          subitem-name="My Shared Items">
+          items="{{collections}}"
+          primary-item-menu-name="My Collections"
+          secondary-item-menu-name="My Shared Collections"
+          item-name="collection"
+          subitem-name="zrickr">
         </zrickr-drawer-content>
       </paper-scroll-header-panel>
       <paper-scroll-header-panel id="main" main condenses keep-condensed-header>

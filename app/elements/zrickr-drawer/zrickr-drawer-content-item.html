@@ -1,0 +1,374 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../bower_components/paper-menu/paper-submenu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/image-icons.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<!--
+`<zrickr-drawer-content-item>` implements a menu content to a item
+and their subitems if it has someone, or a simple menu tittle with its
+corresponding events.
+
+Example:
+
+    <zrickr-drawer-content-item
+      icon="icons:settings"
+      item-menu-name="Settings">
+    </zrickr-drawer-content-item>
+
+In case our items are able to add manually, it exists the possibility to
+include a button to add a new item (view `add-item-tapped` event)
+
+    <zrickr-drawer-content-item
+      icon="image:view-comfy"
+      item-menu-name="My Collections"
+      add
+      item-name="collection"
+      subitem-name="element"
+      items="[{'name': 'Balls', 'public':true}, {'name': 'Coins', 'public':false}]">
+    </zrickr-drawer-content-item>
+
+If there are no subitems, we must no put `subitem-name` property
+
+@element zrickr-drawer-content-item
+-->
+
+<dom-module id="zrickr-drawer-content-item">
+  <style include="iron-flex iron-flex-alignment">
+    :host {
+      --paper-menu-disabled-color: red;
+      --drawer-content-item: {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        color:
+          var(--drawer-content-item-text-color, --primary-text-color);
+        background:
+          var(--drawer-content-item-background-color, --paper-grey-50);
+        border-bottom:
+          1px solid
+          var(--drawer-content-item-border-color, --divider-color);
+        padding-left: 14px;
+        padding-right: 0px;
+        font-weight: normal;
+        font-size: 90%;
+        opacity: 0.99;
+      };
+      --drawer-content-subitem: {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        color:
+          var(--drawer-content-subitem-text-color, --secondary-text-color);
+        background:
+          var(--drawer-content-subitem-background-color, --paper-grey-50);
+        border-bottom:
+          1px solid
+          var(--drawer-content-subitem-border-color, --divider-color);
+        padding-left: 28px;
+        padding-right: 0px;
+        font-size: 90%;
+        font-weight: normal;
+      };
+
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    paper-menu {
+      padding: 0px;
+    }
+
+    paper-menu-button {
+      padding: 0px;
+    }
+
+    iron-image {
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
+    }
+
+    .item {
+      @apply(--drawer-content-item);
+    }
+
+    .item-title {
+      @apply(--layout-flex);
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+      padding-right: 14px;
+    }
+
+    .item-list {
+      @apply(--layout-vertical);
+      overflow: auto;
+      min-height: 0px;
+    }
+
+    .subitem {
+      @apply(--drawer-content-subitem);
+    }
+
+    .subitem-title {
+      @apply(--layout-flex);
+      @apply(--layout-horizontal);
+      margin-right: 8px;
+    }
+
+    .menu-button {
+      color:
+        var(--drawer-content-item-icon-color,
+            --drawer-content-subitem-text-color);
+      margin-right: 4px;
+      opacity: 0.50;
+    }
+
+    .menu-subitem {
+      width: 150px;
+      border: 1px solid var(--drawer-content-subitem-menu-border-color,
+                            --primary-text-color);
+      padding: 1px;
+    }
+
+    .menu-subitem-action {
+      @apply(--layout-flex);
+      @apply(--layout-horizontal);
+      font-size: 12px;
+      margin: 0px auto;
+      min-height: 8px;
+      padding: 0px 4px;
+      min-height: 40px;
+    }
+
+    .menu-subitem-action paper-icon-button {
+      width: 30px;
+      height: 30px;
+    }
+
+    .space {
+      border-bottom: 1px solid var(--divider-color);
+      margin-bottom: 2px;
+    }
+  </style>
+
+  <template>
+    <paper-submenu>
+      <a href="javascript:void(0)" class="menu-trigger"><paper-item class="item">
+        <div class="item-title" on-tap="_itemTapped">
+          <paper-icon-button icon="{{icon}}"></paper-icon-button>
+          <span>[[itemMenuName]]</span>
+        </div>
+        <paper-icon-button
+          hidden="{{!add}}"
+          icon="icons:add"
+          on-tap="_addItemTapped"
+          class="menu-button">
+          <paper-ripple></paper-ripple>
+        </paper-icon-button>
+      </paper-item></a>
+
+      <!--<template is="dom-if" if="[[items]]">-->
+        <paper-menu id="menuItem" role="listbox" class="menu-content item-list">
+          <template is="dom-repeat" items="[[items]]" as="item">
+            <a href="javascript:void(0)" tabindex="-1"><paper-item raised class="subitem">
+              <div class="subitem-title" on-tap="_viewSubitemTapped">
+                <iron-image sizing="contain" src="../../images/zrickr.png"></iron-image>
+                <span>[[item.name]]</span>
+              </div>
+              <paper-menu-button>
+                <paper-icon-button
+                  icon="icons:more-vert"
+                  class="dropdown-trigger menu-button"
+                  on-tap="_menuSubitemTapped">
+                  <paper-ripple></paper-ripple>
+                </paper-icon-button>
+                <paper-menu id="menuSubitem" role="menu" class="dropdown-content menu-subitem">
+                  <paper-item hidden={{!subitemName}}
+                              class="menu-subitem-action space"
+                              on-tap="_addSubitemTapped">
+                    <paper-icon-button icon="image:add-to-photos"></paper-icon-button>
+                    Add a [[subitemName]]
+                  </paper-item>
+                  <paper-item class="menu-subitem-action"
+                              on-tap="_viewSubitemTapped">
+                    <paper-icon-button icon="image:remove-red-eye"></paper-icon-button>
+                    View [[itemName]]
+                  </paper-item>
+                  <paper-item class="menu-subitem-action"
+                              on-tap="_editSubitemTapped">
+                    <paper-icon-button icon="icons:create"></paper-icon-button>
+                    Edit [[itemName]]
+                  </paper-item>
+                  <paper-item class="menu-subitem-action"
+                              on-tap="_deleteSubitemTapped">
+                    <paper-icon-button icon="icons:close"></paper-icon-button>
+                    Delete [[itemName]]
+                  </paper-item>
+                </paper-menu>
+              </paper-menu-button>
+            </paper-item></a>
+          <!--</template>-->
+        </paper-menu>
+      </template>
+    </paper-submenu>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+
+  Polymer({
+
+    is: "zrickr-drawer-content-item",
+
+
+    listeners: {
+      /*'paper-submenu-open': '_submenuOpen',
+      'paper-submenu-close': '_submenuClose'*/
+      'iron-activate': '_subitemActivate',
+      'iron-select': '_subitemSelected',
+      'item-tapped': '_itemTapped2'
+    },
+
+    _itemTapped2(event) {
+      let menuItem = this.$.menuItem;
+      console.log("menuItem", menuItem);
+    },
+
+    _subitemActivate(event) {
+      console.log("Subitem Activated", event.detail);
+      let index = event.detail.selected;
+      let item = this.items[index];
+      let item2 = event.detail.item;
+      let focusedItem = event.detail.focusedItem;
+      let firebaseKey = item.__firebaseKey__;
+      console.log("index", index);
+      console.log("item", item);
+      console.log("item2",item2);
+      console.log("focusedItem", focusedItem);
+      console.log("firebaseKey", firebaseKey);
+    },
+
+    _subitemSelected(event) {
+      console.log("Subitem Selected", event.detail);
+    },
+
+    properties: {
+      /**
+       * If it should be a button to add a new item
+       */
+      add: {
+        type: Boolean,
+        value: false,
+      },
+      /**
+       * Indicate the new password that the user wants to change
+       */
+      newPassword: {
+        type: String,
+        value: '',
+      },
+      /**
+       * Main icon of the item title
+       */
+      icon: Object,
+      /**
+       * Item name of the menu
+       */
+      itemMenuName: {
+        type: String,
+        value: 'My Items',
+        readonly: true
+      },
+      /**
+       * Item name in singular
+       */
+      itemName: {
+        type: String,
+        value: 'item',
+        readonly: true
+      },
+      /**
+       * Subitems name in singular
+       */
+      subitemName: {
+        type: String,
+        value: '',
+        readonly: true
+      },
+      /**
+       * Array of main items
+       */
+      items: {
+        type: Array,
+        readonly: true
+      }
+    },
+
+    /**
+     * When the user tap on the add item button.
+     * @event add-item-tapped
+     */
+    _addItemTapped(event) {
+      this.fire("add-item-tapped", this);
+      event.stopPropagation();
+    },
+
+    _itemTapped(event) {
+      this.fire("item-tapped", this);
+      //console.log("Item Tapped", event.detail);
+    },
+
+    _viewSubitemTapped(event) {
+      this.fire("view-subitem-tapped", this);
+      console.log("View Subitem Tapped", event.detail);
+    },
+
+    /**
+     * When the user tap on the right button for each subitem.
+     * @event menu-subitem-tapped
+     */
+    _menuSubitemTapped(event) {
+      this.fire("menu-subitem-tapped", this);
+      console.log("Menu Subitem Tapped", event.detail);
+    },
+
+    _addSubitemTapped(event) {
+      this.fire("add-subitem-tapped", this);
+      console.log("Add Subitem Tapped", event.detail);
+    },
+
+    _editSubitemTapped(event) {
+      this.fire("edit-subitem-tapped", this);
+      console.log("Edit Subitem Tapped", event.detail);
+    },
+
+    _deleteSubitemTapped(event) {
+      this.fire("delete-subitem-tapped", this);
+      console.log("Delete Subitem Tapped", event.detail);
+    },
+
+
+
+
+
+    _changePasswordTapped() {
+      this.fire("change-password-tapped", this);
+    },
+
+    _signoutTapped() {
+      this.fire("signout-tapped");
+    },
+  });
+
+})();
+</script>
