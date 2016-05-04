@@ -1,0 +1,78 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/image-icons.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<!--
+`<zrickr-drawer-content-setting>` implements a simple menu item
+
+Example:
+
+  <zrickr-drawer-content-setting
+    id="recycleBin"
+    icon="icons:delete"
+    item-menu-name="Recycle Bin">
+  </zrickr-drawer-content-setting>
+
+@element zrickr-drawer-content-setting
+-->
+
+<dom-module id="zrickr-drawer-content-setting">
+  <style include="iron-flex iron-flex-alignment">
+    paper-item {
+      cursor: pointer;
+    }
+
+    .item {
+      @apply(--drawer-content-item);
+    }
+
+    .item-title {
+      @apply(--drawer-title-item);
+    }
+
+  </style>
+
+  <template>
+    <paper-item class="item">
+      <div class="item-title" on-tap="_settingTapped">
+        <paper-icon-button icon="{{icon}}"></paper-icon-button>
+        <span>[[itemMenuName]]</span>
+      </div>
+    </paper-item>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+
+  Polymer({
+
+    is: "zrickr-drawer-content-setting",
+
+    properties: {
+      /**
+       * Main icon of the item title
+       */
+      icon: Object,
+      /**
+       * Item name of the menu
+       */
+      itemMenuName: {
+        type: String,
+        value: 'My Items',
+        readonly: true
+      }
+    },
+
+    _settingTapped(event) {
+      this.fire("setting-tapped", this);
+    }
+
+  });
+})();
+</script>

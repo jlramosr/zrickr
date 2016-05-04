@@ -20,6 +20,7 @@ corresponding events.
 Example:
 
     <zrickr-drawer-content-item
+      id="itemMenu1"
       icon="icons:settings"
       item-menu-name="Settings">
     </zrickr-drawer-content-item>
@@ -28,6 +29,7 @@ In case our items are able to add manually, it exists the possibility to
 include a button to add a new item (view `add-item-tapped` event)
 
     <zrickr-drawer-content-item
+      id="itemMenu2"
       icon="image:view-comfy"
       item-menu-name="My Collections"
       add
@@ -38,49 +40,22 @@ include a button to add a new item (view `add-item-tapped` event)
 
 If there are no subitems, we must no put `subitem-name` property
 
-@element zrickr-drawer-content-item
+### Styling
+
+The following custom properties are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--drawer-content-subitem-menu-border-color`| Border color of subitem menu | `--primary-text-color`
+
+@element zrickr-drawer-setting
+@demo ../../elements/zrickr-drawer/demo/index.html
 -->
 
 <dom-module id="zrickr-drawer-content-item">
   <style include="iron-flex iron-flex-alignment">
-    :host {
-      --paper-menu-disabled-color: red;
-      --drawer-content-item: {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
-        color:
-          var(--drawer-content-item-text-color, --primary-text-color);
-        background:
-          var(--drawer-content-item-background-color, --paper-grey-50);
-        border-bottom:
-          1px solid
-          var(--drawer-content-item-border-color, --divider-color);
-        padding-left: 14px;
-        padding-right: 0px;
-        font-weight: normal;
-        font-size: 90%;
-        opacity: 0.99;
-      };
-      --drawer-content-subitem: {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
-        color:
-          var(--drawer-content-subitem-text-color, --secondary-text-color);
-        background:
-          var(--drawer-content-subitem-background-color, --paper-grey-50);
-        border-bottom:
-          1px solid
-          var(--drawer-content-subitem-border-color, --divider-color);
-        padding-left: 28px;
-        padding-right: 0px;
-        font-size: 90%;
-        font-weight: normal;
-      };
-
-    }
-
-    a {
-      text-decoration: none;
+    paper-item {
+      cursor: pointer;
     }
 
     paper-menu {
@@ -102,10 +77,7 @@ If there are no subitems, we must no put `subitem-name` property
     }
 
     .item-title {
-      @apply(--layout-flex);
-      @apply(--layout-horizontal);
-      @apply(--layout-center);
-      padding-right: 14px;
+      @apply(--drawer-title-item);
     }
 
     .item-list {
@@ -125,11 +97,8 @@ If there are no subitems, we must no put `subitem-name` property
     }
 
     .menu-button {
-      color:
-        var(--drawer-content-item-icon-color,
-            --drawer-content-subitem-text-color);
       margin-right: 4px;
-      opacity: 0.50;
+      opacity: 0.75;
     }
 
     .menu-subitem {
@@ -162,7 +131,7 @@ If there are no subitems, we must no put `subitem-name` property
 
   <template>
     <paper-submenu>
-      <a href="javascript:void(0)" class="menu-trigger"><paper-item class="item">
+      <paper-item class="menu-trigger item">
         <div class="item-title" on-tap="_itemTapped">
           <paper-icon-button icon="{{icon}}"></paper-icon-button>
           <span>[[itemMenuName]]</span>
@@ -174,51 +143,48 @@ If there are no subitems, we must no put `subitem-name` property
           class="menu-button">
           <paper-ripple></paper-ripple>
         </paper-icon-button>
-      </paper-item></a>
+      </paper-item>
 
-      <!--<template is="dom-if" if="[[items]]">-->
-        <paper-menu id="menuItem" role="listbox" class="menu-content item-list">
-          <template is="dom-repeat" items="[[items]]" as="item">
-            <a href="javascript:void(0)" tabindex="-1"><paper-item raised class="subitem">
-              <div class="subitem-title" on-tap="_viewSubitemTapped">
-                <iron-image sizing="contain" src="../../images/zrickr.png"></iron-image>
-                <span>[[item.name]]</span>
-              </div>
-              <paper-menu-button>
-                <paper-icon-button
-                  icon="icons:more-vert"
-                  class="dropdown-trigger menu-button"
-                  on-tap="_menuSubitemTapped">
-                  <paper-ripple></paper-ripple>
-                </paper-icon-button>
-                <paper-menu id="menuSubitem" role="menu" class="dropdown-content menu-subitem">
-                  <paper-item hidden={{!subitemName}}
-                              class="menu-subitem-action space"
-                              on-tap="_addSubitemTapped">
-                    <paper-icon-button icon="image:add-to-photos"></paper-icon-button>
-                    Add a [[subitemName]]
-                  </paper-item>
-                  <paper-item class="menu-subitem-action"
-                              on-tap="_viewSubitemTapped">
-                    <paper-icon-button icon="image:remove-red-eye"></paper-icon-button>
-                    View [[itemName]]
-                  </paper-item>
-                  <paper-item class="menu-subitem-action"
-                              on-tap="_editSubitemTapped">
-                    <paper-icon-button icon="icons:create"></paper-icon-button>
-                    Edit [[itemName]]
-                  </paper-item>
-                  <paper-item class="menu-subitem-action"
-                              on-tap="_deleteSubitemTapped">
-                    <paper-icon-button icon="icons:close"></paper-icon-button>
-                    Delete [[itemName]]
-                  </paper-item>
-                </paper-menu>
-              </paper-menu-button>
-            </paper-item></a>
-          <!--</template>-->
-        </paper-menu>
-      </template>
+      <paper-menu id="menuItem" role="listbox" class="menu-content item-list">
+        <template is="dom-repeat" items="[[items]]" as="item">
+          <paper-item class="subitem" id="item-{{index}}">
+            <div class="subitem-title" on-tap="_viewSubitemTapped">
+              <iron-image sizing="contain" src="../../images/zrickr.png"></iron-image>
+              <span>[[item.name]]</span>
+            </div>
+            <paper-menu-button>
+              <paper-icon-button
+                icon="icons:more-vert"
+                class="dropdown-trigger menu-button">
+                <paper-ripple></paper-ripple>
+              </paper-icon-button>
+              <paper-menu id="menuSubitem" role="menu" class="dropdown-content menu-subitem">
+                <paper-item hidden={{!subitemName}}
+                            class="menu-subitem-action space"
+                            on-tap="_addSubitemTapped">
+                  <paper-icon-button icon="image:add-to-photos"></paper-icon-button>
+                  Add a [[subitemName]]
+                </paper-item>
+                <paper-item class="menu-subitem-action"
+                            on-tap="_viewItemTapped">
+                  <paper-icon-button icon="image:remove-red-eye"></paper-icon-button>
+                  View [[itemName]]
+                </paper-item>
+                <paper-item class="menu-subitem-action"
+                            on-tap="_editItemTapped">
+                  <paper-icon-button icon="icons:create"></paper-icon-button>
+                  Edit [[itemName]]
+                </paper-item>
+                <paper-item class="menu-subitem-action"
+                            on-tap="_deleteItemTapped">
+                  <paper-icon-button icon="icons:close"></paper-icon-button>
+                  Delete [[itemName]]
+                </paper-item>
+              </paper-menu>
+            </paper-menu-button>
+          </paper-item>
+        </template>
+      </paper-menu>
     </paper-submenu>
   </template>
 </dom-module>
@@ -230,39 +196,21 @@ If there are no subitems, we must no put `subitem-name` property
 
     is: "zrickr-drawer-content-item",
 
-
-    listeners: {
-      /*'paper-submenu-open': '_submenuOpen',
-      'paper-submenu-close': '_submenuClose'*/
-      'iron-activate': '_subitemActivate',
-      'iron-select': '_subitemSelected',
-      'item-tapped': '_itemTapped2'
-    },
-
-    _itemTapped2(event) {
-      let menuItem = this.$.menuItem;
-      console.log("menuItem", menuItem);
-    },
-
-    _subitemActivate(event) {
-      console.log("Subitem Activated", event.detail);
-      let index = event.detail.selected;
-      let item = this.items[index];
-      let item2 = event.detail.item;
-      let focusedItem = event.detail.focusedItem;
-      let firebaseKey = item.__firebaseKey__;
-      console.log("index", index);
-      console.log("item", item);
-      console.log("item2",item2);
-      console.log("focusedItem", focusedItem);
-      console.log("firebaseKey", firebaseKey);
-    },
-
-    _subitemSelected(event) {
-      console.log("Subitem Selected", event.detail);
-    },
-
     properties: {
+      /**
+       * Index of active or selected item
+       */
+      activeItem: {
+        type: Number,
+        value: -1
+      },
+      /**
+       * Database ID of active or selected item
+       */
+      activeID: {
+        type: String,
+        value: undefined
+      },
       /**
        * If it should be a button to add a new item
        */
@@ -314,6 +262,62 @@ If there are no subitems, we must no put `subitem-name` property
       }
     },
 
+    listeners: {
+      'paper-submenu-open': '_submenuOpen',
+      'iron-activate': '_subitemActivate',
+      'iron-select': '_subitemSelected'
+    },
+
+    observers: [
+      '_activeItemChanged(activeItem, activeID)'
+    ],
+
+    attached() {
+      if (!this.items || !this.itemMenuName) {
+        let menuItem = this.$.menuItem;
+        this.$.menuItem.remove();
+      }
+    },
+
+    close() {
+      this.$$('paper-submenu').close();
+    },
+
+    _submenuOpen(event) {
+      this.fire('menu-opened', this);
+    },
+
+    _activeItemChanged(activeItem, activeID) {
+
+    },
+
+    _subitemActivate(event) {
+      console.log("Subitem Activated", event.detail);
+      let index = event.detail.selected;
+      this.activeItem = index;
+      let itemObject = this.items[index];
+      let firebaseKey = itemObject.__firebaseKey__;
+      this.activeID = firebaseKey;
+      let itemAnchor = event.detail.item;
+      let itemPaper = itemAnchor.firstChild;
+      itemPaper.focused = true;
+      console.log("index", index);
+      console.log("itemObject", itemObject);
+      console.log("itemPaper",itemPaper.focused);
+      console.log("firebaseKey", firebaseKey);
+    },
+
+    _subitemSelected(event) {
+    },
+
+    /**
+     * When the user tap on a item
+     * @event item-tapped
+     */
+    _itemTapped(event) {
+      this.fire("item-tapped", this);
+    },
+
     /**
      * When the user tap on the add item button.
      * @event add-item-tapped
@@ -323,40 +327,45 @@ If there are no subitems, we must no put `subitem-name` property
       event.stopPropagation();
     },
 
-    _itemTapped(event) {
-      this.fire("item-tapped", this);
-      //console.log("Item Tapped", event.detail);
-    },
-
-    _viewSubitemTapped(event) {
-      this.fire("view-subitem-tapped", this);
-      console.log("View Subitem Tapped", event.detail);
+    /**
+     * When the user tap on a subitem
+     * @event menu-subitem-tapped
+     */
+    _subitemTapped(event) {
+      this.fire("subitem-tapped", this);
     },
 
     /**
-     * When the user tap on the right button for each subitem.
-     * @event menu-subitem-tapped
+     * When the user want to add a subitem on a item
+     * @event view-item-tapped
      */
-    _menuSubitemTapped(event) {
-      this.fire("menu-subitem-tapped", this);
-      console.log("Menu Subitem Tapped", event.detail);
-    },
-
     _addSubitemTapped(event) {
       this.fire("add-subitem-tapped", this);
-      console.log("Add Subitem Tapped", event.detail);
     },
 
-    _editSubitemTapped(event) {
-      this.fire("edit-subitem-tapped", this);
-      console.log("Edit Subitem Tapped", event.detail);
+    /**
+     * When the user want to general view of a item
+     * @event view-item-tapped
+     */
+    _viewItemTapped(event) {
+      this.fire("view-item-tapped", this);
     },
 
-    _deleteSubitemTapped(event) {
-      this.fire("delete-subitem-tapped", this);
-      console.log("Delete Subitem Tapped", event.detail);
+    /**
+     * When the user want to edit a item
+     * @event edit-item-tapped
+     */
+    _editItemTapped(event) {
+      this.fire("edit-item-tapped", this);
     },
 
+    /**
+     * When the user want to delete a item
+     * @event delete-item-tapped
+     */
+    _deleteItemTapped(event) {
+      this.fire("delete-item-tapped", this);
+    },
 
 
 

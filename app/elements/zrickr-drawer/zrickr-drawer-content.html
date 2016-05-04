@@ -2,6 +2,7 @@
 <link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="zrickr-drawer-content-item.html">
+<link rel="import" href="zrickr-drawer-content-setting.html">
 
 <!--
 `<zrickr-drawer-content>` is the element of the drawer content with all menus
@@ -16,8 +17,25 @@ Example:
     subitem-name="zrickr">
   </zrickr-drawer-content>
 
-If we don't want a secondary menu for more items we haven't put the
-`secondary-item-menu-name` property or let empty `items` array
+If we don't want a primary/secondary menu for items we haven't put the
+`primary-item-menu-name` or `secondary-item-menu-name` property or let
+empty corresponding `items` array.
+
+### Styling
+
+The following custom properties are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--drawer-title-item`| Mixin of a menu item title container| `{padding-right: 14px;}`
+`--drawer-content-item`| Mixin of a complete menu item| `{..}`
+`--drawer-content-subitem`| Mixin of a complete menu subitem| `{..}`
+`--drawer-content-item-text-color`| Item text color | `--primary-text-color`
+`--drawer-content-item-background-color`| Item text color background | `--paper-grey-50`
+`--drawer-content-item-border-color`| Space color between items | `--divider-color`
+`--drawer-content-subitem-text-color`| Subitem text color | `--secondary-text-color`
+`--drawer-content-subitem-background-color`| Subitem text color background | `--paper-grey-50`
+`--drawer-content-subitem-border-color`| Space color between subitems | `--divider-color`
 
 @element zrickr-drawer-content
 @demo ../../elements/zrickr-drawer/demo/index.html
@@ -25,6 +43,47 @@ If we don't want a secondary menu for more items we haven't put the
 
 <dom-module id="zrickr-drawer-content">
   <style include="iron-flex iron-flex-alignment">
+    :root {
+      --drawer-title-item: {
+        @apply(--layout-flex);
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        padding-right: 14px;
+      };
+      --drawer-content-item: {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        color:
+          var(--drawer-content-item-text-color, --primary-text-color);
+        background:
+          var(--drawer-content-item-background-color, --paper-grey-50);
+        border-bottom:
+          1px solid
+          var(--drawer-content-item-border-color, --divider-color);
+        padding-left: 14px;
+        padding-right: 0px;
+        font-weight: normal;
+        font-size: 90%;
+        opacity: 0.99;
+      };
+      --drawer-content-subitem: {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        color:
+          var(--drawer-content-subitem-text-color, --secondary-text-color);
+        background:
+          var(--drawer-content-subitem-background-color, --paper-grey-50);
+        border-bottom:
+          1px solid
+          var(--drawer-content-subitem-border-color, --divider-color);
+        padding-left: 28px;
+        padding-right: 0px;
+        font-size: 90%;
+        min-height: 40px;
+        font-weight: normal;
+      };
+    }
+
     :host {
       @apply(--layout-vertical);
       height: 100%;
@@ -50,37 +109,43 @@ If we don't want a secondary menu for more items we haven't put the
   <template>
     <paper-menu class="main">
       <zrickr-drawer-content-item
+        id="primaryItem"
         icon="image:view-comfy"
         item-menu-name="[[primaryItemMenuName]]"
         add
         item-name="[[itemName]]"
         subitem-name="[[subitemName]]"
-        items="[[items]]">
-        <!--hidden="[[_notShowPrimary(primaryItemMenuName, items)]]">-->
+        items="[[items]]"
+        hidden="[[!primaryItemMenuName]]">
       </zrickr-drawer-content-item>
       <zrickr-drawer-content-item
+        id="secondaryItem"
         icon="social:group"
         item-menu-name="[[secondaryItemMenuName]]"
-        items="[[items]]">
-        <!--hidden="[[_notShowSecondary(secondaryItemMenuName, items)]]">-->
+        item-name="[[itemName]]"
+        subitem-name="[[subitemName]]"
+        items="[[items]]"
+        hidden="[[!secondaryItemMenuName]]">
       </zrickr-drawer-content-item>
     </paper-menu>
 
     <paper-menu class="secondary">
-      <zrickr-drawer-content-item
+      <zrickr-drawer-content-setting
+        id="settings"
         icon="icons:settings"
         item-menu-name="Settings">
-      </zrickr-drawer-content-item>
-      <zrickr-drawer-content-item
+      </zrickr-drawer-content-setting>
+      <zrickr-drawer-content-setting
+        id="recycleBin"
         icon="icons:delete"
         item-menu-name="Recycle Bin">
-      </zrickr-drawer-content-item>
-      <zrickr-drawer-content-item
+      </zrickr-drawer-content-setting>
+      <zrickr-drawer-content-setting
+        id="help"
         icon="icons:help"
         item-menu-name="Help and Suggestions">
-      </zrickr-drawer-content-item>
+      </zrickr-drawer-content-setting>
     </paper-menu>
-
   </template>
 </dom-module>
 
@@ -140,25 +205,21 @@ If we don't want a secondary menu for more items we haven't put the
       }
     },
 
-    /**
-     * Calculate if not should be the primary menu item
-     * @return {boolean} Condition to appear the primary menu
-     */
-    _notShowPrimary(primaryItemMenuName, items) {
-      console.log(items);
-      console.log(this.items);
-      console.log(items.length);
-      return (!this.items.length || !primaryItemMenuName);
+    listeners: {
+      'menu-opened': '_menuOpened'
     },
 
     /**
-     * Calculate if not should be the secondary menu item
-     * @return {boolean} Condition to appear the secondary menu
+     * Fired when some submenu of this element is opened
      */
-    _notShowSecondary(secondaryItemMenuName, items) {
-      console.log(items);
-      console.log(items.length);
-      return (!this.items.length || !secondaryItemMenuName);
+    _menuOpened(event) {
+      let allMainItems = Polymer.dom(this.root).
+                          querySelectorAll('zrickr-drawer-content-item');
+      let itemId = event.detail.id;
+      let i = 0;
+      for(i=0; i<allMainItems.length; i++) {
+        allMainItems[i].close();
+      }
     }
 
   });
