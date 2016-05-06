@@ -1,18 +1,13 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="zrickr-main-content.html">
 <link rel="import" href="zrickr-main-toolbar.html">
 
 <dom-module id="zrickr-main">
+  <style include="shared-styles">
+  </style>
   <template>
-    <zrickr-main-toolbar
-      id="mainToolbar"
-      user={{user}}
-      toogle-drawer>
-    </zrickr-main-toolbar>
-    <zrickr-main-content
-      collections="{{collections}}"
-      id="mainContent">
-    </main-content>
+
   </template>
 </dom-module>
 
@@ -20,7 +15,13 @@
 (function() {
 
   Polymer({
-    is: "zrickr-main"
+    is: "zrickr-main",
+
+    properties: {
+      collections: {
+        type: Array
+      }
+    }
   });
 
 })();

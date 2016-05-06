@@ -1,0 +1,48 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<!--
+`<zrickr-profile>` implements a view for edit the user profile
+
+    <zrickr-profile user="{{user}}"></zrickr-profile>
+
+### Styling
+
+The following custom properties are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--`| | ``
+
+@element zrickr-profile
+@demo demo/toolbar.html
+-->
+
+<dom-module id="zrickr-profile">
+  <style include="iron-flex iron-flex-alignment">
+    :host {
+      @apply(--layout-vertical);
+    }
+  </style>
+
+  <template>
+    <h3>{{user.password.email}}</h3>
+    <input placeholder="old password" value="{{oldPassword::input}}">
+    <input placeholder="new password" value="{{newPassword::input}}">
+    <button on-tap="_changePasswordTapped">Change password</button>
+    <br>
+    <button on-tap="_signoutTapped">Signout</button>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  Polymer({
+
+    is: 'zrickr-profile',
+
+    properties: {
+      user: Object
+    }
+  });
+})();
+</script>

@@ -3,15 +3,13 @@
 
 <dom-module id="zrickr-main-content">
   <style include="iron-flex iron-flex-alignment">
+    :host {
+      @apply(--layout-vertical);
+    }
   </style>
 
   <template>
-    {{collections}}
-    <input placeholder="old password" value="{{oldPassword::input}}">
-    <input placeholder="new password" value="{{newPassword::input}}">
-    <button on-tap="_changePasswordTapped">Change password</button>
-    <br>
-    <button on-tap="_signoutTapped">Signout</button>
+    <content></content>
   </template>
 </dom-module>
 
@@ -25,6 +23,10 @@
     properties: {
       toogleDrawer: {
         type: Boolean
+      },
+
+      items: {
+        type: Array
       }
     },
 
@@ -37,6 +39,5 @@
     }
 
   });
-
 })();
 </script>

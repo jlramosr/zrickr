@@ -18,28 +18,6 @@
   // have resolved and content has been stamped to the page
   zrickr.addEventListener('dom-change', () => {
     let zrickrAuth = document.querySelector('zrickr-auth');
-    let currentElement;
-
-    //Main Switched Event
-    zrickrAuth.addEventListener('user-changed', (event) => {
-      if (currentElement) {
-        currentElement.remove();
-        currentElement = null;
-      }
-
-      if (event.detail.value) {
-        currentElement = document.createElement('zrickr-app');
-        currentElement.user = zrickr.user;
-        currentElement.location = zrickr.location;
-      }
-      else {
-        currentElement = document.createElement('zrickr-login');
-        /*document.body.style.backgroundImage = "url('../images/background.jpg')";
-        document.body.style.backgroundRepeat = "no-repeat";
-        document.body.style.backgroundSize = "100% 100%";*/
-      }
-      document.body.appendChild(currentElement);
-    });
 
     //Show Message
     window.addEventListener('message-opened', (event) => {
@@ -87,10 +65,6 @@
       zrickrAuth.resetPassword();
     });
 
-    //User App Events
-    window.addEventListener('logout-tapped', (event) => {
-      zrickrAuth.logout();
-    });
     window.addEventListener('change-password-tapped', (event) => {
       let zrickr = event.detail;
       let infoUser = zrickr.user.password;

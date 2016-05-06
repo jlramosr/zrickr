@@ -1,5 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/firebase-element/firebase-auth.html">
+<link rel="import" href="../../elements/zrickr-login/zrickr-login.html">
+<link rel="import" href="../../elements/zrickr-app/zrickr-app.html">
 
 <dom-module id="zrickr-auth">
   <template>
@@ -51,11 +53,40 @@
         type: Object,
         value: {},
         notify: true,
+        observer: '_userChanged'
       },
 
       statusKnown: {
         type: Boolean
       },
+
+      currentElement: {
+        type: Object,
+        value: null
+      }
+    },
+
+    listeners: {
+      'logout-tapped': 'logout'
+    },
+
+    _userChanged(user) {
+      if (this.currentElement) {
+        this.currentElement.remove();
+        this.currentElement = null;
+      }
+      if (user) {
+        this.currentElement = document.createElement('zrickr-app');
+        this.currentElement.user = this.user;
+        this.currentElement.location = this.location;
+      }
+      else {
+        this.currentElement = document.createElement('zrickr-login');
+        /*document.body.style.backgroundImage = "url('../images/background.jpg')";
+        document.body.style.backgroundRepeat = "no-repeat";
+        document.body.style.backgroundSize = "100% 100%";*/
+      }
+    this.appendChild(this.currentElement);
     },
 
     login() {
@@ -116,7 +147,6 @@
 
     _passwordChangedHandler(event) {
       let params = {};
-      console.log("HOLA" + event.detail);
       params.message = "Your password has been changed correctly";
       params.info = true;
       this.fire('message-opened', params);
