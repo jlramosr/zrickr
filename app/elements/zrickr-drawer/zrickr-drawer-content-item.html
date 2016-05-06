@@ -11,6 +11,7 @@
 <link rel="import" href="../../bower_components/iron-icons/image-icons.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../styles/shared-styles.html">
 
 <!--
 `<zrickr-drawer-content-item>` implements a menu content to a item
@@ -47,25 +48,14 @@ The following custom properties are available for styling:
 Custom property | Description | Default
 ----------------|-------------|----------
 `--drawer-content-subitem-menu-border-color`| Border color of subitem menu | `--primary-text-color`
+`--drawer-content-subitem-hover-color`| Color hover of a subitem | `--paper-grey-200`
 
 @element zrickr-drawer-setting
 @demo ../../elements/zrickr-drawer/demo/index.html
 -->
 
 <dom-module id="zrickr-drawer-content-item">
-  <style include="iron-flex iron-flex-alignment">
-    paper-item {
-      cursor: pointer;
-    }
-
-    paper-menu {
-      padding: 0px;
-    }
-
-    paper-menu-button {
-      padding: 0px;
-    }
-
+  <style include="iron-flex iron-flex-alignment shared-styles">
     iron-image {
       width: 18px;
       height: 18px;
@@ -89,6 +79,24 @@ Custom property | Description | Default
     .subitem {
       @apply(--drawer-content-subitem);
     }
+
+    /*.subitem:hover {
+      background: var(--drawer-content-subitem-hover-background-color,
+                      --paper-grey-200);
+    }
+
+    .subitem:focus {
+      background: var(--drawer-content-subitem-focus-background-color,
+                      --paper-grey-200);
+    }
+
+    .subitem.iron-selected {
+      background: var(--drawer-content-subitem-selected-background-color,
+                      --paper-grey-200);
+      color: var( --drawer-content-subitem-selected-color,
+                  --secondary-text-color);
+      font-weight: bold;
+    }*/
 
     .subitem-title {
       @apply(--layout-flex);
@@ -117,16 +125,6 @@ Custom property | Description | Default
       padding: 0px 4px;
       min-height: 40px;
     }
-
-    .menu-subitem-action paper-icon-button {
-      width: 30px;
-      height: 30px;
-    }
-
-    .space {
-      border-bottom: 1px solid var(--divider-color);
-      margin-bottom: 2px;
-    }
   </style>
 
   <template>
@@ -148,7 +146,7 @@ Custom property | Description | Default
       <paper-menu id="menuItem" role="listbox" class="menu-content item-list">
         <template is="dom-repeat" items="[[items]]" as="item">
           <paper-item class="subitem" id="item-{{index}}">
-            <div class="subitem-title" on-tap="_viewSubitemTapped">
+            <div class="subitem-title" on-tap="_viewItemTapped">
               <iron-image sizing="contain" src="../../images/zrickr.png"></iron-image>
               <span>[[item.name]]</span>
             </div>
@@ -158,16 +156,19 @@ Custom property | Description | Default
                 class="dropdown-trigger menu-button">
                 <paper-ripple></paper-ripple>
               </paper-icon-button>
-              <paper-menu id="menuSubitem" role="menu" class="dropdown-content menu-subitem">
-                <paper-item hidden={{!subitemName}}
+              <paper-menu role="menu"
+                          selected="-1"
+                          class="dropdown-content menu-subitem menu-triggered">
+                <paper-item hidden={{!objectName}}
                             class="menu-subitem-action space"
-                            on-tap="_addSubitemTapped">
-                  <paper-icon-button icon="image:add-to-photos"></paper-icon-button>
-                  Add a [[subitemName]]
+                            on-tap="_addZrickrTapped">
+                  <paper-icon-button  icon="image:add-to-photos">
+                  </paper-icon-button>
+                  Add a [[objectName]]
                 </paper-item>
                 <paper-item class="menu-subitem-action"
                             on-tap="_viewItemTapped">
-                  <paper-icon-button icon="image:remove-red-eye"></paper-icon-button>
+                  <paper-icon-button  icon="image:remove-red-eye"></paper-icon-button>
                   View [[itemName]]
                 </paper-item>
                 <paper-item class="menu-subitem-action"
@@ -246,9 +247,9 @@ Custom property | Description | Default
         readonly: true
       },
       /**
-       * Subitems name in singular
+       * Objects name in singular
        */
-      subitemName: {
+      objectName: {
         type: String,
         value: '',
         readonly: true
@@ -263,9 +264,10 @@ Custom property | Description | Default
     },
 
     listeners: {
-      'paper-submenu-open': '_submenuOpen',
+      'paper-dropdown-close': '_subitemMenuClosed',
+      'paper-submenu-open': '_itemMenuOpened',
       'iron-activate': '_subitemActivate',
-      'iron-select': '_subitemSelected'
+      /*'iron-select': '_subitemSelected'*/
     },
 
     observers: [
@@ -274,17 +276,29 @@ Custom property | Description | Default
 
     attached() {
       if (!this.items || !this.itemMenuName) {
-        let menuItem = this.$.menuItem;
         this.$.menuItem.remove();
       }
     },
 
+    /**
+     * Close the item dropdown menu
+     */
     close() {
       this.$$('paper-submenu').close();
     },
 
-    _submenuOpen(event) {
-      this.fire('menu-opened', this);
+    /**
+     * Fired when a subitem menu closes
+     */
+    _subitemMenuClosed(event) {
+      let target = event.target; //paper-menu-button
+      let menu = target.contentElement; //paper-menu
+      menu.select(-1); //disable selection mark
+    },
+
+    _itemMenuOpened(event) {
+      this.fire('menu-opened');
+      event.stopPropagation();
     },
 
     _activeItemChanged(activeItem, activeID) {
@@ -292,6 +306,7 @@ Custom property | Description | Default
     },
 
     _subitemActivate(event) {
+      event.stopPropagation();
       console.log("Subitem Activated", event.detail);
       let index = event.detail.selected;
       this.activeItem = index;
@@ -348,6 +363,7 @@ Custom property | Description | Default
      * @event view-item-tapped
      */
     _viewItemTapped(event) {
+      console.log("1view", this.activeItem);
       this.fire("view-item-tapped", this);
     },
 

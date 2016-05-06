@@ -14,7 +14,7 @@ Example:
     primary-item-menu-name="My Collections"
     secondary-item-menu-name="My Shared Collections"
     item-name="collection"
-    subitem-name="zrickr">
+    object-name="zrickr">
   </zrickr-drawer-content>
 
 If we don't want a primary/secondary menu for items we haven't put the
@@ -114,7 +114,7 @@ Custom property | Description | Default
         item-menu-name="[[primaryItemMenuName]]"
         add
         item-name="[[itemName]]"
-        subitem-name="[[subitemName]]"
+        object-name="[[objectName]]"
         items="[[items]]"
         hidden="[[!primaryItemMenuName]]">
       </zrickr-drawer-content-item>
@@ -123,7 +123,7 @@ Custom property | Description | Default
         icon="social:group"
         item-menu-name="[[secondaryItemMenuName]]"
         item-name="[[itemName]]"
-        subitem-name="[[subitemName]]"
+        object-name="[[objectName]]"
         items="[[items]]"
         hidden="[[!secondaryItemMenuName]]">
       </zrickr-drawer-content-item>
@@ -189,11 +189,11 @@ Custom property | Description | Default
         readonly: true
       },
       /**
-       * Title of a subitem in singular
+       * Title of a object in singular
        */
-      subitemName: {
+      objectName: {
         type: String,
-        value: 'subitem',
+        value: 'object',
         readonly: true
       },
       /**
@@ -206,18 +206,28 @@ Custom property | Description | Default
     },
 
     listeners: {
-      'menu-opened': '_menuOpened'
+      'menu-opened': '_menuItemOpened'
+    },
+
+    attached() {
+      let mainMenu = Polymer.dom(this.root).querySelector('.main');
+      mainMenu.selectedAttribute = 'selected';
     },
 
     /**
      * Fired when some submenu of this element is opened
      */
-    _menuOpened(event) {
+    _menuItemOpened(event) {
+      let mainMenu = Polymer.dom(this.root).querySelector('.main');
+      mainMenu.select(1);
       let allMainItems = Polymer.dom(this.root).
                           querySelectorAll('zrickr-drawer-content-item');
       let itemId = event.detail.id;
       let i = 0;
       for(i=0; i<allMainItems.length; i++) {
+        if (allMainItems[i].id == itemId) {
+          mainMenu.selected = i;
+        }
         allMainItems[i].close();
       }
     }

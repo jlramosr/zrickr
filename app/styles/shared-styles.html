@@ -5,25 +5,41 @@
 <dom-module id="shared-styles">
   <template>
     <style>
-      .page-title {
-        @apply(--paper-font-display2);
-      }
-
-      .app-menu {
-        --paper-menu-selected-item: {
-          color: #fff;
-          background: var(--light-primary-color);
+      :host {
+        --paper-item: {
+          cursor: pointer;
+        }
+        --paper-menu: {
+          padding: 0px;
+        }
+        --paper-menu-button: {
+          padding: 0px;
         }
       }
 
-      paper-menu a > *, paper-menu paper-item > *, paper-menu paper-icon-item > * {
-        pointer-events: none;
+      .menu-triggered {
+        border: 1px solid var(--primary-text-color);
+      }
+
+      .menu-triggered paper-icon-button {
+        width: 30px;
+        height: 30px;
+      }
+
+      .menu-triggered paper-item {
+        min-height: 40px;
+      }
+
+      .space {
+        border-bottom: 1px solid var(--divider-color);
+        margin-bottom: 2px;
+      }
+
+      .content {
+        padding: 25px;
       }
 
       @media (max-width: 600px) {
-        .page-title {
-          font-size: 24px!important;
-        }
       }
     </style>
   </template>

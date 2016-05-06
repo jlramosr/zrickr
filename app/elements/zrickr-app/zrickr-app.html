@@ -39,7 +39,7 @@ Example:
 
   <template>
     <paper-drawer-panel id="mainPanel">
-      <paper-scroll-header-panel id="drawer" fixed condenses scroll-away-topbar drawer>
+      <paper-scroll-header-panel id="drawer" fixed drawer>
         <zrickr-drawer-toolbar
           class="paper-header"
           id="drawerToolbar">
@@ -49,7 +49,7 @@ Example:
           primary-item-menu-name="My Collections"
           secondary-item-menu-name="My Shared Collections"
           item-name="collection"
-          subitem-name="zrickr">
+          object-name="zrickr">
         </zrickr-drawer-content>
       </paper-scroll-header-panel>
       <paper-scroll-header-panel id="main" main condenses keep-condensed-header>
@@ -84,9 +84,12 @@ Example:
     },
 
     listeners: {
-      'menu-tapped': '_openDrawer',
+      'drawer-menu-tapped': '_openDrawer',
       'add-item-tapped': '_newItemProcess',
-      'add-item': '_addItem'
+      'add-item': '_addItem',
+      'item-tapped': '_viewItem',
+      'view-item-tapped': '_viewItem',
+      'edit-profile-tapped': '_editProfile'
     },
 
     attached() {
@@ -113,11 +116,25 @@ Example:
     },
 
     /**
+     * Fired when the user taps on edit profile
+     */
+    _editProfile(event) {
+    },
+
+    /**
      * Fires when the process of creation has finished
      */
     _addItem(event) {
       let collection = event.detail;
       this.$.collectionHandler.add(collection);
+    },
+
+    /**
+     * Fires when the user wants to view a subitem
+     */
+    _viewItem(event) {
+      let collection = event.detail;
+      console.log("VIEW", collection);
     }
   });
 })();
