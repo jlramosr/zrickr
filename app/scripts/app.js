@@ -46,13 +46,6 @@
     });
 
     //User Login Events
-    window.addEventListener('login-tapped', (event) => {
-      let zrickrLogin = event.detail;
-      zrickrAuth.provider = zrickrLogin.provider;
-      zrickrAuth.email = zrickrLogin.email;
-      zrickrAuth.password = zrickrLogin.password;
-      zrickrAuth.login();
-    });
     window.addEventListener('signin-tapped', (event) => {
       let zrickrLogin = event.detail;
       zrickrAuth.provider = zrickrLogin.provider;

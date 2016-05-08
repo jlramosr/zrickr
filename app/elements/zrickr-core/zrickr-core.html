@@ -1,0 +1,84 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../elements/zrickr-auth/zrickr-auth.html">
+<link rel="import" href="../../elements/zrickr-login/zrickr-login.html">
+<link rel="import" href="../../elements/zrickr-app/zrickr-app.html">
+
+<!--
+`<zrickr-core>` is
+
+@demo demo/index.html
+@element zrickr-core
+-->
+
+<dom-module id="zrickr-core">
+  <template>
+    <zrickr-auth id="zrickrAuth" user="{{user}}"></zrickr-auth>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  'use strict';
+
+  Polymer({
+
+    is: "zrickr-core",
+
+    properties: {
+      /**
+       * If the collection
+       */
+      user: {
+        type: Object
+      },
+
+      currentElement: {
+        type: Object,
+        value: null
+      }
+    },
+
+    listeners: {
+      'user-changed': '_userChanged',
+      'login-tapped': '_loginTapped',
+      'logout-tapped': '_logoutTapped'
+    },
+
+    _userChanged(event) {
+      console.log("user",event.detail.value)
+      if (this.currentElement) {
+        this.currentElement.remove();
+        this.currentElement = null;
+      }
+      if (event.detail.value) {
+        this.currentElement = document.createElement('zrickr-app');
+        this.currentElement.user = this.user;
+        this.currentElement.location = this.location;
+      }
+      else {
+        this.currentElement = document.createElement('zrickr-login');
+        /*document.body.style.backgroundImage = "url('../images/background.jpg')";
+        document.body.style.backgroundRepeat = "no-repeat";
+        document.body.style.backgroundSize = "100% 100%";*/
+      }
+      this.appendChild(this.currentElement);
+    },
+
+    _loginTapped() {
+      let zrickrLogin = event.detail;
+      zrickrAuth.provider = zrickrLogin.provider;
+      zrickrAuth.email = zrickrLogin.email;
+      zrickrAuth.password = zrickrLogin.password;
+      zrickrAuth.login();
+    });
+
+    /**
+     * Function
+     */
+    _logoutTapped() {
+      this.$.zrickrAuth.logout();
+    }
+
+  });
+}());
+</script>

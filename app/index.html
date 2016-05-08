@@ -54,10 +54,13 @@
     <!-- endbuild -->
 
     <template is="dom-bind" id="app">
-      <zrickr-auth
+      <!--<zrickr-auth
         user="{{user}}"
         location="{{location}}">
-      </zrickr-auth>
+      </zrickr-auth>-->
+      <zrickr-core
+        user="{{user}}">
+      </zrickr-core>
     </template>
 
     <!-- build:js scripts/app.js -->

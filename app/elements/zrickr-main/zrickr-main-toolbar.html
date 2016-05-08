@@ -52,7 +52,7 @@
             for="userIcon"
             position="left"
             animation-delay="0"
-            offset="0">{{_getUserName(user)}}
+            offset="0">LALA
           </paper-tooltip>
           <paper-icon-button
             id="userIcon"
@@ -95,16 +95,6 @@
         notify: true,
         readonly: true
       }
-    },
-
-    _getUserName() {
-      if (this.user.provider == "password") {
-        return this.user.password.email;
-      }
-      else if (this.user.provider == "google") {
-        return "google";
-      }
-      return "";
     },
 
     _menuTapped() {
