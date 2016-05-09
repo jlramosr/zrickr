@@ -3,8 +3,6 @@
 <script>
   window.addEventListener('WebComponentsReady', () => {
 
-    console.log(app);
-
     // Removes end / from app.baseUrl which page.base requires for production
     if (window.location.port === '') {  // if production
       page.base(app.baseUrl.replace(/\/$/, ''));
@@ -14,16 +12,17 @@
     let scrollToTop = (ctx, next) => {
       //app.scrollPageToTop();
       next();
-    }
+    };
 
     let closeDrawer = (ctx, next) => {
       //app.closeDrawer();
       next();
     }
 
-    /*function setFocus(selected){
-      document.querySelector('section[data-route="' + selected + '"] .page-title').focus();
-    }*/
+    let setFocus = (selected) => {
+      //document.querySelector('section[data-route="' + selected + '"] .page-title').focus();
+      console.log(document.querySelector('section[data-route="' + selected + '"]'));
+    }
 
     // Routes
     page('*', scrollToTop, closeDrawer, (ctx, next) => {
@@ -33,6 +32,17 @@
     page('/', () => {
       app.route = 'home';
       page.redirect('/home');
+    });
+
+    page('/home', () => {
+      app.route = 'home';
+    });
+
+    page('/profile', () => {
+      console.log("HOLA TEST");
+      app.route = 'load1';
+      console.log(document.querySelector('#zrickrApp'));
+      setFocus(app.route);
     });
 
     page('/collections', () => {
@@ -47,10 +57,10 @@
 
     // 404
     page('*', () => {
-      app.$.toast.text = 'Can\'t find: ' + window.location.href  + '. Redirected you to Home Page';
+      /*app.$.toast.text = 'Can\'t find: ' + window.location.href  + '. Redirected you to Home Page';
       app.$.toast.show();
       console.log("error");
-      page.redirect(app.baseUrl);
+      page.redirect(app.baseUrl);*/
     });
 
     // add #! before urls

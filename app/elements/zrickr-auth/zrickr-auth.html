@@ -27,14 +27,14 @@
       location: {
         type: String,
         value: 'https://zrickr.firebaseio.com',
-        readOnly: true
+        notify: true,
+        readonly: true
       },
 
       provider: {
         type: String,
         value: 'password',
-        notify: true,
-        readonly: true
+        notify: true
       },
 
       email: {
@@ -49,9 +49,7 @@
 
       user: {
         type: Object,
-        value: {},
-        notify: true,
-        observer: '_userChanged'
+        notify: true
       },
 
       statusKnown: {
@@ -59,18 +57,23 @@
       }
     },
 
-    getUserName() {
+    getAuth() {
+      let auth = {};
+      auth.provider = this.provider;
+      auth.location = this.location;
+      auth.uid = this.user.uid;
+      auth.token = this.user.token;
+      auth.expires = this.user.expires;
       if (this.user.provider == "password") {
-        return this.user.password.email;
+        auth.name = this.user.password.email;
+        auth.email = this.user.password.email;
+        auth.image = this.user.password.profileImageURL;
       }
       else if (this.user.provider == "google") {
-        return "google";
+        auth.name = "google";
+        auth.email = "email";
       }
-      return "";
-    },
-
-    _userChanged(user) {
-      this.fire('user-changed', user);
+      return auth;
     },
 
     login() {

@@ -25,16 +25,14 @@
     is: "zrickr-core",
 
     properties: {
-      /**
-       * If the collection
-       */
       user: {
-        type: Object
+        type: Object,
+        readonly: true,
+        notify: true
       },
 
       currentElement: {
-        type: Object,
-        value: null
+        type: Object
       }
     },
 
@@ -44,36 +42,42 @@
       'logout-tapped': '_logoutTapped'
     },
 
+    /**
+     * Fires when the user changes (at start of the app load and login/logout)
+     */
     _userChanged(event) {
-      console.log("user",event.detail.value)
+      let user = event.detail.value;
       if (this.currentElement) {
         this.currentElement.remove();
         this.currentElement = null;
       }
-      if (event.detail.value) {
-        this.currentElement = document.createElement('zrickr-app');
-        this.currentElement.user = this.user;
-        this.currentElement.location = this.location;
+      let currentElement;
+      if (user) {
+        currentElement = document.createElement('zrickr-app');
+        currentElement.id = "zrickrApp";
+        currentElement.auth = this.$.zrickrAuth.getAuth();
       }
       else {
-        this.currentElement = document.createElement('zrickr-login');
-        /*document.body.style.backgroundImage = "url('../images/background.jpg')";
-        document.body.style.backgroundRepeat = "no-repeat";
-        document.body.style.backgroundSize = "100% 100%";*/
+        currentElement = document.createElement('zrickr-login');
       }
-      this.appendChild(this.currentElement);
+      Polymer.dom(this.root).appendChild(currentElement);
+      this.currentElement = currentElement;
     },
 
-    _loginTapped() {
+    /**
+     * Fires when login
+     */
+    _loginTapped(event) {
       let zrickrLogin = event.detail;
+      let zrickrAuth = this.$.zrickrAuth;
       zrickrAuth.provider = zrickrLogin.provider;
       zrickrAuth.email = zrickrLogin.email;
       zrickrAuth.password = zrickrLogin.password;
       zrickrAuth.login();
-    });
+    },
 
     /**
-     * Function
+     * Fires when logout
      */
     _logoutTapped() {
       this.$.zrickrAuth.logout();

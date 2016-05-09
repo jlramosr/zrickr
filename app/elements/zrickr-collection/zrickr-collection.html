@@ -13,7 +13,7 @@ methods (add, modify, remove a collection)
 <dom-module id="zrickr-collection">
   <template>
     <firebase-collection
-      location="https://zrickr.firebaseio.com/collections"
+      location="[[_getLocation(location)]]"
       data="{{collections}}">
    </firebase-collection>
   </template>
@@ -28,15 +28,27 @@ methods (add, modify, remove a collection)
     is: "zrickr-collection",
 
     properties: {
+      baseUrl: {
+        type: String,
+        value: "collections",
+        readonly: true
+      },
       location: {
         type: String,
-        readOnly: true
+        readonly: true
       },
       collections: {
         type: Array,
         value: [],
         notify: true
       },
+    },
+
+    /**
+     * Calculate the complete url of the collection backend
+     */
+    _getLocation() {
+      return (this.location + "/" + this.baseUrl);
     },
 
     /**

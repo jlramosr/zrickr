@@ -22,12 +22,18 @@
 
     .right-icons {
       margin-left: auto;
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
     }
 
     .profile-item {
       @apply(--layout-horizontal);
       @apply(--layout-center);
       @apply(--layout-start-justified);
+    }
+
+    paper-icon-button.profile-icon {
+      border-radius: 100%;
     }
 
     paper-item {
@@ -39,7 +45,7 @@
 
   <template>
     <paper-toolbar>
-     <div>
+      <div>
         <paper-icon-button id="menuButton" on-tap="_menuTapped" icon="icons:menu">
         </paper-icon-button>
       </div>
@@ -47,19 +53,16 @@
         <paper-icon-button on-tap="" icon="icons:create"></paper-icon-button>
         <paper-icon-button on-tap="" icon="icons:home"></paper-icon-button>
         <paper-menu-button vertical-offset="36" horizontal-offset="-78">
-          <paper-tooltip
-            id="userNameTooltip"
-            for="userIcon"
-            position="left"
-            animation-delay="0"
-            offset="0">LALA
-          </paper-tooltip>
           <paper-icon-button
             id="userIcon"
-            icon="icons:account-circle"
-            class="dropdown-trigger"
+            src="[[auth.image]]"
+            class="dropdown-trigger profile-icon"
             on-tap="_userIconTapped">
           </paper-icon-button>
+          <paper-tooltip
+            id="userNameTooltip"
+            for="userIcon">LALA
+          </paper-tooltip>
           <paper-menu class="dropdown-content user-menu menu-triggered" selected="-1">
             <paper-item on-tap="_editProfileTapped"
                         class="profile-item space">
@@ -89,10 +92,8 @@
     is: "zrickr-main-toolbar",
 
     properties: {
-
-      user: {
+      auth: {
         type: Object,
-        notify: true,
         readonly: true
       }
     },
