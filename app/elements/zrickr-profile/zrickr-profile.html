@@ -25,7 +25,7 @@ Custom property | Description | Default
   </style>
 
   <template>
-    <h3>{{user.password.email}}</h3>
+    {{auth.name}}
     <input placeholder="old password" value="{{oldPassword::input}}">
     <input placeholder="new password" value="{{newPassword::input}}">
     <button on-tap="_changePasswordTapped">Change password</button>
@@ -41,7 +41,7 @@ Custom property | Description | Default
     is: 'zrickr-profile',
 
     properties: {
-      user: Object
+      auth: Object
     }
   });
 })();

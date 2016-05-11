@@ -39,7 +39,9 @@ methods (add, modify, remove a collection)
       },
       collections: {
         type: Array,
-        value: [],
+        value: function() {
+          return [];
+        },
         notify: true
       },
     },

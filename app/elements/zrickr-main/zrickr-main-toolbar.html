@@ -51,7 +51,7 @@
       </div>
       <div class="right-icons">
         <paper-icon-button on-tap="" icon="icons:create"></paper-icon-button>
-        <paper-icon-button on-tap="" icon="icons:home"></paper-icon-button>
+        <paper-icon-button on-tap="_homeTapped" icon="icons:home"></paper-icon-button>
         <paper-menu-button vertical-offset="36" horizontal-offset="-78">
           <paper-icon-button
             id="userIcon"
@@ -61,7 +61,7 @@
           </paper-icon-button>
           <paper-tooltip
             id="userNameTooltip"
-            for="userIcon">LALA
+            for="userIcon">{{auth.name}}
           </paper-tooltip>
           <paper-menu class="dropdown-content user-menu menu-triggered" selected="-1">
             <paper-item on-tap="_editProfileTapped"
@@ -104,6 +104,10 @@
 
     _userIconTapped() {
       this.$.userNameTooltip.hide();
+    },
+
+    _homeTapped() {
+      this.fire('home-tapped');
     },
 
     _editProfileTapped() {

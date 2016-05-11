@@ -1,135 +1,105 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../../bower_components/iron-icons/social-icons.html">
-<link rel="import" href="../../bower_components/iron-icons/image-icons.html">
+<link rel="import" href="../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
-<dom-module id="collection-list">
+<dom-module id="zrickr-collection-list">
+  <style include="iron-flex iron-flex-alignment">
+    :host {
+      display: block;
+      margin-left: -7px;
+    }
+
+    iron-list {
+      --iron-list-items-container: {
+
+      };
+    }
+
+    .collection-container {
+      border: 1px solid grey;
+      width: 100px;
+      height: 100px;
+      margin: 8px;
+      @apply(--layout-vertical);
+    }
+
+    .loadingIndicator {
+    }
+
+    .loadingIndicator paper-spinner {
+      margin-right: 20px;
+      --paper-spinner-layer-1-color: var(--secondary-text-color);
+      --paper-spinner-layer-2-color: var(--primary-text-color);
+      --paper-spinner-layer-3-color: var(--secondary-text-color);
+      --paper-spinner-layer-4-color: var(--primary-text-color);
+    }
+  </style>
+
   <template>
-    <style include="iron-flex iron-flex-alignment">
-    </style>
+    <iron-list items="[[collections]]" as="collection" scroll-target="document" grid>
+      <template>
+        <div class="collection-container" tabindex$="[[tabIndex]]">
+          <iron-image sizing="contain" src="../../images/zrickr.png"></iron-image>
+          [[collection.name]]
+          [[collection.public]]
+        </div>
+      </template>
+    </iron-list>
 
-    <firebase-collection
-      order-by-child="name"
-      limit-to-first="3"
-      location="https://zrickr.firebaseio.com/collections"
-      data="{{collections}}">
-    </firebase-collection>
-    <h3>MY COLLECTIONS</h3>
-    <template is="dom-repeat" items="[[collections]]" as="collection">
-      <h4>[[collection.__firebaseKey__]]</h4>
-      Name: <span>[[collection.name]]</span>
-    </template>
-    <paper-icon-button  class="add-my-collections layout left"
-                        icon="icons:add-circle"
-                        on-tap="_addCollection">
-    </paper-icon-button>
-    <iron-ajax
-      auto
-      url="../../bd/collections.json"
-      handle-as="json"
-      last-response="{{ajaxResponseCollections}}">
-    </iron-ajax>
-
-    <iron-ajax
-      auto
-      url="../../bd/shared-collections.json"
-      handle-as="json"
-      last-response="{{ajaxResponseSharedCollections}}">
-    </iron-ajax>
-
-    <div id="my-collections" class="layout vertical">
-      <div class="layout horizontal center">
-        <iron-icon icon="image:filter-none"></iron-icon>
-        <h3>MY COLLECTIONS</h3>
-        <paper-icon-button  class="add-my-collections layout left"
-                            icon="icons:add-circle"
-                            on-tap="_toggleNewCollectionDialog">
-        </paper-icon-button>
-      </div>
-      <div class="layout horizontal">
-        <template is="dom-repeat" items="[[ajaxResponseCollections]]">
-          <div class="layout vertical center">
-            <paper-item>
-              <img src="[[_computeImg(item)]]"/>
-            </paper-item>
-            <div class="name layout center">{{item.name}}</div>
-          </div>
-        </template>
-      </div>
+    <div class="loadingIndicator" hidden$="[[!loadingCollections]]">
+      <paper-spinner active$="[[loadingCollections]]"></paper-spinner>
+        Loading collections</b>
     </div>
 
-    <div id="my-shared-collections" class="layout vertical">
-      <div class="layout horizontal center">
-        <iron-icon icon="social:group"></iron-icon>
-        <h3 class="layout flex">MY SHARED COLLECTIONS</h3>
-      </div>
-      <div class="layout horizontal">
-        <template is="dom-repeat" items="[[ajaxResponseSharedCollections]]">
-          <div class="layout vertical center">
-            <paper-item>
-              <img src="[[_computeImg(item)]]"/>
-            </paper-item>
-            <div class="name layout center">{{item.name}}</div>
-          </div>
-        </template>
-      </div>
-    </div>
+    <iron-scroll-threshold id="scrollTheshold"
+      lower-threshold="500"
+      on-lower-threshold="_loadMoreCollections"
+      scroll-target="document">
+    </iron-scroll-threshold>
 
   </template>
 </dom-module>
 
 <script>
-(() => {
+(function() {
   'use strict';
-
-  const DEFAULT_IMG = 'zrickr.png';
 
   Polymer({
 
-    is: "collection-list",
+    is: "zrickr-collection-list",
 
     properties: {
-
-    },
-
-    _addCollection() {
-      console.log("HOLA");
-      console.log(this);
-    },
-
-    created() {
-      console.log(this.localName + '#' + this.id + ' was created');
-    },
-
-    ready() {
-      console.log(this.localName + '#' + this.id + ' has local DOM initialized');
-    },
-
-    attached() {
-      console.log(this.localName + '#' + this.id + ' was attached');
-    },
-
-    detached() {
-      console.log(this.localName + '#' + this.id + ' was detached');
-    },
-
-    attributeChanged(name, type) {
-      console.log(this.localName + '#' + this.id + ' attribute ' + name +
-        ' was changed to ' + this.getAttribute(name));
-    },
-
-    _computeImg(item) {
-      if (item.image) {
-        return "bd/" + item.image;
+      auth: {
+        type: Object
+      },
+      collections: {
+        type: Array,
+        notify: true,
+        value: function() {
+          return [];
+        }
+      },
+      loadingCollections: {
+        type: Boolean,
+        value: true
       }
-      return DEFAULT_IMG;
     },
 
-    _toggleNewCollectionDialog() {
-      this.$.newCollectionElement.toggle();
+    attached: function () {
+      this.async( function() {
+
+    	});
+    },
+
+    _loadMoreCollections() {
+      console.log("HOLA");
     }
+
+    /*renderList() {
+      this.$.collectionsList.render();
+    }*/
 
   });
 }());

@@ -44,6 +44,11 @@ Example:
   </style>
 
   <template>
+    <zrickr-collection
+      id="collectionHandler"
+      location="[[auth.location]]"
+      collections="{{items}}">
+    </zrickr-collection>
     <carbon-location use-hash-as-path route="{{route}}"></carbon-location>
     <carbon-route id="zrickrRoute" route="{{route}}" pattern="/:page"
                   tail="{{tail}}" data="{{data}}">
@@ -55,7 +60,7 @@ Example:
           id="drawerToolbar">
         </zrickr-drawer-toolbar>
         <zrickr-drawer-content
-          items="[[collections]]"
+          items="[[items]]"
           primary-item-menu-name="My Collections"
           secondary-item-menu-name="My Shared Collections"
           item-name="collection"
@@ -70,21 +75,13 @@ Example:
           id="mainToolbar">
         </zrickr-main-toolbar>
         <zrickr-main-content
-          items="{{collections}}"
+          auth="{{auth}}"
+          items="{{items}}"
           class="content"
           id="mainContent">
-          <!--<iron-pages attr-for-selected="data-route" selected="{{route}}">
-              <section id="load1" data-route="load1">load1</section>
-              <section id="load2" data-route="load2">load2</section>
-          </iron-pages>-->
         </zrickr-main-content>
       </paper-scroll-header-panel>
     </paper-drawer-panel>
-    <zrickr-collection
-      id="collectionHandler"
-      location="[[auth.location]]"
-      collections="{{collections}}">
-    </zrickr-collection>
   </template>
 </dom-module>
 
@@ -92,10 +89,13 @@ Example:
 
 <script>
 (function() {
+  'use strict';
+
   Polymer({
     is: 'zrickr-app',
 
     properties: {
+
       positionDrawer: {
         type: String,
         value: 'left'
@@ -104,11 +104,10 @@ Example:
        * Authentication and backend information
        */
       auth: {
-        type: Object,
+        type: Object
       },
-      collections: {
-        type: Array,
-        readonly: true
+      items: {
+        type: Array
       }
     },
 
@@ -118,6 +117,7 @@ Example:
       'add-item': '_addItem',
       'item-tapped': '_viewItem',
       'view-item-tapped': '_viewItem',
+      'home-tapped': '_viewItems',
       'edit-profile-tapped': '_editProfile'
     },
 
@@ -126,30 +126,41 @@ Example:
       if (route.page == 'profile') {
         this._editProfile();
       }
+      else if (route.page == '' || !route.page) {
+        this._viewItems();
+      }
+
       let mainPanel = this.$.mainPanel;
       if (this.positionDrawer == 'right') {
         mainPanel.rightDrawer = true;
       }
     },
 
-
     /**
-     * Add an element to the main content
-     * @param elementName {String} The element to add as child of mainContent
-     * @param headerTitle {String} The header of the new content
+     * Add an element to the content of the zrickr-main-content
+     * @param {String} elementName Element to append
+     * @param {String} headerTitle [description]
+     * @param {String} route       [description]
      */
     _addMainContent(elementName, headerTitle, route) {
-      this.$.mainContent.lastChild.remove();
-      let element = document.createElement(elementName);
-      this.$.zrickrRoute.route.path = "/pppp";
-      element.route = "lala";
-      this.$.mainContent.appendChild(element);
-      let header = document.createElement('h2');
-      header.className = 'h';
-      header.textContent= headerTitle;
-      element.insertBefore(header, element.firstChild);
-      //page.redirect('/' + route);
-      return element;
+      let container = this.$.mainContent;
+      container.removeContent();
+      let newContent = document.createElement(elementName);
+      newContent.auth = this.auth;
+      //newContent.collections = this.items;
+      this.addEventListener("items-changed", (event) => {
+      /* TODO:
+       *  mirar SET collections en evento items-changed para ir rellenando
+       * collections en hijo y DEBOUNCE para esperar unos milisegundos
+       * y no hacer el SET cada vez que se meta un item desde firebase
+       * sino al final cuando esten metidos todos
+       */
+      /* newContent.renderList(); //ASI SE CONSIGUE PERO TARDA CON items-changed
+       * console.log(newContent.collections, event.detail);
+       */
+      });
+      container.addContent(newContent, headerTitle);
+      return newContent;
     },
 
     /**
@@ -175,10 +186,13 @@ Example:
      * view to the main content
      */
     _editProfile() {
-      let element = this._addMainContent('zrickr-profile',
-                                         'User Profile',
-                                         'profile');
-      element.auth = this.auth;
+      let zrickrProfile =
+        this._addMainContent('zrickr-profile','User Profile','profile');
+    },
+
+    _viewItems() {
+      let container = this.$.mainContent;
+      container.showItems(this.$.drawerContent.primaryItemMenuName);
     },
 
     /**
@@ -193,8 +207,8 @@ Example:
      * Fires when the user wants to view a subitem
      */
     _viewItem(event) {
-      let collection = event.detail;
-      console.log("VIEW", collection);
+      let item = event.detail;
+      console.log("VIEW", item);
     }
   });
 })();
