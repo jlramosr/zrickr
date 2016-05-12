@@ -5,23 +5,52 @@
 <dom-module id="zrickr-main-content">
   <style include="iron-flex iron-flex-alignment">
     :host {
+      display: block;
       @apply(--layout-vertical);
+      @apply(--layout-fit);
+    }
+
+    #zrickrCollections {
+      @apply(--layout-flex);
+    }
+
+    #header {
+      border-image:
+        linear-gradient(0deg, transparent,
+        var(--primary-text-color) 0%, transparent) 1 0 100%;
+      -webkit-border-image:
+        -webkit-linear-gradient(0deg, transparent,
+        var(--primary-text-color) 0%, transparent) 1 0 100%;
+      -o-border-image:
+        -o-linear-gradient(0deg, transparent,
+        var(--primary-text-color) 0%, transparent) 1 0 100%;
+      -moz-border-image:
+        -moz-linear-gradient(0deg, transparent,
+        var(--primary-text-color) 0%, transparent) 1 0 100%;
+      border-bottom-width: 1px;
+      border-top-width: 0px;
+      margin-bottom: 20px;
     }
 
     .header-title {
-      margin-top: 0px;
-      margin-bottom: 20px;
-      color: var(--content-header, --primary-text-color);
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--content-header-color, --primary-text-color);
     }
+
   </style>
 
   <template>
-    <h2 class="header-title">[[headerTitle]]</h2>
-    <zrickr-collection-list
-      auth="{{auth}}"
-      collections="{{items}}"
-      hidden="[[hideItems]]">
-    </zrickr-collection-list>
+    <div id="header">
+      <span class="header-title">[[headerTitle]]</span>
+    </div>
+    <div id="zrickrCollections">
+      <zrickr-collection-list
+        auth="{{auth}}"
+        collections="{{items}}"
+        hidden="[[hideItems]]">
+      </zrickr-collection-list>
+    </div>
     <div id="content">
       <content></content>
     </div>

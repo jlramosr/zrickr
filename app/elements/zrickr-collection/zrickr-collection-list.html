@@ -8,21 +8,39 @@
   <style include="iron-flex iron-flex-alignment">
     :host {
       display: block;
-      margin-left: -7px;
+      margin: auto -25px;
     }
 
     iron-list {
       --iron-list-items-container: {
-
+        
       };
     }
 
+    iron-list:first-child {
+
+    }
+
     .collection-container {
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+      height:60px;
+      padding-left: 20px;
+      border-bottom: 1px solid var(--paper-grey-200);
+    }
+
+    .collection-container > iron-image {
+      width:30px;
+      height: 30px;
+      border-radius: 100%;
       border: 1px solid grey;
-      width: 100px;
-      height: 100px;
-      margin: 8px;
+    }
+
+    .collection-description {
       @apply(--layout-vertical);
+      @apply(--layout-flex);
+      padding-left: 20px;
+
     }
 
     .loadingIndicator {
@@ -38,17 +56,20 @@
   </style>
 
   <template>
-    <iron-list items="[[collections]]" as="collection" scroll-target="document" grid>
+    <iron-list items="[[collections]]" as="collection" scroll-target="document">
       <template>
         <div class="collection-container" tabindex$="[[tabIndex]]">
           <iron-image sizing="contain" src="../../images/zrickr.png"></iron-image>
-          [[collection.name]]
-          [[collection.public]]
+          <div class="collection-description">
+            [[collection.name]]
+            [[collection.public]]
+          </div>
         </div>
       </template>
     </iron-list>
 
-    <div class="loadingIndicator" hidden$="[[!loadingCollections]]">
+    <!--<div class="loadingIndicator" hidden$="[[!loadingCollections]]">-->
+    <div class="loadingIndicator" hidden>
       <paper-spinner active$="[[loadingCollections]]"></paper-spinner>
         Loading collections</b>
     </div>

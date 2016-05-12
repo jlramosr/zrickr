@@ -58,13 +58,14 @@ Custom property | Description | Default
         background:
           var(--drawer-content-item-background-color, --paper-grey-50);
         border-bottom:
-          1px solid
+          0px solid
           var(--drawer-content-item-border-color, --divider-color);
         padding-left: 14px;
         padding-right: 0px;
         font-weight: normal;
-        font-size: 90%;
+        font-size: 13px;
         opacity: 0.99;
+        min-height: 20px;
       };
       --drawer-content-subitem: {
         @apply(--layout-horizontal);
@@ -78,7 +79,7 @@ Custom property | Description | Default
           var(--drawer-content-subitem-border-color, --divider-color);
         padding-left: 28px;
         padding-right: 0px;
-        font-size: 90%;
+        font-size: 12px;
         min-height: 40px;
         font-weight: normal;
       };
@@ -86,7 +87,8 @@ Custom property | Description | Default
 
     :host {
       @apply(--layout-vertical);
-      height: 100%;
+      height: calc(100% - 12px); //(-6x2);
+      padding: 6px 0px;
       min-height: 240px; //(48x5);
     }
 
