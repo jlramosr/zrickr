@@ -54,7 +54,9 @@ Example:
     <carbon-route id="zrickrRoute" route="{{route}}" pattern="/:page"
                   tail="{{tail}}" data="{{data}}">
     </carbon-route>
-    <paper-drawer-panel id="mainPanel">
+    <paper-drawer-panel
+      id="mainPanel"
+      force-narrow>
       <paper-scroll-header-panel id="drawer" fixed drawer>
         <zrickr-drawer-toolbar
           class="paper-header"
@@ -78,7 +80,6 @@ Example:
         <zrickr-main-content
           auth="{{auth}}"
           items="{{items}}"
-          class="content"
           id="mainContent">
         </zrickr-main-content>
       </paper-scroll-header-panel>

@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
@@ -8,25 +9,36 @@
   <style include="iron-flex iron-flex-alignment">
     :host {
       display: block;
-      margin: auto -25px;
+      margin: auto;
     }
 
     iron-list {
       --iron-list-items-container: {
-        
+
       };
     }
 
-    iron-list:first-child {
+    iron-list .collection-container:hover {
+      background: var(--paper-blue-grey-50);
+    };
 
+    iron-list .collection-container:focus {
+      background: var(--paper-blue-grey-50);
+      font-weight: bold;
+    };
+
+    iron-list:first-child {
     }
 
     .collection-container {
       @apply(--layout-horizontal);
       @apply(--layout-center);
-      height:60px;
-      padding-left: 20px;
-      border-bottom: 1px solid var(--paper-grey-200);
+      cursor: pointer;
+      height: 54px;
+      padding-left: 25px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--paper-grey-400);
+      background: var(--paper-grey-100);
     }
 
     .collection-container > iron-image {
@@ -36,11 +48,31 @@
       border: 1px solid grey;
     }
 
-    .collection-description {
-      @apply(--layout-vertical);
-      @apply(--layout-flex);
+    .collection-container .description {
+      padding: 0 16px;
       padding-left: 20px;
+    }
 
+    .collection-container .description .primary {
+      font-size: 16px;
+      color: var(--primary-text-color);
+    }
+
+    .collection-container .description .secondary {
+      font-style: italic;
+      font-size: 12px;
+      color: var(--secondary-text-color);
+    }
+
+    .collection-container .actions {
+      margin-left: auto;
+      padding-right: 20px;
+    }
+
+    .collection-container .actions > paper-icon-button {
+      opacity: 0.40;
+      height: 32px;
+      width: 32px;
     }
 
     .loadingIndicator {
@@ -56,17 +88,32 @@
   </style>
 
   <template>
-    <iron-list items="[[collections]]" as="collection" scroll-target="document">
+    <iron-list selection-enabled id="collectionsList" items="[[collections]]" as="collection" scroll-target="document">
       <template>
-        <div class="collection-container" tabindex$="[[tabIndex]]">
+        <div class="collection-container"
+          on-tap="_collectionTapped"
+          on-mouseover="_collectionHover"
+          tabindex$="[[tabIndex]]">
           <iron-image sizing="contain" src="../../images/zrickr.png"></iron-image>
-          <div class="collection-description">
-            [[collection.name]]
-            [[collection.public]]
+          <div class="description">
+            <span class="primary">[[collection.name]]</span><br>
+            <span class="secondary">[[collection.public]]</span>
+          </div>
+          <div class="actions" hidden$={{!_computeActionsVisibility(index)}}>
+            <paper-icon-button on-tap="_addItem" icon="icons:add-circle"></paper-icon-button>
+            <paper-icon-button on-tap="" icon="icons:create"></paper-icon-button>
+            <paper-icon-button on-tap="" icon="icons:build"></paper-icon-button>
           </div>
         </div>
       </template>
     </iron-list>
+
+    <array-selector
+      id="collectionSelector"
+      items="{{collections}}"
+      selected="{{selected}}"
+      toggle>
+    </array-selector>
 
     <!--<div class="loadingIndicator" hidden$="[[!loadingCollections]]">-->
     <div class="loadingIndicator" hidden>
@@ -105,20 +152,36 @@
       loadingCollections: {
         type: Boolean,
         value: true
+      },
+      hoveredIndex: {
+        type: Number,
+        value: 0
       }
     },
 
-    attached: function () {
-      this.async( function() {
-
-    	});
+    _computeActionsVisibility(index) {
+      if (index == this.selectedIndex) {
+        return true;
+      }
+      return false;
     },
 
-    _loadMoreCollections() {
+    _collectionTapped(event) {
+      console.log ("Selected index is ", event.model.index);
+      console.log ("Selected collection is", event.model.collection);
+    },
+
+    _collectionHover(event) {
+      console.log ("Hovered index is ", event.model.index);
+      console.log ("Hovered collection is", event.model.collection);
+      this.hoveredIndex = event.model.index;
+    },
+
+    /*_loadMoreCollections() {
       console.log("HOLA");
     }
 
-    /*renderList() {
+    renderList() {
       this.$.collectionsList.render();
     }*/
 

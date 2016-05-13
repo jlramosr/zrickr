@@ -1,57 +1,90 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../elements/zrickr-collection/zrickr-collection-list.html">
 
 <dom-module id="zrickr-main-content">
-  <style include="iron-flex iron-flex-alignment">
+  <style include="iron-flex iron-flex-alignment shared-styles">
     :host {
       display: block;
+      width: 100%;
       @apply(--layout-vertical);
       @apply(--layout-fit);
     }
 
-    #zrickrCollections {
-      @apply(--layout-flex);
-    }
-
     #header {
+      color: var(--content-header-color, --primary-text-color);
+      margin: 10px auto;
+      width: 100%;
       border-image:
         linear-gradient(0deg, transparent,
-        var(--primary-text-color) 0%, transparent) 1 0 100%;
+        var(--primary-text-color) 10%, transparent) 1 0 100%;
       -webkit-border-image:
         -webkit-linear-gradient(0deg, transparent,
-        var(--primary-text-color) 0%, transparent) 1 0 100%;
+        var(--primary-text-color) 10%, transparent) 1 0 100%;
       -o-border-image:
         -o-linear-gradient(0deg, transparent,
-        var(--primary-text-color) 0%, transparent) 1 0 100%;
+        var(--primary-text-color) 10%, transparent) 1 0 100%;
       -moz-border-image:
         -moz-linear-gradient(0deg, transparent,
-        var(--primary-text-color) 0%, transparent) 1 0 100%;
+        var(--primary-text-color) 10%, transparent) 1 0 100%;
       border-bottom-width: 1px;
       border-top-width: 0px;
-      margin-bottom: 20px;
+      border-left-width: 0px;
+      border-right-width: 0px;
+    }
+
+    #header.headerFixed {
+      position:fixed;
+    }
+
+    .header-content {
+      @apply(--layout-horizontal);
+      @apply(--layout center);
+      padding-left: 25px;
+      padding-right: 25px;
+    }
+
+    .header-content paper-icon-button {
+      padding: 5px;
+      width: 32px;
+      height: 32px;
+      color: var(--content-header-icon-color, --secondary-text-color);
+      opacity: 0.60;
     }
 
     .header-title {
-      font-size: 24px;
-      font-weight: bold;
-      color: var(--content-header-color, --primary-text-color);
+      font-size: 22px;
     }
 
+    .actions {
+      margin-left: auto;
+    }
   </style>
 
   <template>
-    <div id="header">
-      <span class="header-title">[[headerTitle]]</span>
+    <div id="header" class$="{{_headerFixed(headerFixed)}}">
+      <div class="header-content">
+        <span class="header-title">[[headerTitle]]</span>
+        <div class="actions">
+          <paper-icon-button on-tap="" icon="icons:search"></paper-icon-button>
+          <paper-icon-button on-tap="_addItem" icon="icons:add-circle"></paper-icon-button>
+          <paper-icon-button on-tap="" icon="icons:create"></paper-icon-button>
+          <paper-icon-button on-tap="" icon="icons:build"></paper-icon-button>
+        </div>
+      </div>
     </div>
-    <div id="zrickrCollections">
+    <div id="zrickrItems">
       <zrickr-collection-list
         auth="{{auth}}"
         collections="{{items}}"
         hidden="[[hideItems]]">
       </zrickr-collection-list>
     </div>
-    <div id="content">
+    <div id="content" class="content"
+         hidden="[[!hideItems]]">
       <content></content>
     </div>
   </template>
@@ -65,9 +98,6 @@
     is: "zrickr-main-content",
 
     properties: {
-      toogleDrawer: {
-        type: Boolean
-      },
       auth: {
         type: Object
       },
@@ -81,7 +111,21 @@
       headerTitle: {
         type: String,
         value: ''
+      },
+      headerFixed: {
+        type: Boolean,
+        value: false
       }
+    },
+
+    _headerFixed(is) {
+      if (is) {
+        return 'headerFixed';
+      }
+    },
+
+    _addItem() {
+      this.fire('add-item-tapped');
     },
 
     showItems(headerTitle) {
