@@ -222,13 +222,6 @@ Custom property | Description | Default
         value: false,
       },
       /**
-       * Indicate the new password that the user wants to change
-       */
-      newPassword: {
-        type: String,
-        value: '',
-      },
-      /**
        * Main icon of the item title
        */
       icon: Object,
@@ -383,18 +376,7 @@ Custom property | Description | Default
      */
     _deleteItemTapped(event) {
       this.fire("delete-item-tapped", this);
-    },
-
-
-
-
-    _changePasswordTapped() {
-      this.fire("change-password-tapped", this);
-    },
-
-    _signoutTapped() {
-      this.fire("signout-tapped");
-    },
+    }
   });
 
 })();

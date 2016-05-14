@@ -70,7 +70,7 @@
         <span class="header-title">[[headerTitle]]</span>
         <div class="actions">
           <paper-icon-button on-tap="" icon="icons:search"></paper-icon-button>
-          <paper-icon-button on-tap="_addItem" icon="icons:add-circle"></paper-icon-button>
+          <paper-icon-button on-tap="" icon="icons:add-circle"></paper-icon-button>
           <paper-icon-button on-tap="" icon="icons:create"></paper-icon-button>
           <paper-icon-button on-tap="" icon="icons:build"></paper-icon-button>
         </div>
@@ -122,10 +122,6 @@
       if (is) {
         return 'headerFixed';
       }
-    },
-
-    _addItem() {
-      this.fire('add-item-tapped');
     },
 
     showItems(headerTitle) {
