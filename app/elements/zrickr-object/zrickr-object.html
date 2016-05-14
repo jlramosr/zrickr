@@ -1,4 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/firebase-element/firebase-document.html">
 <link rel="import" href="../../bower_components/firebase-element/firebase-collection.html">
 
 <!--
@@ -9,7 +10,7 @@ methods (add, modify, remove a collection)
 @element zrickr-collection
 -->
 
-<dom-module id="zrickr-collection">
+<dom-module id="zrickr-object">
   <template>
     <firebase-collection
       location="[[_getLocation(location)]]"
@@ -24,19 +25,19 @@ methods (add, modify, remove a collection)
 
   Polymer({
 
-    is: "zrickr-collection",
+    is: "zrickr-object",
 
     properties: {
       baseUrl: {
         type: String,
-        value: "collections",
+        value: "objects",
         readonly: true
       },
       location: {
         type: String,
         readonly: true
       },
-      collections: {
+      objects: {
         type: Array,
         value: function() {
           return [];
@@ -54,10 +55,10 @@ methods (add, modify, remove a collection)
 
     /**
      * Add a collection
-     * @param {object} The collection to add
+     * @param {object} The object to add
      */
     add(collection) {
-      this.$$('firebase-collection').add(collection);
+      this.$$('firebase-collection').add(object);
     }
   });
 }());
