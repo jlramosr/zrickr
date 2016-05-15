@@ -6,7 +6,7 @@
 <link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
-<dom-module id="zrickr-collection-list">
+<dom-module id="zrickr-object-list">
   <style include="iron-flex iron-flex-alignment">
     :host {
       display: block;
@@ -67,7 +67,6 @@
 
     .collection-container .item-actions {
       margin-left: auto;
-      margin-right: -25px;
     }
 
     .collection-container .item-actions > paper-icon-button {
@@ -89,14 +88,14 @@
 
     .actions {
       @apply(--layout-horizontal);
-      position: fixed;
+      position: absolute;
       bottom: 20px;
       right: 30px;
     }
 
     paper-fab {
       --paper-fab: {
-        opacity: 0.95;
+        opacity: 0.8;
         margin-left: 10px;
       }
       --paper-fab-background: var(--secondary-text-color);
@@ -104,7 +103,7 @@
   </style>
 
   <template>
-    <iron-list selection-enabled id="collectionsList" items="[[collections]]" as="collection" scroll-target="document">
+    <iron-list selection-enabled id="collectionsList" items="[[objects]]" as="collection" scroll-target="document">
       <template>
         <div class="collection-container"
           on-tap="_collectionTapped"
@@ -126,7 +125,7 @@
 
     <array-selector
       id="collectionSelector"
-      items="{{collections}}"
+      items="{{objects}}"
       selected="{{selected}}"
       toggle>
     </array-selector>
@@ -157,13 +156,13 @@
 
   Polymer({
 
-    is: "zrickr-collection-list",
+    is: "zrickr-object-list",
 
     properties: {
       auth: {
         type: Object
       },
-      collections: {
+      objects: {
         type: Array,
         notify: true,
         value: function() {

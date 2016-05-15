@@ -3,8 +3,8 @@
 <link rel="import" href="../../bower_components/firebase-element/firebase-collection.html">
 
 <!--
-`<zrickr-collection>` is the main handler of a collection with the basic
-methods (add, modify, remove a collection)
+`<zrickr-object>` is the main handler of a object belonging to a
+collection
 
 @demo demo/index.html
 @element zrickr-collection
@@ -14,7 +14,7 @@ methods (add, modify, remove a collection)
   <template>
     <firebase-collection
       location="[[_getLocation(location)]]"
-      data="{{collections}}">
+      data="{{objects}}">
    </firebase-collection>
   </template>
 </dom-module>
@@ -44,6 +44,10 @@ methods (add, modify, remove a collection)
         },
         notify: true
       },
+      collectionID: {
+        type: String,
+        readonly: true
+      }
     },
 
     /**

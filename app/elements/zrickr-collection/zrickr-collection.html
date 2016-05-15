@@ -32,6 +32,11 @@ methods (add, modify, remove a collection)
         value: "collections",
         readonly: true
       },
+      mainName: {
+        type: String,
+        value: "name",
+        readonly: true
+      },
       location: {
         type: String,
         readonly: true
@@ -58,6 +63,14 @@ methods (add, modify, remove a collection)
      */
     add(collection) {
       this.$$('firebase-collection').add(collection);
+    },
+
+    getId(collection) {
+      return collection.__firebaseKey__;
+    },
+
+    getName(collection) {
+      return collection[this.mainName];
     }
   });
 }());

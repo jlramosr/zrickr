@@ -8,14 +8,14 @@
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <!--
-`<zrickr-drawer-content-setting>` implements a simple menu item
+`<zrickr-drawer-content-setting>` implements a simple menu setting
 
 Example:
 
   <zrickr-drawer-content-setting
     id="recycleBin"
     icon="icons:delete"
-    item-menu-name="Recycle Bin">
+    setting-menu-name="Recycle Bin">
   </zrickr-drawer-content-setting>
 
 @element zrickr-drawer-content-setting
@@ -27,21 +27,21 @@ Example:
       cursor: pointer;
     }
 
-    .item {
-      @apply(--drawer-content-item);
+    .setting {
+      @apply(--drawer-content-catalog);
     }
 
-    .item-title {
-      @apply(--drawer-title-item);
+    .setting-title {
+      @apply(--drawer-title-catalog);
     }
 
   </style>
 
   <template>
-    <paper-item class="item">
-      <div class="item-title" on-tap="_settingTapped">
+    <paper-item class="setting">
+      <div class="setting-title" on-tap="_settingTapped">
         <paper-icon-button icon="{{icon}}"></paper-icon-button>
-        <span>[[itemMenuName]]</span>
+        <span>[[settingMenuName]]</span>
       </div>
     </paper-item>
   </template>
@@ -60,11 +60,11 @@ Example:
        */
       icon: Object,
       /**
-       * Item name of the menu
+       * Setting name of the menu
        */
-      itemMenuName: {
+      settingMenuName: {
         type: String,
-        value: 'My Items',
+        value: 'Settings',
         readonly: true
       }
     },

@@ -1,7 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="zrickr-drawer-content-item.html">
+<link rel="import" href="zrickr-drawer-content-catalog.html">
 <link rel="import" href="zrickr-drawer-content-setting.html">
 
 <!--
@@ -27,15 +27,15 @@ The following custom properties are available for styling:
 
 Custom property | Description | Default
 ----------------|-------------|----------
-`--drawer-title-item`| Mixin of a menu item title container| `{padding-right: 14px;}`
-`--drawer-content-item`| Mixin of a complete menu item| `{..}`
-`--drawer-content-subitem`| Mixin of a complete menu subitem| `{..}`
-`--drawer-content-item-text-color`| Item text color | `--primary-text-color`
+`--drawer-title-catalog`| Mixin of a menu item title container| `{padding-right: 14px;}`
+`--drawer-content-catalog`| Mixin of a complete menu item| `{..}`
+`--drawer-content-catalog`| Mixin of a complete menu catalog| `{..}`
+`--drawer-content-catalog-text-color`| Catalog text color | `--primary-text-color`
+`--drawer-content-catalog-background-color`| Catalog text color background | `--paper-grey-50`
+`--drawer-content-catalog-border-color`| Space color between catalogs | `--divider-color`
+`--drawer-content-item-text-color`| Item text color | `--secondary-text-color`
 `--drawer-content-item-background-color`| Item text color background | `--paper-grey-50`
-`--drawer-content-item-border-color`| Space color between items | `--divider-color`
-`--drawer-content-subitem-text-color`| Subitem text color | `--secondary-text-color`
-`--drawer-content-subitem-background-color`| Subitem text color background | `--paper-grey-50`
-`--drawer-content-subitem-border-color`| Space color between subitems | `--divider-color`
+`--drawer-content-item-border-color`| Space color between Items | `--divider-color`
 
 @element zrickr-drawer-content
 @demo ../../elements/zrickr-drawer/demo/index.html
@@ -44,22 +44,22 @@ Custom property | Description | Default
 <dom-module id="zrickr-drawer-content">
   <style include="iron-flex iron-flex-alignment">
     :root {
-      --drawer-title-item: {
+      --drawer-title-catalog: {
         @apply(--layout-flex);
         @apply(--layout-horizontal);
         @apply(--layout-center);
         padding-right: 14px;
       };
-      --drawer-content-item: {
+      --drawer-content-catalog: {
         @apply(--layout-horizontal);
         @apply(--layout-center);
         color:
-          var(--drawer-content-item-text-color, --primary-text-color);
+          var(--drawer-content-catalog-text-color, --primary-text-color);
         background:
-          var(--drawer-content-item-background-color, --paper-grey-50);
+          var(--drawer-content-catalog-background-color, --paper-grey-50);
         border-bottom:
           0px solid
-          var(--drawer-content-item-border-color, --divider-color);
+          var(--drawer-content-catalog-border-color, --divider-color);
         padding-left: 14px;
         padding-right: 0px;
         font-weight: normal;
@@ -67,16 +67,16 @@ Custom property | Description | Default
         opacity: 0.99;
         min-height: 20px;
       };
-      --drawer-content-subitem: {
+      --drawer-content-item: {
         @apply(--layout-horizontal);
         @apply(--layout-center);
         color:
-          var(--drawer-content-subitem-text-color, --secondary-text-color);
+          var(--drawer-content-item-text-color, --secondary-text-color);
         background:
-          var(--drawer-content-subitem-background-color, --paper-grey-50);
+          var(--drawer-content-item-background-color, --paper-grey-50);
         border-bottom:
           1px solid
-          var(--drawer-content-subitem-border-color, --divider-color);
+          var(--drawer-content-item-border-color, --divider-color);
         padding-left: 28px;
         padding-right: 0px;
         font-size: 12px;
@@ -110,42 +110,42 @@ Custom property | Description | Default
 
   <template>
     <paper-menu class="main">
-      <zrickr-drawer-content-item
+      <zrickr-drawer-content-catalog
         id="primaryItem"
         icon="image:view-comfy"
-        item-menu-name="[[primaryItemMenuName]]"
+        catalog-menu-name="[[primaryCatalogMenuName]]"
         add
         item-name="[[itemName]]"
         object-name="[[objectName]]"
         items="[[items]]"
         hidden="[[!primaryItemMenuName]]">
-      </zrickr-drawer-content-item>
-      <zrickr-drawer-content-item
+      </zrickr-drawer-content-catalog>
+      <zrickr-drawer-content-catalog
         id="secondaryItem"
         icon="social:group"
-        item-menu-name="[[secondaryItemMenuName]]"
-        item-name="[[itemName]]"
+        catalog-menu-name="[[secondaryCatalogMenuName]]"
+        item-name="[[catalogName]]"
         object-name="[[objectName]]"
         items="[[items]]"
-        hidden="[[!secondaryItemMenuName]]">
-      </zrickr-drawer-content-item>
+        hidden="[[!secondaryCatalogMenuName]]">
+      </zrickr-drawer-content-catalog>
     </paper-menu>
 
     <paper-menu class="secondary">
       <zrickr-drawer-content-setting
         id="settings"
         icon="icons:settings"
-        item-menu-name="Settings">
+        setting-menu-name="Settings">
       </zrickr-drawer-content-setting>
       <zrickr-drawer-content-setting
         id="recycleBin"
         icon="icons:delete"
-        item-menu-name="Recycle Bin">
+        setting-menu-name="Recycle Bin">
       </zrickr-drawer-content-setting>
       <zrickr-drawer-content-setting
         id="help"
         icon="icons:help"
-        item-menu-name="Help and Suggestions">
+        setting-menu-name="Help and Suggestions">
       </zrickr-drawer-content-setting>
     </paper-menu>
   </template>
@@ -162,7 +162,7 @@ Custom property | Description | Default
       /**
        * Primary items menu title
        */
-      primaryItemMenuName: {
+      primaryCatalogMenuName: {
         type: String,
         value: 'My Items',
         readonly: true
@@ -170,7 +170,7 @@ Custom property | Description | Default
       /**
        * Secondary items menu title
        */
-      secondaryItemMenuName: {
+      secondaryCatalogMenuName: {
         type: String,
         value: '',
         readonly: true
@@ -201,7 +201,7 @@ Custom property | Description | Default
     },
 
     listeners: {
-      'menu-opened': '_menuItemOpened'
+      'menu-opened': '_menuCatalogOpened'
     },
 
     attached() {
@@ -212,7 +212,7 @@ Custom property | Description | Default
     /**
      * Fired when some submenu of this element is opened
      */
-    _menuItemOpened(event) {
+    _menuCatalogOpened(event) {
       let mainMenu = Polymer.dom(this.root).querySelector('.main');
       mainMenu.select(1);
       let allMainItems = Polymer.dom(this.root).

@@ -14,32 +14,32 @@
 <link rel="import" href="../../styles/shared-styles.html">
 
 <!--
-`<zrickr-drawer-content-item>` implements a menu content to a item
-and their subitems if it has someone, or a simple menu tittle with its
+`<zrickr-drawer-content-catalog>` implements a menu content to a catalog
+and their items if it has someone, or a simple menu tittle with its
 corresponding events.
 
 Example:
 
-    <zrickr-drawer-content-item
-      id="itemMenu1"
-      icon="icons:settings"
-      item-menu-name="Settings">
-    </zrickr-drawer-content-item>
+    <zrickr-drawer-content-catalog
+      id="catalogMenu1"
+      icon="icons:collection"
+      catalog-menu-name="Collections">
+    </zrickr-drawer-content-catalog>
 
 In case our items are able to add manually, it exists the possibility to
-include a button to add a new item (view `add-item-tapped` event)
+include a button to add a new item to a catalog (view `add-item-tapped` event)
 
-    <zrickr-drawer-content-item
-      id="itemMenu2"
+    <zrickr-drawer-content-catalog
+      id="catalogMenu2"
       icon="image:view-comfy"
       item-menu-name="My Collections"
       add
-      item-name="collection"
-      subitem-name="element"
+      catalog-name="collection"
+      item-name="element"
       items="[{'name': 'Balls', 'public':true}, {'name': 'Coins', 'public':false}]">
-    </zrickr-drawer-content-item>
+    </zrickr-drawer-content-catalog>
 
-If there are no subitems, we must no put `subitem-name` property
+If there are no items, we must no put `item-name` property
 
 ### Styling
 
@@ -47,14 +47,14 @@ The following custom properties are available for styling:
 
 Custom property | Description | Default
 ----------------|-------------|----------
-`--drawer-content-subitem-menu-border-color`| Border color of subitem menu | `--primary-text-color`
-`--drawer-content-subitem-hover-color`| Color hover of a subitem | `--paper-grey-200`
+`--drawer-content-item-menu-border-color`| Border color of item menu | `--primary-text-color`
+`--drawer-content-item-hover-color`| Color hover of a item | `--paper-grey-200`
 
-@element zrickr-drawer-setting
+@element zrickr-drawer-content-catalog
 @demo ../../elements/zrickr-drawer/demo/index.html
 -->
 
-<dom-module id="zrickr-drawer-content-item">
+<dom-module id="zrickr-drawer-content-catalog">
   <style include="iron-flex iron-flex-alignment shared-styles">
     iron-image {
       width: 18px;
@@ -62,43 +62,43 @@ Custom property | Description | Default
       margin-right: 8px;
     }
 
-    .item {
-      @apply(--drawer-content-item);
+    .catalog {
+      @apply(--drawer-content-catalog);
     }
 
-    .item-title {
-      @apply(--drawer-title-item);
+    .catalog-title {
+      @apply(--drawer-title-catalog);
     }
 
-    .item-list {
+    .catalog-list {
       @apply(--layout-vertical);
       overflow: auto;
       min-height: 0px;
     }
 
-    .subitem {
-      @apply(--drawer-content-subitem);
+    .item {
+      @apply(--drawer-content-item);
     }
 
-    /*.subitem:hover {
-      background: var(--drawer-content-subitem-hover-background-color,
+    /*.item:hover {
+      background: var(--drawer-content-item-hover-background-color,
                       --paper-grey-200);
     }
 
-    .subitem:focus {
-      background: var(--drawer-content-subitem-focus-background-color,
+    .item:focus {
+      background: var(--drawer-content-item-focus-background-color,
                       --paper-grey-200);
     }
 
-    .subitem.iron-selected {
-      background: var(--drawer-content-subitem-selected-background-color,
+    .item.iron-selected {
+      background: var(--drawer-content-item-selected-background-color,
                       --paper-grey-200);
-      color: var( --drawer-content-subitem-selected-color,
+      color: var( --drawer-content-item-selected-color,
                   --secondary-text-color);
       font-weight: bold;
     }*/
 
-    .subitem-title {
+    .item-title {
       @apply(--layout-flex);
       @apply(--layout-horizontal);
       margin-right: 8px;
@@ -111,14 +111,14 @@ Custom property | Description | Default
       height: 36px;
     }
 
-    .menu-subitem {
+    .menu-item {
       width: 150px;
-      border: 1px solid var(--drawer-content-subitem-menu-border-color,
+      border: 1px solid var(--drawer-content-item-menu-border-color,
                             --primary-text-color);
       padding: 1px;
     }
 
-    .menu-subitem-action {
+    .menu-item-action {
       @apply(--layout-flex);
       @apply(--layout-horizontal);
       font-size: 12px;
@@ -131,10 +131,10 @@ Custom property | Description | Default
 
   <template>
     <paper-submenu>
-      <paper-item class="menu-trigger item">
-        <div class="item-title" on-tap="_itemTapped">
+      <paper-item class="menu-trigger catalog">
+        <div class="catalog-title" on-tap="_catalogTapped">
           <paper-icon-button icon="{{icon}}"></paper-icon-button>
-          <span>[[itemMenuName]]</span>
+          <span>[[catalogMenuName]]</span>
         </div>
         <paper-icon-button
           hidden="{{!add}}"
@@ -145,10 +145,10 @@ Custom property | Description | Default
         </paper-icon-button>
       </paper-item>
 
-      <paper-menu id="menuItem" role="listbox" class="menu-content item-list">
+      <paper-menu id="menuCatalog" role="listbox" class="menu-content catalog-list">
         <template is="dom-repeat" items="[[items]]" as="item">
-          <paper-item class="subitem" id="item-{{index}}">
-            <div class="subitem-title" on-tap="_viewItemTapped">
+          <paper-item class="item" id="item-{{index}}">
+            <div class="item-title" on-tap="_viewItemTapped">
               <iron-image sizing="contain" src="../../images/zrickr.png"></iron-image>
               <span>[[item.name]]</span>
             </div>
@@ -160,25 +160,25 @@ Custom property | Description | Default
               </paper-icon-button>
               <paper-menu role="menu"
                           selected="-1"
-                          class="dropdown-content menu-subitem menu-triggered">
-                <paper-item hidden={{!objectName}}
-                            class="menu-subitem-action space"
-                            on-tap="_addZrickrTapped">
+                          class="dropdown-content menu-item menu-triggered">
+                <paper-item hidden={{!itemName}}
+                            class="menu-item-action space"
+                            on-tap="_addObjectTapped">
                   <paper-icon-button  icon="image:add-to-photos">
                   </paper-icon-button>
                   Add a [[objectName]]
                 </paper-item>
-                <paper-item class="menu-subitem-action"
+                <paper-item class="menu-item-action"
                             on-tap="_viewItemTapped">
                   <paper-icon-button  icon="image:remove-red-eye"></paper-icon-button>
                   View [[itemName]]
                 </paper-item>
-                <paper-item class="menu-subitem-action"
+                <paper-item class="menu-item-action"
                             on-tap="_editItemTapped">
                   <paper-icon-button icon="icons:create"></paper-icon-button>
                   Edit [[itemName]]
                 </paper-item>
-                <paper-item class="menu-subitem-action"
+                <paper-item class="menu-item-action"
                             on-tap="_deleteItemTapped">
                   <paper-icon-button icon="icons:close"></paper-icon-button>
                   Delete [[itemName]]
@@ -197,7 +197,7 @@ Custom property | Description | Default
 
   Polymer({
 
-    is: "zrickr-drawer-content-item",
+    is: "zrickr-drawer-content-catalog",
 
     properties: {
       /**
@@ -259,10 +259,10 @@ Custom property | Description | Default
     },
 
     listeners: {
-      'paper-dropdown-close': '_subitemMenuClosed',
-      'paper-submenu-open': '_itemMenuOpened',
-      'iron-activate': '_subitemActivate',
-      /*'iron-select': '_subitemSelected'*/
+      'paper-dropdown-close': '_itemMenuClosed',
+      'paper-submenu-open': '_catalogMenuOpened',
+      'iron-activate': '_itemActivate',
+      /*'iron-select': '_itemSelected'*/
     },
 
     observers: [
@@ -283,16 +283,16 @@ Custom property | Description | Default
     },
 
     /**
-     * Fired when a subitem menu closes
+     * Fired when a item menu closes
      */
-    _subitemMenuClosed(event) {
+    _itemMenuClosed(event) {
       let target = event.target; //paper-menu-button
       let menu = target.contentElement; //paper-menu
       menu.select(-1); //disable selection mark
     },
 
-    _itemMenuOpened(event) {
-      this.fire('menu-opened');
+    _catalogMenuOpened(event) {
+      this.fire('catalog-menu-opened');
       event.stopPropagation();
     },
 
@@ -300,9 +300,9 @@ Custom property | Description | Default
 
     },
 
-    _subitemActivate(event) {
+    _itemActivate(event) {
       event.stopPropagation();
-      console.log("Subitem Activated", event.detail);
+      console.log("Item Activated", event.detail);
       let index = event.detail.selected;
       this.activeItem = index;
       let itemObject = this.items[index];
@@ -317,15 +317,15 @@ Custom property | Description | Default
       console.log("firebaseKey", firebaseKey);
     },
 
-    _subitemSelected(event) {
+    _itemSelected(event) {
     },
 
     /**
-     * When the user tap on a item
-     * @event item-tapped
+     * When the user tap on a catalog
+     * @event catalog-tapped
      */
-    _itemTapped(event) {
-      this.fire("item-tapped", this);
+    _catalogTapped(event) {
+      this.fire("catalog-tapped", this);
     },
 
     /**
@@ -338,27 +338,27 @@ Custom property | Description | Default
     },
 
     /**
-     * When the user tap on a subitem
-     * @event menu-subitem-tapped
+     * When the user tap on a item.
+     * @event item-tapped
      */
-    _subitemTapped(event) {
-      this.fire("subitem-tapped", this);
+    _itemTapped(event) {
+      this.fire("item-tapped", this);
     },
 
     /**
-     * When the user want to add a subitem on a item
-     * @event view-item-tapped
+     * When the user want to add an object on a item.
+     * @event add-object-tapped
      */
-    _addSubitemTapped(event) {
-      this.fire("add-subitem-tapped", this);
+    _addObjectTapped(event) {
+      this.fire("add-object-tapped", this);
     },
 
     /**
-     * When the user want to general view of a item
+     * When the user want to general view of a item.
      * @event view-item-tapped
      */
     _viewItemTapped(event) {
-      console.log("1view", this.activeItem);
+      //console.log("1view", this.activeItem);
       this.fire("view-item-tapped", this);
     },
 

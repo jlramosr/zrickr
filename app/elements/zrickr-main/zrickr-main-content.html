@@ -3,6 +3,7 @@
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../styles/shared-styles.html">
+<link rel="import" href="../../elements/zrickr-object/zrickr-object.html">
 <link rel="import" href="../../elements/zrickr-collection/zrickr-collection-list.html">
 
 <dom-module id="zrickr-main-content">
@@ -52,14 +53,14 @@
       width: 32px;
       height: 32px;
       color: var(--content-header-icon-color, --secondary-text-color);
-      opacity: 0.60;
+      opacity: 0.95;
     }
 
     .header-title {
       font-size: 22px;
     }
 
-    .actions {
+    .header-actions {
       margin-left: auto;
     }
   </style>
@@ -68,11 +69,8 @@
     <div id="header" class$="{{_headerFixed(headerFixed)}}">
       <div class="header-content">
         <span class="header-title">[[headerTitle]]</span>
-        <div class="actions">
-          <paper-icon-button on-tap="" icon="icons:search"></paper-icon-button>
-          <paper-icon-button on-tap="" icon="icons:add-circle"></paper-icon-button>
-          <paper-icon-button on-tap="" icon="icons:create"></paper-icon-button>
-          <paper-icon-button on-tap="" icon="icons:build"></paper-icon-button>
+        <div class="header-actions">
+          <paper-icon-button on-tap="" icon="search"></paper-icon-button>
         </div>
       </div>
     </div>
@@ -83,10 +81,14 @@
         hidden="[[hideItems]]">
       </zrickr-collection-list>
     </div>
-    <div id="content" class="content"
-         hidden="[[!hideItems]]">
+    <div id="content" class="content" hidden="[[!hideItems]]">
       <content></content>
     </div>
+    <zrickr-object id="objectHandler"
+      location="[[auth.location]]"
+      collectionId="{{collectionId}}"
+      objects="{{objects}}">
+    </zrickr-object>
   </template>
 </dom-module>
 
@@ -100,6 +102,9 @@
     properties: {
       auth: {
         type: Object
+      },
+      collectionId: {
+        type: String
       },
       items: {
         type: Array

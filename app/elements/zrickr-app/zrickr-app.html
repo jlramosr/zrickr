@@ -13,6 +13,7 @@
 <link rel="import" href="../../elements/zrickr-collection/zrickr-collection.html">
 <link rel="import" href="../../elements/zrickr-collection/zrickr-collection-new.html">
 <link rel="import" href="../../elements/zrickr-profile/zrickr-profile.html">
+<link rel="import" href="../../elements/zrickr-object/zrickr-object-list.html">
 
 <!--
 `<zrickr-app>` provides a web main structure with a drawer
@@ -64,10 +65,10 @@ Example:
         </zrickr-drawer-toolbar>
         <zrickr-drawer-content
           items="[[items]]"
-          primary-item-menu-name="My Collections"
-          secondary-item-menu-name="My Shared Collections"
+          primary-catalog-menu-name="My Collections"
+          secondary-catalog-menu-name="My Shared Collections"
           item-name="collection"
-          object-name="zrickr"
+          object-name="object"
           id="drawerContent">
         </zrickr-drawer-content>
       </paper-scroll-header-panel>
@@ -120,7 +121,10 @@ Example:
       'home-tapped': '_viewItems',
       'item-tapped': '_viewItem',
       'view-item-tapped': '_viewItem',
-      'edit-profile-tapped': '_editProfile'
+      'edit-item-tapped': '_editItem',
+      'delete-item-tapped': '_deleteItem',
+      'edit-profile-tapped': '_editProfile',
+      'add-object-tapped': '_addObject'
     },
 
     attached() {
@@ -162,6 +166,7 @@ Example:
        */
       });
       container.addContent(newContent, headerTitle);
+      mainPanel.closeDrawer();
       return newContent;
     },
 
@@ -183,6 +188,11 @@ Example:
       this.$.collectionHandler.appendChild(newCollectionProcess);
     },
 
+    _viewItems() {
+      let container = this.$.mainContent;
+      container.showItems(this.$.drawerContent.primaryCatalogMenuName);
+    },
+
     /**
      * Fired when the user taps on edit profile. Add the user profile
      * view to the main content
@@ -192,25 +202,50 @@ Example:
         this._addMainContent('zrickr-profile','User Profile','profile');
     },
 
-    _viewItems() {
-      let container = this.$.mainContent;
-      container.showItems(this.$.drawerContent.primaryItemMenuName);
-    },
-
     /**
      * Fires when the process of creation has finished
      */
     _addItem(event) {
-      let collection = event.detail;
-      this.$.collectionHandler.add(collection);
+      let item = event.detail;
+      this.$.collectionHandler.add(item);
     },
 
     /**
-     * Fires when the user wants to view a subitem
+     * Fires when the user wants to view a item
      */
     _viewItem(event) {
       let item = event.detail;
-      console.log("VIEW", item);
+      let itemName = this.$.collectionHandler.getName(item);
+      let itemId = this.$.collectionHandler.getId(item);
+
+      let container = this.$.mainContent;
+      container.removeContent();
+      let zrickrObjectList = document.createElement('zrickr-object-list');
+      zrickrObjectList.auth = this.auth;
+      zrickrObjectList.collectionId = itemId;
+      container.addContent(zrickrObjectList, itemName);
+      mainPanel.closeDrawer();
+    },
+
+    /**
+     * Fires when the user wants to edit a item
+     */
+    _editItem(event) {
+      let item = event.detail;
+    },
+
+    /**
+     * Fires when the user wants to delete a item
+     */
+    _deleteItem(event) {
+      let item = event.detail;
+    },
+
+    /**
+     * Fires when the user wants to add an object on a item
+     */
+    _addObject(event) {
+      let item = event.detail;
     }
   });
 })();
