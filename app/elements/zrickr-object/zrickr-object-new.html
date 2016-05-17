@@ -1,0 +1,40 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<!--
+`<zrickr-object-new>` implements the view of an object creation
+
+@demo demo/index.html
+@element zrickr-object-new
+-->
+
+<dom-module id="zrickr-object-new">
+  <template>
+    <button on-tap="_createObject">CREAR</button>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  'use strict';
+
+  Polymer({
+
+    is: "zrickr-object-new",
+
+    properties: {
+      itemId: {
+        type: String,
+        readonly: true
+      }
+    },
+
+    _createObject() {
+      let newObject = {
+        'itemId': this.itemId,
+      };
+      this.fire('add-object', newObject);
+    }
+
+  });
+}());
+</script>

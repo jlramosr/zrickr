@@ -143,7 +143,7 @@
     </iron-scroll-threshold>
 
     <div class="actions">
-      <paper-fab mini icon="add"></paper-fab>
+      <paper-fab mini icon="add" on-tap="_addObject"></paper-fab>
       <paper-fab mini icon="create"></paper-fab>
     </div>
 
@@ -168,6 +168,10 @@
         value: function() {
           return [];
         }
+      },
+      item: {
+        type: Object,
+        readonly: true
       },
       loadingCollections: {
         type: Boolean,
@@ -195,6 +199,13 @@
       console.log ("Hovered collection is", event.model.collection);*/
       this.hoveredIndex = event.model.index;
     },
+
+    _addObject() {
+      let params = {};
+      params.itemId = this.item.id;
+      params.itemName = this.item.name;
+      this.fire('add-object-tapped', params);
+    }
 
     /*_loadMoreCollections() {
       console.log("HOLA");

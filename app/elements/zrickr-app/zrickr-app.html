@@ -6,13 +6,18 @@
 <link rel="import" href="../../bower_components/carbon-route/carbon-location.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../styles/shared-styles.html">
+<!-- Main view elements -->
 <link rel="import" href="../../elements/zrickr-drawer/zrickr-drawer-toolbar.html">
 <link rel="import" href="../../elements/zrickr-drawer/zrickr-drawer-content.html">
 <link rel="import" href="../../elements/zrickr-main/zrickr-main-toolbar.html">
 <link rel="import" href="../../elements/zrickr-main/zrickr-main-content.html">
+<!-- Handlers of items and objects -->
 <link rel="import" href="../../elements/zrickr-collection/zrickr-collection.html">
+<link rel="import" href="../../elements/zrickr-object/zrickr-object.html">
+<!-- Possible views at one moment -->
 <link rel="import" href="../../elements/zrickr-collection/zrickr-collection-new.html">
 <link rel="import" href="../../elements/zrickr-profile/zrickr-profile.html">
+<link rel="import" href="../../elements/zrickr-object/zrickr-object-new.html">
 <link rel="import" href="../../elements/zrickr-object/zrickr-object-list.html">
 
 <!--
@@ -51,6 +56,11 @@ Example:
       location="[[auth.location]]"
       collections="{{items}}">
     </zrickr-collection>
+    <zrickr-object id="objectHandler"
+      location="[[auth.location]]"
+      collectionId="{{collectionId}}"
+      objects="{{objects}}">
+    </zrickr-object>
     <carbon-location use-hash-as-path route="{{route}}"></carbon-location>
     <carbon-route id="zrickrRoute" route="{{route}}" pattern="/:page"
                   tail="{{tail}}" data="{{data}}">
@@ -124,18 +134,19 @@ Example:
       'edit-item-tapped': '_editItem',
       'delete-item-tapped': '_deleteItem',
       'edit-profile-tapped': '_editProfile',
-      'add-object-tapped': '_addObject'
+      'add-object-tapped': '_newObjectProcess',
+      'add-object': '_addObject'
     },
 
     attached() {
-      let route = this.$.zrickrRoute.data;
+      /*let route = this.$.zrickrRoute.data;
       if (route.page == 'profile') {
         this._editProfile();
       }
       else if (route.page == '' || !route.page) {
         this._viewItems();
-      }
-
+      }*/
+      this._viewItems();
       let mainPanel = this.$.mainPanel;
       if (this.positionDrawer == 'right') {
         mainPanel.rightDrawer = true;
@@ -154,7 +165,7 @@ Example:
       let newContent = document.createElement(elementName);
       newContent.auth = this.auth;
       //newContent.collections = this.items;
-      this.addEventListener("items-changed", (event) => {
+      //this.addEventListener("items-changed", (event) => {
       /* TODO:
        *  mirar SET collections en evento items-changed para ir rellenando
        * collections en hijo y DEBOUNCE para esperar unos milisegundos
@@ -164,7 +175,7 @@ Example:
       /* newContent.renderList(); //ASI SE CONSIGUE PERO TARDA CON items-changed
        * console.log(newContent.collections, event.detail);
        */
-      });
+      //});
       container.addContent(newContent, headerTitle);
       mainPanel.closeDrawer();
       return newContent;
@@ -185,7 +196,16 @@ Example:
     _newItemProcess() {
       let newCollectionProcess =
         document.createElement('zrickr-collection-new');
-      this.$.collectionHandler.appendChild(newCollectionProcess);
+      this.$.mainContent.appendChild(newCollectionProcess);
+      this.$.mainPanel.closeDrawer();
+    },
+
+    /**
+     * Fires when the process of creation has finished
+     */
+    _addItem(event) {
+      let item = event.detail;
+      this.$.collectionHandler.add(item);
     },
 
     _viewItems() {
@@ -198,16 +218,7 @@ Example:
      * view to the main content
      */
     _editProfile() {
-      let zrickrProfile =
-        this._addMainContent('zrickr-profile','User Profile','profile');
-    },
-
-    /**
-     * Fires when the process of creation has finished
-     */
-    _addItem(event) {
-      let item = event.detail;
-      this.$.collectionHandler.add(item);
+      this._addMainContent('zrickr-profile','User Profile','profile');
     },
 
     /**
@@ -217,14 +228,13 @@ Example:
       let item = event.detail;
       let itemName = this.$.collectionHandler.getName(item);
       let itemId = this.$.collectionHandler.getId(item);
-
-      let container = this.$.mainContent;
-      container.removeContent();
-      let zrickrObjectList = document.createElement('zrickr-object-list');
-      zrickrObjectList.auth = this.auth;
-      zrickrObjectList.collectionId = itemId;
-      container.addContent(zrickrObjectList, itemName);
-      mainPanel.closeDrawer();
+      let zrickrObjectList =
+        this._addMainContent('zrickr-object-list', itemName, itemName);
+      zrickrObjectList.item = {
+        'id': itemId,
+        'name': itemName
+      };
+      zrickrObjectList.objects = this.objects;
     },
 
     /**
@@ -244,8 +254,23 @@ Example:
     /**
      * Fires when the user wants to add an object on a item
      */
+    _newObjectProcess(event) {
+      let object = event.detail;
+      let itemId = object.itemId;
+      let itemName = object.itemName;
+      let zrickrObjectNew =
+        this._addMainContent('zrickr-object-new',
+                             'New ' + itemName + ' object',
+                             'newObject');
+      zrickrObjectNew.itemId = itemId;
+    },
+
+    /**
+     * Fires when the user finish the object creation process
+     */
     _addObject(event) {
-      let item = event.detail;
+      let object = event.detail;
+      this.$.objectHandler.add(object);
     }
   });
 })();
