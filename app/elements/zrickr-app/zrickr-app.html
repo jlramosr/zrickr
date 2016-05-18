@@ -58,7 +58,7 @@ Example:
     </zrickr-collection>
     <zrickr-object id="objectHandler"
       location="[[auth.location]]"
-      collectionId="{{collectionId}}"
+      item-id="{{itemId}}"
       objects="{{objects}}">
     </zrickr-object>
     <carbon-location use-hash-as-path route="{{route}}"></carbon-location>
@@ -112,6 +112,13 @@ Example:
       positionDrawer: {
         type: String,
         value: 'left'
+      },
+      objects: {
+        type: Array
+      },
+      itemId: {
+        type: String,
+        value:"-KGMgQIhhGrh23K9R6X9"
       },
       /**
        * Authentication and backend information
@@ -228,6 +235,16 @@ Example:
       let item = event.detail;
       let itemName = this.$.collectionHandler.getName(item);
       let itemId = this.$.collectionHandler.getId(item);
+      this.itemId = itemId;
+      /*let zrickrObject = document.createElement('zrickr-object');
+      zrickrObject.location = this.auth.location;
+      zrickrObject.itemId = this.itemId;
+      zrickrObject.objects = this.objects;
+      zrickrObject.addEventListener('objects-changed', () => {
+        this.objects = zrickrObject.objects;
+        zrickrObjectList.objects = this.objects;
+      });
+      this.appendChild(zrickrObject);*/
       let zrickrObjectList =
         this._addMainContent('zrickr-object-list', itemName, itemName);
       zrickrObjectList.item = {
@@ -235,6 +252,7 @@ Example:
         'name': itemName
       };
       zrickrObjectList.objects = this.objects;
+
     },
 
     /**

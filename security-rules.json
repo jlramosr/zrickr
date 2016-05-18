@@ -3,6 +3,10 @@
     "collections": {
       ".read": true,
       ".write": true
+    },
+    "objects": {
+      ".read": true,
+      ".write": true
     }
   }
 }

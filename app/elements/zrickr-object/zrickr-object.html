@@ -1,5 +1,4 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-
 <link rel="import" href="../../bower_components/firebase-element/firebase-collection.html">
 
 <!--
@@ -14,6 +13,8 @@ collection
   <template>
     <firebase-collection
       location="[[_getLocation(location)]]"
+      order-by-child="itemId"
+      equal-to="{{itemId}}"
       data="{{objects}}">
    </firebase-collection>
   </template>
@@ -33,6 +34,9 @@ collection
         value: "objects",
         readonly: true
       },
+      itemId: {
+        type: String
+      },
       location: {
         type: String,
         readonly: true
@@ -42,8 +46,14 @@ collection
         value: function() {
           return [];
         },
-        notify: true
+        notify: true,
+        observer: '_objectsChanged'
       }
+    },
+
+    _objectsChanged() {
+      console.log('objects-changed');
+      this.fire('objects-changed');
     },
 
     /**
