@@ -1,0 +1,75 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="zrickr-object-filter.html">
+
+<dom-module id="zrickr-object-view">
+  <style include="iron-flex iron-flex-alignment">
+    :host {
+      display: block;
+      margin: auto;
+    }
+  </style>
+
+  <template>
+    <zrickr-object-filter id="objectHandler"
+      location="[[auth.location]]"
+      item-id="{{item.id}}"
+      objects="{{objects}}">
+    </zrickr-object-filter>
+    {{item.id}}
+    <span>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  'use strict';
+
+  Polymer({
+
+    is: "zrickr-object-view",
+
+    properties: {
+      auth: {
+        type: Object
+      },
+      item: {
+        type: Object
+      }
+    },
+
+    _computeActionsVisibility(index) {
+      if (index == this.selectedIndex) {
+        return true;
+      }
+      return false;
+    },
+
+    _collectionTapped(event) {
+      this.fire('view-object-tapped', event.model.object);
+    },
+
+    _collectionHover(event) {
+      /*console.log ("Hovered index is ", event.model.index);
+      console.log ("Hovered collection is", event.model.collection);*/
+      this.hoveredIndex = event.model.index;
+    },
+
+    _addObject() {
+      let params = {};
+      params.itemId = this.item.id;
+      params.itemName = this.item.name;
+      this.fire('add-object-tapped', params);
+    }
+
+    /*_loadMoreCollections() {
+      console.log("HOLA");
+    }
+
+    renderList() {
+      this.$.collectionsList.render();
+    }*/
+
+  });
+}());
+</script>

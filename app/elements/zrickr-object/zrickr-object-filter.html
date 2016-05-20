@@ -2,18 +2,20 @@
 <link rel="import" href="../../bower_components/firebase-element/firebase-collection.html">
 
 <!--
-`<zrickr-collection>` is the main handler of a collection with the basic
-methods (add, modify, remove a collection)
+`<zrickr-object>` is the main handler of a object belonging to a
+collection
 
 @demo demo/index.html
 @element zrickr-collection
 -->
 
-<dom-module id="zrickr-collection">
+<dom-module id="zrickr-object-filter">
   <template>
     <firebase-collection
       location="[[_getLocation(location)]]"
-      data="{{collections}}">
+      order-by-child="itemId"
+      equal-to="{{itemId}}"
+      data="{{objects}}">
    </firebase-collection>
   </template>
 </dom-module>
@@ -24,30 +26,30 @@ methods (add, modify, remove a collection)
 
   Polymer({
 
-    is: "zrickr-collection",
+    is: "zrickr-object-filter",
 
     properties: {
       baseUrl: {
         type: String,
-        value: "collections",
+        value: "objects",
         readonly: true
       },
-      mainName: {
+      itemId: {
         type: String,
-        value: "name",
+        value: '',
         readonly: true
       },
       location: {
         type: String,
         readonly: true
       },
-      collections: {
+      objects: {
         type: Array,
         value: function() {
           return [];
         },
         notify: true
-      },
+      }
     },
 
     /**
@@ -57,28 +59,16 @@ methods (add, modify, remove a collection)
       return (this.location + "/" + this.baseUrl);
     },
 
+    getId(object) {
+      return object.__firebaseKey__;
+    },
+
     /**
-     * Add a collection
-     * @param {object} The collection to add
+     * Add a object
+     * @param {object} The object to add
      */
-    add(collection) {
-      this.$$('firebase-collection').add(collection);
-    },
-
-    getCollection(collectionId) {
-      return this.$$('firebase-collection').getByKey(collectionId);
-    },
-
-    getNameById(collectionId) {
-      return this.getName(this.getCollection(collectionId));
-    },
-
-    getId(collection) {
-      return collection.__firebaseKey__;
-    },
-
-    getName(collection) {
-      return collection[this.mainName];
+    add(object) {
+      this.$$('firebase-collection').add(object);
     }
   });
 }());

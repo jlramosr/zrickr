@@ -11,12 +11,8 @@ collection
 
 <dom-module id="zrickr-object">
   <template>
-    <firebase-collection
-      location="[[_getLocation(location)]]"
-      order-by-child="itemId"
-      equal-to="{{itemId}}"
-      data="{{objects}}">
-   </firebase-collection>
+    <firebase-collection location="[[_getLocation(location)]]">
+    </firebase-collection>
   </template>
 </dom-module>
 
@@ -34,26 +30,10 @@ collection
         value: "objects",
         readonly: true
       },
-      itemId: {
-        type: String
-      },
       location: {
         type: String,
         readonly: true
-      },
-      objects: {
-        type: Array,
-        value: function() {
-          return [];
-        },
-        notify: true,
-        observer: '_objectsChanged'
       }
-    },
-
-    _objectsChanged() {
-      console.log('objects-changed');
-      this.fire('objects-changed');
     },
 
     /**
@@ -61,6 +41,10 @@ collection
      */
     _getLocation() {
       return (this.location + "/" + this.baseUrl);
+    },
+
+    getId(object) {
+      return object.__firebaseKey__;
     },
 
     /**

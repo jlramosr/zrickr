@@ -19,6 +19,7 @@
 <link rel="import" href="../../elements/zrickr-profile/zrickr-profile.html">
 <link rel="import" href="../../elements/zrickr-object/zrickr-object-new.html">
 <link rel="import" href="../../elements/zrickr-object/zrickr-object-list.html">
+<link rel="import" href="../../elements/zrickr-object/zrickr-object-view.html">
 
 <!--
 `<zrickr-app>` provides a web main structure with a drawer
@@ -56,10 +57,9 @@ Example:
       location="[[auth.location]]"
       collections="{{items}}">
     </zrickr-collection>
-    <zrickr-object id="objectHandler"
-      location="[[auth.location]]"
-      item-id="{{itemId}}"
-      objects="{{objects}}">
+    <zrickr-object
+      id="objectHandler"
+      location="[[auth.location]]">
     </zrickr-object>
     <carbon-location use-hash-as-path route="{{route}}"></carbon-location>
     <carbon-route id="zrickrRoute" route="{{route}}" pattern="/:page"
@@ -108,17 +108,9 @@ Example:
     is: 'zrickr-app',
 
     properties: {
-
       positionDrawer: {
         type: String,
         value: 'left'
-      },
-      objects: {
-        type: Array
-      },
-      itemId: {
-        type: String,
-        value:"-KGMgQIhhGrh23K9R6X9"
       },
       /**
        * Authentication and backend information
@@ -142,7 +134,8 @@ Example:
       'delete-item-tapped': '_deleteItem',
       'edit-profile-tapped': '_editProfile',
       'add-object-tapped': '_newObjectProcess',
-      'add-object': '_addObject'
+      'add-object': '_addObject',
+      'view-object-tapped': '_viewObject'
     },
 
     attached() {
@@ -236,23 +229,13 @@ Example:
       let itemName = this.$.collectionHandler.getName(item);
       let itemId = this.$.collectionHandler.getId(item);
       this.itemId = itemId;
-      /*let zrickrObject = document.createElement('zrickr-object');
-      zrickrObject.location = this.auth.location;
-      zrickrObject.itemId = this.itemId;
-      zrickrObject.objects = this.objects;
-      zrickrObject.addEventListener('objects-changed', () => {
-        this.objects = zrickrObject.objects;
-        zrickrObjectList.objects = this.objects;
-      });
-      this.appendChild(zrickrObject);*/
       let zrickrObjectList =
         this._addMainContent('zrickr-object-list', itemName, itemName);
       zrickrObjectList.item = {
         'id': itemId,
         'name': itemName
       };
-      zrickrObjectList.objects = this.objects;
-
+      zrickrObjectList.itemId = itemId;
     },
 
     /**
@@ -267,6 +250,24 @@ Example:
      */
     _deleteItem(event) {
       let item = event.detail;
+    },
+
+    /**
+     * Fires when the user wants to view and object
+     */
+    _viewObject(event) {
+      let object = event.detail;
+      let itemId = object.itemId;
+      let itemName = this.$.collectionHandler.getNameById(itemId);
+      let objectId = this.$.objectHandler.getId(object);
+      let zrickrObjectView =
+        this._addMainContent('zrickr-object-view',
+                             itemName + ': ' + objectId,
+                             'newObject');
+      zrickrObjectView.item = {
+        'id': objectId,
+        'itemId': itemId
+      };
     },
 
     /**
@@ -289,6 +290,14 @@ Example:
     _addObject(event) {
       let object = event.detail;
       this.$.objectHandler.add(object);
+      let itemId = object.itemId;
+      let itemName = this.$.collectionHandler.getNameById(itemId);
+      let zrickrObjectList =
+        this._addMainContent('zrickr-object-list', itemName, itemName);
+      zrickrObjectList.item = {
+        'id': itemId,
+        'name': itemName
+      };
     }
   });
 })();
