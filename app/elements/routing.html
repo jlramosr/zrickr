@@ -31,28 +31,11 @@
 
     page('/', () => {
       app.route = 'home';
-      page.redirect('/home');
-    });
-
-    page('/home', () => {
-      app.route = 'home';
-    });
-
-    page('/profile', () => {
-      console.log("HOLA TEST");
-      app.route = 'load1';
-      console.log(document.querySelector('#zrickrApp'));
-      setFocus(app.route);
+      page.redirect('/collections');
     });
 
     page('/collections', () => {
       app.route = 'collections';
-      page.redirect('/home');
-    });
-
-    page('/collections/:id', (data) => {
-      app.route = 'collection';
-      app.params = data.params;
     });
 
     // 404

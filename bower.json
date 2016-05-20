@@ -52,10 +52,10 @@
     "iron-image": "PolymerElements/iron-image#^1.2.3",
     "paper-dialog-scrollable": "PolymerElements/paper-dialog-scrollable#^1.1.4",
     "paper-toggle-button": "PolymerElements/paper-toggle-button#^1.1.2",
-    "carbon-route": "PolymerElements/carbon-route#^0.8.4",
     "paper-spinner": "PolymerElements/paper-spinner#^1.1.1",
     "iron-scroll-threshold": "PolymerElements/iron-scroll-threshold#^1.0.1",
-    "paper-fab": "PolymerElements/paper-fab#^1.2.0"
+    "paper-fab": "PolymerElements/paper-fab#^1.2.0",
+    "app-route": "PolymerElements/app-route#^0.9.1"
   },
   "devDependencies": {
     "web-component-tester": "^4.2.2",
