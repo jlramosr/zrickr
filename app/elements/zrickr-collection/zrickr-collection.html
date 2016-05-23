@@ -16,7 +16,20 @@ methods (add, modify, remove a collection)
       data="{{collections}}">
    </firebase-collection>
   </template>
+
 </dom-module>
+
+<script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+<script>
+  var config = {
+    apiKey: "AIzaSyAEjGn2rv0MQ9xtha15xHkMvhntP4mM3Kg",
+    authDomain: "zrickrdatabase.firebaseapp.com",
+    databaseURL: "https://zrickrdatabase.firebaseio.com",
+    storageBucket: "zrickrdatabase.appspot.com",
+  };
+  var mainApp = firebase.initializeApp(config);
+  var ref = mainApp.database().ref("collections");
+</script>
 
 <script>
 (function() {
@@ -29,7 +42,7 @@ methods (add, modify, remove a collection)
     properties: {
       baseUrl: {
         type: String,
-        value: "collections",
+        value: "collections/",
         readonly: true
       },
       mainName: {
@@ -69,17 +82,26 @@ methods (add, modify, remove a collection)
       return this.$$('firebase-collection').getByKey(collectionId);
     },
 
-    getNameById(collectionId) {
-      return this.getName(this.getCollection(collectionId));
-    },
-
     getId(collection) {
       return collection.__firebaseKey__;
     },
 
     getName(collection) {
       return collection[this.mainName];
+    },
+
+    getNameById(collectionId) {
+      let dataVal = "HOLA";
+      let ref2 = mainApp.database().ref(this.baseUrl + collectionId);
+      return ref2.once("value", (snapshot) => {
+        let collection = snapshot.val();
+        console.log(collection.name);
+        dataVal = collection.name;
+      });
+      /*let collection = this.getCollection(collectionId);
+      return this.getName(collection);*/
     }
+
   });
 }());
 </script>

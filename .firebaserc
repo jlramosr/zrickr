@@ -1,5 +1,6 @@
 {
   "projects": {
-    "zrickr": "firebase-zrickr"
+    "zrickr": "zrickr",
+    "default": "zrickrdatabase"
   }
 }

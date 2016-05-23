@@ -68,19 +68,19 @@ Example:
       path="{{path}}">
     </app-location>
     <app-route
-      id="zrickrRoute1"
+      id="viewRoute"
       route="{{route}}"
       pattern="/:view"
       data="{{viewRouteData}}"
-      tail="{{subroute}}"
+      tail="{{viewSubrouteData}}"
       active="{{viewRouteActive}}">
     </app-route>
     <app-route
-      id="zrickrRoute2"
+      id="itemsRoute"
       route="{{route}}"
       pattern="/items/:itemId"
       data="{{itemsRouteData}}"
-      tail="{{subroute2}}"
+      tail="{{itemsSubrouteData}}"
       active="{{itemsRouteActive}}">
     </app-route>
 
@@ -117,8 +117,6 @@ Example:
   </template>
 </dom-module>
 
-<!--<script src="../../bower_components/page/page.js"></script>-->
-
 <script>
 (function() {
   'use strict';
@@ -127,12 +125,10 @@ Example:
     is: 'zrickr-app',
 
     properties: {
-      route: Object,
       path: {
         type: String,
         value: undefined
       },
-      viewRouteData: Object,
       positionDrawer: {
         type: String,
         value: 'left'
@@ -175,54 +171,58 @@ Example:
      */
     _viewItem(event) {
       let item = event.detail;
-      let itemName = this.$.collectionHandler.getName(item);
       let itemId = this.$.collectionHandler.getId(item);
       this.set('itemsRouteData.itemId', itemId);
-      this.itemId = itemId;
-      let zrickrObjectList =
-        this._addMainContent('zrickr-object-list', itemName, itemName);
-      zrickrObjectList.item = {
-        'id': itemId,
-        'name': itemName
-      };
-      zrickrObjectList.itemId = itemId;
     },
 
-    /**
-     * Fired when the user taps on edit profile. Add the user profile
-     * view to the main content
-     */
     _editProfile() {
       this.set('viewRouteData.view', 'profile');
       //=this.set('path', '/profile/');
     },
 
     _viewItems() {
-      this.set('viewRouteData.view', 'collections');
+      this.set('viewRouteData.view', 'items');
     },
 
     _pathChanged(path) {
       console.log('pathChanged', path);
-      let currentPath = path;
-      if (!currentPath || currentPath == '') {
-        this.set('path', '/collections/');
+      if (!path || path == '') {
+        this.set('path', '/items/');
       }
     },
 
     _viewRouteChanged(view) {
       console.log('viewChanged', view);
-      // load data for view
-      if (view == 'collections') {
-        let container = this.$.mainContent;
-        container.showItems(this.$.drawerContent.primaryCatalogMenuName);
-      }
-      if (view == 'profile') {
-        this._addMainContent('zrickr-profile','User Profile','profile');
+      switch (view) {
+        case 'items':
+          break;
+        case 'profile':
+          this._addMainContent('zrickr-profile','User Profile');
+          break;
+        default:
+          //TODO: error page
+          this._addMainContent('zrickr-profile','User Profile');
       }
     },
 
     _itemRouteChanged(itemId) {
       console.log('itemChanged', itemId);
+      if (!itemId) {
+        this.$.mainContent.showItems(this.$.drawerContent.primaryCatalogMenuName);
+      }
+      else {
+        let itemNamePromise = this.$.collectionHandler.getNameById(itemId);
+        itemNamePromise.then((itemName) => {
+          console.log(itemName);
+          let zrickrObjectList =
+            this._addMainContent('zrickr-object-list', itemName);
+          zrickrObjectList.item = {
+            'id': itemId,
+            'name': itemName
+          };
+          zrickrObjectList.itemId = itemId;
+        });
+      }
     },
 
     attached() {
@@ -238,7 +238,7 @@ Example:
      * @param {String} headerTitle [description]
      * @param {String} route       [description]
      */
-    _addMainContent(elementName, headerTitle, route) {
+    _addMainContent(elementName, headerTitle) {
       let mainPanel = this.$.mainPanel;
       let container = this.$.mainContent;
       container.removeContent();
@@ -312,8 +312,7 @@ Example:
       let objectId = this.$.objectHandler.getId(object);
       let zrickrObjectView =
         this._addMainContent('zrickr-object-view',
-                             itemName + ': ' + objectId,
-                             'newObject');
+                             itemName + ': ' + objectId);
       zrickrObjectView.item = {
         'id': objectId,
         'itemId': itemId
@@ -329,8 +328,7 @@ Example:
       let itemName = object.itemName;
       let zrickrObjectNew =
         this._addMainContent('zrickr-object-new',
-                             'New ' + itemName + ' object',
-                             'newObject');
+                             'New ' + itemName + ' object');
       zrickrObjectNew.itemId = itemId;
     },
 
@@ -343,7 +341,7 @@ Example:
       let itemId = object.itemId;
       let itemName = this.$.collectionHandler.getNameById(itemId);
       let zrickrObjectList =
-        this._addMainContent('zrickr-object-list', itemName, itemName);
+        this._addMainContent('zrickr-object-list', itemName);
       zrickrObjectList.item = {
         'id': itemId,
         'name': itemName

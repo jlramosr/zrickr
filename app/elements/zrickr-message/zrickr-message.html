@@ -39,7 +39,7 @@
       text: String,
       duration: {
         type: Number,
-        duration: 5000
+        duration: 10000
       },
       type: {
         type: String,
@@ -48,11 +48,10 @@
     },
 
     open() {
-      console.log(this.$.message);
       this.$.message.open();
     },
 
-    _zrickrMessageClosed() {
+    _messageClosed() {
       this.fire('message-closed', this);
     }
 
