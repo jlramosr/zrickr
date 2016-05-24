@@ -68,12 +68,12 @@ Example:
       path="{{path}}">
     </app-location>
     <app-route
-      id="viewRoute"
+      id="profileRoute"
       route="{{route}}"
-      pattern="/:view"
-      data="{{viewRouteData}}"
-      tail="{{viewSubrouteData}}"
-      active="{{viewRouteActive}}">
+      pattern="/profile"
+      data="{{profileRouteData}}"
+      tail="{{profileSubrouteData}}"
+      active="{{profileRouteActive}}">
     </app-route>
     <app-route
       id="itemsRoute"
@@ -147,8 +147,8 @@ Example:
     //https://www.polymer-project.org/1.0/toolbox/routing
     observers: [
       '_pathChanged(path)',
-      '_viewRouteChanged(viewRouteData.view)',
-      '_itemRouteChanged(itemsRouteData.itemId)'
+      '_profileRouteChanged(profileRouteData)',
+      '_itemsRouteChanged(itemsRouteData)'
     ],
 
     listeners: {
@@ -176,52 +176,68 @@ Example:
     },
 
     _editProfile() {
-      this.set('viewRouteData.view', 'profile');
+      this.set('path', 'profile');
       //=this.set('path', '/profile/');
     },
 
     _viewItems() {
-      this.set('viewRouteData.view', 'items');
+      this.set('path', 'items');
     },
 
     _pathChanged(path) {
-      console.log('pathChanged', path);
-      if (!path || path == '') {
+      if (!path || path == '/') {
         this.set('path', '/items/');
       }
     },
 
-    _viewRouteChanged(view) {
-      console.log('viewChanged', view);
-      switch (view) {
+    _profileRouteChanged(profileRouteData) {
+      console.log('profileRouteChanged', profileRouteData, this.profileRouteActive);
+      if (this.profileRouteActive) {
+        this._addMainContent('zrickr-profile','User Profile');
+      }
+      /*switch (view) {
         case 'items':
+          if (this.path == '/items' || this.path == '/items/') {
+            this.$.mainContent.showItems(this.$.drawerContent.primaryCatalogMenuName);
+          }
           break;
         case 'profile':
-          this._addMainContent('zrickr-profile','User Profile');
+
           break;
         default:
           //TODO: error page
-          this._addMainContent('zrickr-profile','User Profile');
-      }
+          this._addMainContent('zrickr-profile', "RUTA NO ENCONTRADA");
+      }*/
     },
 
-    _itemRouteChanged(itemId) {
-      console.log('itemChanged', itemId);
-      if (!itemId) {
+    _itemsRouteChanged(itemsRouteData) {
+      console.log('itemsRouteChanged', itemsRouteData, this.itemsRouteActive);
+      if (this.itemsRouteActive) {
         this.$.mainContent.showItems(this.$.drawerContent.primaryCatalogMenuName);
       }
-      else {
-        let itemNamePromise = this.$.collectionHandler.getNameById(itemId);
-        itemNamePromise.then((itemName) => {
-          console.log(itemName);
-          let zrickrObjectList =
-            this._addMainContent('zrickr-object-list', itemName);
-          zrickrObjectList.item = {
-            'id': itemId,
-            'name': itemName
-          };
-          zrickrObjectList.itemId = itemId;
-        });
+      /*console.log('itemChanged2', this.viewRouteData);
+      console.log('itemChanged2', this.viewSubrouteData);
+      console.log('itemChanged2', this.itemsRouteData);
+      console.log('itemChanged2', this.itemsSubrouteData);
+      console.log("route", this.route);*/
+      if (this.viewRouteData.view == "items") {
+        if (itemId) {
+          console.log("HOLA")
+          let itemNamePromise = this.$.collectionHandler.getNameById(itemId);
+          itemNamePromise
+            .then((itemName) => {
+              let zrickrObjectList =
+                this._addMainContent('zrickr-object-list', itemName);
+              zrickrObjectList.item = {
+                'id': itemId,
+                'name': itemName
+              };
+              zrickrObjectList.itemId = itemId;
+            })
+            .catch(() => {
+              this._addMainContent('zrickr-profile', "ITEM NO ENCONTRADO");
+            });
+        }
       }
     },
 

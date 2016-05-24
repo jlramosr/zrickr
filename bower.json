@@ -32,7 +32,6 @@
     "platinum-elements": "PolymerElements/platinum-elements#^2.0.0",
     "page": "visionmedia/page.js#^1.7.1",
     "paper-drawer-panel": "PolymerElements/paper-drawer-panel#^1.0.9",
-    "firebase-element": "GoogleWebComponents/firebase-element#^1.0.12",
     "paper-material": "PolymerElements/paper-material#^1.0.6",
     "paper-scroll-header-panel": "PolymerElements/paper-scroll-header-panel#^1.0.15",
     "iron-pages": "PolymerElements/iron-pages#^1.0.7",
@@ -54,7 +53,8 @@
     "paper-spinner": "PolymerElements/paper-spinner#^1.1.1",
     "iron-scroll-threshold": "PolymerElements/iron-scroll-threshold#^1.0.1",
     "paper-fab": "PolymerElements/paper-fab#^1.2.0",
-    "app-route": "PolymerElements/app-route#^0.9.1"
+    "app-route": "PolymerElements/app-route#^0.9.1",
+    "firebase-element": "GoogleWebComponents/firebase-element#^1.0.12"
   },
   "devDependencies": {
     "web-component-tester": "^4.2.2",

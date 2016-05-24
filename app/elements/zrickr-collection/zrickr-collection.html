@@ -28,7 +28,7 @@ methods (add, modify, remove a collection)
     storageBucket: "zrickrdatabase.appspot.com",
   };
   var mainApp = firebase.initializeApp(config);
-  var ref = mainApp.database().ref("collections");
+  var ref2 = mainApp.database().ref("collections");
 </script>
 
 <script>
@@ -40,6 +40,7 @@ methods (add, modify, remove a collection)
     is: "zrickr-collection",
 
     properties: {
+      uid: String,
       baseUrl: {
         type: String,
         value: "collections/",
@@ -53,6 +54,9 @@ methods (add, modify, remove a collection)
       location: {
         type: String,
         readonly: true
+      },
+      data: {
+        type: Object,
       },
       collections: {
         type: Array,
@@ -91,13 +95,19 @@ methods (add, modify, remove a collection)
     },
 
     getNameById(collectionId) {
-      let dataVal = "HOLA";
-      let ref2 = mainApp.database().ref(this.baseUrl + collectionId);
-      return ref2.once("value", (snapshot) => {
-        let collection = snapshot.val();
-        console.log(collection.name);
-        dataVal = collection.name;
+      let dataVal;
+      let ref = mainApp.database().ref(this.baseUrl + collectionId);
+      let promise = new Promise((resolve, reject) => {
+        ref.once("value", (snapshot) => {
+          let collection = snapshot.val();
+          if (collection) {
+            dataVal = this.getName(collection);
+            resolve(dataVal);
+          }
+          reject();
+        });
       });
+      return promise;
       /*let collection = this.getCollection(collectionId);
       return this.getName(collection);*/
     }
