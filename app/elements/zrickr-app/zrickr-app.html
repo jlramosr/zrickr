@@ -2,8 +2,6 @@
 <link rel="import" href="../../bower_components/paper-drawer-panel/paper-drawer-panel.html">
 <link rel="import" href="../../bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="../../bower_components/app-route/app-route.html">
-<link rel="import" href="../../bower_components/app-route/app-location.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../styles/shared-styles.html">
 <!-- Main view elements -->
@@ -11,15 +9,10 @@
 <link rel="import" href="../../elements/zrickr-drawer/zrickr-drawer-content.html">
 <link rel="import" href="../../elements/zrickr-main/zrickr-main-toolbar.html">
 <link rel="import" href="../../elements/zrickr-main/zrickr-main-content.html">
-<!-- Handlers of items and objects -->
+<!-- Handlers of routes, items and objects -->
 <link rel="import" href="../../elements/zrickr-collection/zrickr-collection.html">
 <link rel="import" href="../../elements/zrickr-object/zrickr-object.html">
-<!-- Possible views at one moment -->
-<link rel="import" href="../../elements/zrickr-collection/zrickr-collection-new.html">
-<link rel="import" href="../../elements/zrickr-profile/zrickr-profile.html">
-<link rel="import" href="../../elements/zrickr-object/zrickr-object-new.html">
-<link rel="import" href="../../elements/zrickr-object/zrickr-object-list.html">
-<link rel="import" href="../../elements/zrickr-object/zrickr-object-view.html">
+<link rel="import" href="../../elements/zrickr-route/zrickr-route.html">
 
 <!--
 `<zrickr-app>` provides a web main structure with a drawer
@@ -61,40 +54,15 @@ Example:
       id="objectHandler"
       location="[[auth.location]]">
     </zrickr-object>
+    <zrickr-route
+      id="zrickrRoute"
+      path="{{path}}"
+      page-route-data="{{pageRouteData}}"
+      id-route-data="{{idRouteData}}"
+      sub-id-route-data="{{subIdRouteData}}">
+    </zrickr-route>
 
-    <app-location
-      use-hash-as-path
-      route="{{route}}"
-      path="{{path}}">
-    </app-location>
-    <app-route
-      id="pageRoute"
-      route="{{route}}"
-      pattern="/:page"
-      data="{{pageRouteData}}"
-      tail="{{pageSubrouteData}}"
-      active="{{pageRouteActive}}">
-    </app-route>
-    <app-route
-      id="idRoute"
-      route="{{pageSubrouteData}}"
-      pattern="/:id"
-      data="{{idRouteData}}"
-      tail="{{idSubrouteData}}"
-      active="{{idRouteActive}}">
-    </app-route>
-    <app-route
-      id="subIdRoute"
-      route="{{idSubrouteData}}"
-      pattern="/:id"
-      data="{{subIdRouteData}}"
-      tail="{{subIdSubrouteData}}"
-      active="{{subIdRouteActive}}">
-    </app-route>
-
-    <paper-drawer-panel
-      id="mainPanel"
-      force-narrow>
+    <paper-drawer-panel id="mainPanel" force-narrow>
       <paper-scroll-header-panel id="drawer" fixed drawer>
         <zrickr-drawer-toolbar
           class="paper-header"
@@ -133,10 +101,10 @@ Example:
     is: 'zrickr-app',
 
     properties: {
-      path: {
-        type: String,
-        value: undefined
-      },
+      path: String,
+      pageRouteData: Object,
+      idRouteData: Object,
+      subIdRouteData: Object,
       positionDrawer: {
         type: String,
         value: 'left'
@@ -152,14 +120,6 @@ Example:
       }
     },
 
-    //https://www.polymer-project.org/1.0/toolbox/routing
-    observers: [
-      '_pathChanged(path)',
-      '_pageRouteChanged(pageRouteData.page)',
-      '_idRouteChanged(idRouteData.id)',
-      '_subIdRouteChanged(subIdRouteData.id)'
-    ],
-
     listeners: {
       'drawer-menu-tapped': '_openDrawer',
       'add-item-tapped': '_newItemProcess',
@@ -172,31 +132,30 @@ Example:
       'edit-profile-tapped': '_editProfile',
       'add-object-tapped': '_newObjectProcess',
       'add-object': '_addObject',
-      'view-object-tapped': '_viewObject'
+      'view-object-tapped': '_viewObject',
+      'route-page-changed': '_hola'
     },
 
-    _noSubroute(level) {
-      return !this.path.split('/')[level+1];
-    },
-
-    _shapePath(...subPaths) {
-      this.set('path', '/' + subPaths.join('/') + '/');
-    },
+    //https://www.polymer-project.org/1.0/toolbox/routing
+    observers: [
+      '_pathChanged(path)',
+      '_pageRouteChanged(pageRouteData.page)',
+      '_idRouteChanged(idRouteData.id)',
+      '_subIdRouteChanged(subIdRouteData.id)'
+    ],
 
     _pathChanged(path) {
-      if (this._noSubroute(0)) {
-        this._shapePath('items');
+      if (this.$.zrickrRoute.noSubroute(0)) {
+        this.$.zrickrRoute.shapePath('items');
       }
-      if (!this._noSubroute(3)) {
+      if (!this.$.zrickrRoute.noSubroute(3)) {
         this._addMainContent('zrickr-profile', "RUTA NO ENCONTRADA");
         return;
       }
     },
 
     _pageRouteChanged(page) {
-      console.log('pageRouteChanged', page);
-      if (this._noSubroute(1)) {
-        console.log('pageRouteChanged', "PASA");
+      if (this.$.zrickrRoute.noSubroute(1)) {
         switch (page) {
           case 'items':
             this.$.mainContent.showItems(this.$.drawerContent.primaryCatalogMenuName);
@@ -209,15 +168,10 @@ Example:
             this._addMainContent('zrickr-profile', "RUTA NO ENCONTRADA");
         }
       }
-      else {
-        console.log('pageRouteChanged', "NO PASA");
-      }
     },
 
     _idRouteChanged(id) {
-      console.log('idRouteChanged', id);
-      if (id && this._noSubroute(2)) {
-        console.log('idRouteChanged', "PASA");
+      if (id && this.$.zrickrRoute.noSubroute(2)) {
         let page = this.pageRouteData.page;
         switch (page) {
           case 'items':
@@ -242,15 +196,10 @@ Example:
             this._addMainContent('zrickr-profile', "RUTA NO ENCONTRADA");
         }
       }
-      else {
-        console.log('idRouteChanged', "NO PASA");
-      }
     },
 
     _subIdRouteChanged(id) {
-      console.log('subIdRouteChanged', id);
-      if (id && this._noSubroute(3)) {
-        console.log('subIdRouteChanged', "PASA");
+      if (id && this.$.zrickrRoute.noSubroute(3)) {
         let page = this.pageRouteData.page;
         let subPage = this.idRouteData.id;
         switch (page) {
@@ -272,7 +221,6 @@ Example:
         }
       }
       else {
-        console.log('subIdRouteChanged', "NO PASA");
       }
     },
 
@@ -312,20 +260,25 @@ Example:
       return newContent;
     },
 
-    /**
-     * Fired when the user taps on menu button
-     */
     _openDrawer() {
       let mainPanel = this.$.mainPanel;
       mainPanel.openDrawer();
     },
 
     _editProfile() {
-      this._shapePath('profile');
+      this.$.zrickrRoute.shapePath('profile');
     },
 
     _viewItems() {
-      this._shapePath('items');
+      this.$.zrickrRoute.shapePath('items');
+    },
+
+    _viewObject(event) {
+      let object = event.detail;
+      let itemId = object.itemId;
+      let itemName = this.$.collectionHandler.getNameById(itemId);
+      let objectId = this.$.objectHandler.getId(object);
+      this.$.zrickrRoute.shapePath('items', itemId, objectId);
     },
 
     /**
@@ -334,7 +287,7 @@ Example:
     _viewItem(event) {
       let item = event.detail;
       let itemId = this.$.collectionHandler.getId(item);
-      this._shapePath('items', itemId);
+      this.$.zrickrRoute.shapePath('items', itemId);
     },
 
     /**
@@ -368,17 +321,6 @@ Example:
      */
     _deleteItem(event) {
       let item = event.detail;
-    },
-
-    /**
-     * Fires when the user wants to view and object
-     */
-    _viewObject(event) {
-      let object = event.detail;
-      let itemId = object.itemId;
-      let itemName = this.$.collectionHandler.getNameById(itemId);
-      let objectId = this.$.objectHandler.getId(object);
-      this._shapePath('items', itemId, objectId);
     },
 
     /**
