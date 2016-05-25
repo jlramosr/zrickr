@@ -1,0 +1,174 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+
+<!--
+`<zrickr-route>` implements a routes handler
+
+Example:
+
+    <zrickr-route></zrickr-route>
+
+@element zrickr-route
+@demo demo/index.html
+-->
+
+<dom-module id="zrickr-route">
+  <template>
+    <app-location
+      use-hash-as-path
+      route="{{route}}"
+      path="{{path}}">
+    </app-location>
+    <app-route
+      id="pageRoute"
+      route="{{route}}"
+      pattern="/:page"
+      data="{{pageRouteData}}"
+      tail="{{pageSubrouteData}}"
+      active="{{pageRouteActive}}">
+    </app-route>
+    <app-route
+      id="idRoute"
+      route="{{pageSubrouteData}}"
+      pattern="/:id"
+      data="{{idRouteData}}"
+      tail="{{idSubrouteData}}"
+      active="{{idRouteActive}}">
+    </app-route>
+    <app-route
+      id="subIdRoute"
+      route="{{idSubrouteData}}"
+      pattern="/:id"
+      data="{{subIdRouteData}}"
+      tail="{{subIdSubrouteData}}"
+      active="{{subIdRouteActive}}">
+    </app-route>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  'use strict';
+
+  Polymer({
+    is: 'zrickr-route',
+
+    properties: {
+      path: {
+        type: String,
+        value: undefined
+      }
+    },
+
+    //https://www.polymer-project.org/1.0/toolbox/routing
+    observers: [
+      '_pathChanged(path)',
+      '_pageRouteChanged(pageRouteData.page)',
+      '_idRouteChanged(idRouteData.id)',
+      '_subIdRouteChanged(subIdRouteData.id)'
+    ],
+
+    shapePath(...subPaths) {
+      this.set('path', '/' + subPaths.join('/') + '/');
+    },
+
+    _noSubroute(level) {
+      return !this.path.split('/')[level+1];
+    },
+
+    _pathChanged(path) {
+      if (this._noSubroute(0)) {
+        this._shapePath('items');
+      }
+      if (!this._noSubroute(3)) {
+        this._addMainContent('zrickr-profile', "RUTA NO ENCONTRADA");
+        return;
+      }
+    },
+
+    _pageRouteChanged(page) {
+      console.log('pageRouteChanged', page);
+      if (this._noSubroute(1)) {
+        console.log('pageRouteChanged', "PASA");
+        switch (page) {
+          case 'items':
+            this.$.mainContent.showItems(this.$.drawerContent.primaryCatalogMenuName);
+            break;
+          case 'profile':
+            this._addMainContent('zrickr-profile','User Profile');
+            break;
+          default:
+            //TODO: error page
+            this._addMainContent('zrickr-profile', "RUTA NO ENCONTRADA");
+        }
+      }
+      else {
+        console.log('pageRouteChanged', "NO PASA");
+      }
+    },
+
+    _idRouteChanged(id) {
+      console.log('idRouteChanged', id);
+      if (id && this._noSubroute(2)) {
+        console.log('idRouteChanged', "PASA");
+        let page = this.pageRouteData.page;
+        switch (page) {
+          case 'items':
+            let itemId = id;
+            let itemNamePromise = this.$.collectionHandler.getNameById(itemId);
+            itemNamePromise
+              .then((itemName) => {
+                let zrickrObjectList =
+                  this._addMainContent('zrickr-object-list', itemName);
+                zrickrObjectList.item = {
+                  'id': itemId,
+                  'name': itemName
+                };
+                zrickrObjectList.itemId = itemId;
+              })
+              .catch(() => {
+                this._addMainContent('zrickr-profile', "ITEM NO ENCONTRADO");
+              });
+            break;
+          default:
+            //TODO: error page
+            this._addMainContent('zrickr-profile', "RUTA NO ENCONTRADA");
+        }
+      }
+      else {
+        console.log('idRouteChanged', "NO PASA");
+      }
+    },
+
+    _subIdRouteChanged(id) {
+      console.log('subIdRouteChanged', id);
+      if (id && this._noSubroute(3)) {
+        console.log('subIdRouteChanged', "PASA");
+        let page = this.pageRouteData.page;
+        let subPage = this.idRouteData.id;
+        switch (page) {
+          case 'items':
+            let itemName = "HOLA";
+            let itemId = subPage;
+            let objectId = id;
+            let zrickrObjectView =
+              this._addMainContent('zrickr-object-view',
+                                   itemName + ': ' + objectId);
+            zrickrObjectView.item = {
+              'id': objectId,
+              'itemId': itemId
+            };
+            break;
+          default:
+            //TODO: error page
+            this._addMainContent('zrickr-profile', "RUTA NO ENCONTRADA");
+        }
+      }
+      else {
+        console.log('subIdRouteChanged', "NO PASA");
+      }
+    }
+  });
+})();
+</script>

@@ -68,20 +68,28 @@ Example:
       path="{{path}}">
     </app-location>
     <app-route
-      id="profileRoute"
+      id="pageRoute"
       route="{{route}}"
-      pattern="/profile"
-      data="{{profileRouteData}}"
-      tail="{{profileSubrouteData}}"
-      active="{{profileRouteActive}}">
+      pattern="/:page"
+      data="{{pageRouteData}}"
+      tail="{{pageSubrouteData}}"
+      active="{{pageRouteActive}}">
     </app-route>
     <app-route
-      id="itemsRoute"
-      route="{{route}}"
-      pattern="/items/:itemId"
-      data="{{itemsRouteData}}"
-      tail="{{itemsSubrouteData}}"
-      active="{{itemsRouteActive}}">
+      id="idRoute"
+      route="{{pageSubrouteData}}"
+      pattern="/:id"
+      data="{{idRouteData}}"
+      tail="{{idSubrouteData}}"
+      active="{{idRouteActive}}">
+    </app-route>
+    <app-route
+      id="subIdRoute"
+      route="{{idSubrouteData}}"
+      pattern="/:id"
+      data="{{subIdRouteData}}"
+      tail="{{subIdSubrouteData}}"
+      active="{{subIdRouteActive}}">
     </app-route>
 
     <paper-drawer-panel
@@ -147,8 +155,9 @@ Example:
     //https://www.polymer-project.org/1.0/toolbox/routing
     observers: [
       '_pathChanged(path)',
-      '_profileRouteChanged(profileRouteData)',
-      '_itemsRouteChanged(itemsRouteData)'
+      '_pageRouteChanged(pageRouteData.page)',
+      '_idRouteChanged(idRouteData.id)',
+      '_subIdRouteChanged(subIdRouteData.id)'
     ],
 
     listeners: {
@@ -166,78 +175,104 @@ Example:
       'view-object-tapped': '_viewObject'
     },
 
-    /**
-     * Fires when the user wants to view a item
-     */
-    _viewItem(event) {
-      let item = event.detail;
-      let itemId = this.$.collectionHandler.getId(item);
-      this.set('itemsRouteData.itemId', itemId);
+    _noSubroute(level) {
+      return !this.path.split('/')[level+1];
     },
 
-    _editProfile() {
-      this.set('path', 'profile');
-      //=this.set('path', '/profile/');
-    },
-
-    _viewItems() {
-      this.set('path', 'items');
+    _shapePath(...subPaths) {
+      this.set('path', '/' + subPaths.join('/') + '/');
     },
 
     _pathChanged(path) {
-      if (!path || path == '/') {
-        this.set('path', '/items/');
+      if (this._noSubroute(0)) {
+        this._shapePath('items');
+      }
+      if (!this._noSubroute(3)) {
+        this._addMainContent('zrickr-profile', "RUTA NO ENCONTRADA");
+        return;
       }
     },
 
-    _profileRouteChanged(profileRouteData) {
-      console.log('profileRouteChanged', profileRouteData, this.profileRouteActive);
-      if (this.profileRouteActive) {
-        this._addMainContent('zrickr-profile','User Profile');
-      }
-      /*switch (view) {
-        case 'items':
-          if (this.path == '/items' || this.path == '/items/') {
+    _pageRouteChanged(page) {
+      console.log('pageRouteChanged', page);
+      if (this._noSubroute(1)) {
+        console.log('pageRouteChanged', "PASA");
+        switch (page) {
+          case 'items':
             this.$.mainContent.showItems(this.$.drawerContent.primaryCatalogMenuName);
-          }
-          break;
-        case 'profile':
-
-          break;
-        default:
-          //TODO: error page
-          this._addMainContent('zrickr-profile', "RUTA NO ENCONTRADA");
-      }*/
+            break;
+          case 'profile':
+            this._addMainContent('zrickr-profile','User Profile');
+            break;
+          default:
+            //TODO: error page
+            this._addMainContent('zrickr-profile', "RUTA NO ENCONTRADA");
+        }
+      }
+      else {
+        console.log('pageRouteChanged', "NO PASA");
+      }
     },
 
-    _itemsRouteChanged(itemsRouteData) {
-      console.log('itemsRouteChanged', itemsRouteData, this.itemsRouteActive);
-      if (this.itemsRouteActive) {
-        this.$.mainContent.showItems(this.$.drawerContent.primaryCatalogMenuName);
-      }
-      /*console.log('itemChanged2', this.viewRouteData);
-      console.log('itemChanged2', this.viewSubrouteData);
-      console.log('itemChanged2', this.itemsRouteData);
-      console.log('itemChanged2', this.itemsSubrouteData);
-      console.log("route", this.route);*/
-      if (this.viewRouteData.view == "items") {
-        if (itemId) {
-          console.log("HOLA")
-          let itemNamePromise = this.$.collectionHandler.getNameById(itemId);
-          itemNamePromise
-            .then((itemName) => {
-              let zrickrObjectList =
-                this._addMainContent('zrickr-object-list', itemName);
-              zrickrObjectList.item = {
-                'id': itemId,
-                'name': itemName
-              };
-              zrickrObjectList.itemId = itemId;
-            })
-            .catch(() => {
-              this._addMainContent('zrickr-profile', "ITEM NO ENCONTRADO");
-            });
+    _idRouteChanged(id) {
+      console.log('idRouteChanged', id);
+      if (id && this._noSubroute(2)) {
+        console.log('idRouteChanged', "PASA");
+        let page = this.pageRouteData.page;
+        switch (page) {
+          case 'items':
+            let itemId = id;
+            let itemNamePromise = this.$.collectionHandler.getNameById(itemId);
+            itemNamePromise
+              .then((itemName) => {
+                let zrickrObjectList =
+                  this._addMainContent('zrickr-object-list', itemName);
+                zrickrObjectList.item = {
+                  'id': itemId,
+                  'name': itemName
+                };
+                zrickrObjectList.itemId = itemId;
+              })
+              .catch(() => {
+                this._addMainContent('zrickr-profile', "ITEM NO ENCONTRADO");
+              });
+            break;
+          default:
+            //TODO: error page
+            this._addMainContent('zrickr-profile', "RUTA NO ENCONTRADA");
         }
+      }
+      else {
+        console.log('idRouteChanged', "NO PASA");
+      }
+    },
+
+    _subIdRouteChanged(id) {
+      console.log('subIdRouteChanged', id);
+      if (id && this._noSubroute(3)) {
+        console.log('subIdRouteChanged', "PASA");
+        let page = this.pageRouteData.page;
+        let subPage = this.idRouteData.id;
+        switch (page) {
+          case 'items':
+            let itemName = "HOLA";
+            let itemId = subPage;
+            let objectId = id;
+            let zrickrObjectView =
+              this._addMainContent('zrickr-object-view',
+                                   itemName + ': ' + objectId);
+            zrickrObjectView.item = {
+              'id': objectId,
+              'itemId': itemId
+            };
+            break;
+          default:
+            //TODO: error page
+            this._addMainContent('zrickr-profile', "RUTA NO ENCONTRADA");
+        }
+      }
+      else {
+        console.log('subIdRouteChanged', "NO PASA");
       }
     },
 
@@ -285,6 +320,23 @@ Example:
       mainPanel.openDrawer();
     },
 
+    _editProfile() {
+      this._shapePath('profile');
+    },
+
+    _viewItems() {
+      this._shapePath('items');
+    },
+
+    /**
+     * Fires when the user wants to view a item
+     */
+    _viewItem(event) {
+      let item = event.detail;
+      let itemId = this.$.collectionHandler.getId(item);
+      this._shapePath('items', itemId);
+    },
+
     /**
      * Fired when the user taps on add a new item in drawer. Add
      * the new process of collecion creation
@@ -326,13 +378,7 @@ Example:
       let itemId = object.itemId;
       let itemName = this.$.collectionHandler.getNameById(itemId);
       let objectId = this.$.objectHandler.getId(object);
-      let zrickrObjectView =
-        this._addMainContent('zrickr-object-view',
-                             itemName + ': ' + objectId);
-      zrickrObjectView.item = {
-        'id': objectId,
-        'itemId': itemId
-      };
+      this._shapePath('items', itemId, objectId);
     },
 
     /**
