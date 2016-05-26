@@ -1,22 +1,19 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/paper-drawer-panel/paper-drawer-panel.html">
-<link rel="import" href="../../bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
-<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../../styles/shared-styles.html">
-<!-- Main view elements -->
-<link rel="import" href="../../elements/zrickr-drawer/zrickr-drawer-toolbar.html">
-<link rel="import" href="../../elements/zrickr-drawer/zrickr-drawer-content.html">
-<link rel="import" href="../../elements/zrickr-main/zrickr-main-toolbar.html">
-<link rel="import" href="../../elements/zrickr-main/zrickr-main-content.html">
-<!-- Handlers of routes, items and objects -->
+<!-- Handlers -->
 <link rel="import" href="../../elements/zrickr-collection/zrickr-collection.html">
 <link rel="import" href="../../elements/zrickr-object/zrickr-object.html">
 <link rel="import" href="../../elements/zrickr-route/zrickr-route.html">
+<!-- Main view -->
+<link rel="import" href="zrickr-app-view.html">
+<!-- Possible views at one moment -->
+<link rel="import" href="../../elements/zrickr-collection/zrickr-collection-new.html">
+<link rel="import" href="../../elements/zrickr-profile/zrickr-profile.html">
+<link rel="import" href="../../elements/zrickr-object/zrickr-object-new.html">
+<link rel="import" href="../../elements/zrickr-object/zrickr-object-list.html">
+<link rel="import" href="../../elements/zrickr-object/zrickr-object-view.html">
 
 <!--
-`<zrickr-app>` provides a web main structure with a drawer
-and a main content
+`<zrickr-app>` a handler to manage the main actions of the app
 
 Example:
 
@@ -27,24 +24,20 @@ Example:
 -->
 
 <dom-module id="zrickr-app">
-  <style include="iron-flex iron-flex-alignment shared-styles">
-    :host {
-      display: block;
-    }
-    #mainPanel {
-      background: var(--main-panel-background-color, --primary-background-color);
-      height: 100%;
-    }
-    #drawer {
-      background: var(--drawer-background-color, --primary-background-color);
-      border-right: 1px solid var(--primary-color);
-    }
-    #main {
-      background: var(--main-background-color, --primary-background-color);
-    }
-  </style>
-
   <template>
+    <zrickr-route
+      id="zrickrRoute"
+      path="{{path}}"
+      page-route-data="{{pageRouteData}}"
+      id-route-data="{{idRouteData}}"
+      sub-id-route-data="{{subIdRouteData}}">
+    </zrickr-route>
+    <zrickr-app-view
+      id="zrickrAppView"
+      auth='{{auth}}'
+      items='{{items}}'
+      position-drawer='left'>
+    </zrickr-app-view>
     <zrickr-collection
       id="collectionHandler"
       location="[[auth.location]]"
@@ -54,42 +47,6 @@ Example:
       id="objectHandler"
       location="[[auth.location]]">
     </zrickr-object>
-    <zrickr-route
-      id="zrickrRoute"
-      path="{{path}}"
-      page-route-data="{{pageRouteData}}"
-      id-route-data="{{idRouteData}}"
-      sub-id-route-data="{{subIdRouteData}}">
-    </zrickr-route>
-
-    <paper-drawer-panel id="mainPanel" force-narrow>
-      <paper-scroll-header-panel id="drawer" fixed drawer>
-        <zrickr-drawer-toolbar
-          class="paper-header"
-          id="drawerToolbar">
-        </zrickr-drawer-toolbar>
-        <zrickr-drawer-content
-          items="[[items]]"
-          primary-catalog-menu-name="My Collections"
-          secondary-catalog-menu-name="My Shared Collections"
-          item-name="collection"
-          object-name="object"
-          id="drawerContent">
-        </zrickr-drawer-content>
-      </paper-scroll-header-panel>
-      <paper-scroll-header-panel id="main" fixed main>
-        <zrickr-main-toolbar
-          auth={{auth}}
-          class="paper-header"
-          id="mainToolbar">
-        </zrickr-main-toolbar>
-        <zrickr-main-content
-          auth="{{auth}}"
-          items="{{items}}"
-          id="mainContent">
-        </zrickr-main-content>
-      </paper-scroll-header-panel>
-    </paper-drawer-panel>
   </template>
 </dom-module>
 
@@ -101,13 +58,17 @@ Example:
     is: 'zrickr-app',
 
     properties: {
-      path: String,
-      pageRouteData: Object,
-      idRouteData: Object,
-      subIdRouteData: Object,
-      positionDrawer: {
-        type: String,
-        value: 'left'
+      path:  {
+        type: String
+      },
+      pageRouteData:  {
+        type: Object
+      },
+      idRouteData:  {
+        type: Object
+      },
+      subIdRouteData:  {
+        type: Object
       },
       /**
        * Authentication and backend information
@@ -121,7 +82,6 @@ Example:
     },
 
     listeners: {
-      'drawer-menu-tapped': '_openDrawer',
       'add-item-tapped': '_newItemProcess',
       'add-item': '_addItem',
       'home-tapped': '_viewItems',
@@ -132,8 +92,7 @@ Example:
       'edit-profile-tapped': '_editProfile',
       'add-object-tapped': '_newObjectProcess',
       'add-object': '_addObject',
-      'view-object-tapped': '_viewObject',
-      'route-page-changed': '_hola'
+      'view-object-tapped': '_viewObject'
     },
 
     //https://www.polymer-project.org/1.0/toolbox/routing
@@ -144,34 +103,59 @@ Example:
       '_subIdRouteChanged(subIdRouteData.id)'
     ],
 
-    _pathChanged(path) {
-      if (this.$.zrickrRoute.noSubroute(0)) {
-        this.$.zrickrRoute.shapePath('items');
+    _shapeURL(...paths) {
+      this.$.zrickrRoute.shapePath(...paths);
+    },
+
+    _hasSubroute(level) {
+      if (this.$.zrickrRoute.noSubroute(level)) {
+        return false;
       }
-      if (!this.$.zrickrRoute.noSubroute(3)) {
-        this._addMainContent('zrickr-profile', "RUTA NO ENCONTRADA");
+      return true;
+    },
+
+    _showViewItems(headerTitle) {
+      this.$.zrickrAppView.showItems(headerTitle);
+    },
+
+    _showViewElement(elementName, headerTitle) {
+      let element = document.createElement(elementName);
+      return this.$.zrickrAppView.showElement(element, headerTitle);
+    },
+
+    _showViewTempElement(elementName) {
+      let element = document.createElement(elementName);
+      this.$.zrickrAppView.showTempElement(element);
+    },
+
+    _pathChanged(path) {
+      if (!this._hasSubroute(0)) {
+        this._shapeURL('items');
+      }
+      if (this._hasSubroute(3)) {
+        this._showViewElement('zrickr-profile', "RUTA NO ENCONTRADA");
         return;
       }
     },
 
     _pageRouteChanged(page) {
-      if (this.$.zrickrRoute.noSubroute(1)) {
+      if (!this._hasSubroute(1)) {
         switch (page) {
           case 'items':
-            this.$.mainContent.showItems(this.$.drawerContent.primaryCatalogMenuName);
+            this._showViewItems('My Collections jiji');
             break;
           case 'profile':
-            this._addMainContent('zrickr-profile','User Profile');
+            this._showViewElement('zrickr-profile','User Profile');
             break;
           default:
             //TODO: error page
-            this._addMainContent('zrickr-profile', "RUTA NO ENCONTRADA");
+            this._showViewElement('zrickr-profile', "RUTA NO ENCONTRADA");
         }
       }
     },
 
     _idRouteChanged(id) {
-      if (id && this.$.zrickrRoute.noSubroute(2)) {
+      if (id && !this._hasSubroute(2)) {
         let page = this.pageRouteData.page;
         switch (page) {
           case 'items':
@@ -180,97 +164,72 @@ Example:
             itemNamePromise
               .then((itemName) => {
                 let zrickrObjectList =
-                  this._addMainContent('zrickr-object-list', itemName);
+                  this._showViewElement('zrickr-object-list', itemName);
                 zrickrObjectList.item = {
                   'id': itemId,
                   'name': itemName
                 };
                 zrickrObjectList.itemId = itemId;
               })
-              .catch(() => {
-                this._addMainContent('zrickr-profile', "ITEM NO ENCONTRADO");
+              .catch((message) => {
+                this._showViewElement('zrickr-profile', message);
               });
             break;
           default:
             //TODO: error page
-            this._addMainContent('zrickr-profile', "RUTA NO ENCONTRADA");
+            this._showViewElement('zrickr-profile', "RUTA NO ENCONTRADA");
         }
       }
     },
 
     _subIdRouteChanged(id) {
-      if (id && this.$.zrickrRoute.noSubroute(3)) {
+      if (id && !this._hasSubroute(3)) {
         let page = this.pageRouteData.page;
         let subPage = this.idRouteData.id;
         switch (page) {
           case 'items':
-            let itemName = "HOLA";
             let itemId = subPage;
             let objectId = id;
-            let zrickrObjectView =
-              this._addMainContent('zrickr-object-view',
-                                   itemName + ': ' + objectId);
-            zrickrObjectView.item = {
-              'id': objectId,
-              'itemId': itemId
-            };
+            let itemNamePromise = this.$.collectionHandler.getNameById(itemId);
+            itemNamePromise
+            .then((itemName) => {
+              console.log(itemName);
+              let zrickrObjectView =
+                this._showViewElement('zrickr-object-view',
+                                     itemName + ': ' + objectId);
+              zrickrObjectView.item = {
+                'id': objectId,
+                'itemId': itemId
+              };
+            })
+            .catch((message) => {
+              this._showViewElement('zrickr-profile', message);
+            });
             break;
           default:
             //TODO: error page
-            this._addMainContent('zrickr-profile', "RUTA NO ENCONTRADA");
+            this._showViewElement('zrickr-profile', "RUTA NO ENCONTRADA");
         }
       }
       else {
       }
     },
 
-    attached() {
-      let mainPanel = this.$.mainPanel;
-      if (this.positionDrawer == 'right') {
-        mainPanel.rightDrawer = true;
-      }
-    },
-
-    /**
-     * Add an element to the content of the zrickr-main-content
-     * @param {String} elementName Element to append
-     * @param {String} headerTitle [description]
-     * @param {String} route       [description]
-     */
-    _addMainContent(elementName, headerTitle) {
-      let mainPanel = this.$.mainPanel;
-      let container = this.$.mainContent;
-      container.removeContent();
-      let newContent = document.createElement(elementName);
-      newContent.auth = this.auth;
-      //newContent.collections = this.items;
-      //this.addEventListener("items-changed", (event) => {
-      /* TODO:
-       *  mirar SET collections en evento items-changed para ir rellenando
-       * collections en hijo y DEBOUNCE para esperar unos milisegundos
-       * y no hacer el SET cada vez que se meta un item desde firebase
-       * sino al final cuando esten metidos todos
-       */
-      /* newContent.renderList(); //ASI SE CONSIGUE PERO TARDA CON items-changed
-       * console.log(newContent.collections, event.detail);
-       */
-      //});
-      container.addContent(newContent, headerTitle);
-      mainPanel.closeDrawer();
-      return newContent;
-    },
-
-    _openDrawer() {
-      let mainPanel = this.$.mainPanel;
-      mainPanel.openDrawer();
-    },
-
     _editProfile() {
-      this.$.zrickrRoute.shapePath('profile');
+      this._shapeURL('profile');
     },
 
     _viewItems() {
-      this.$.zrickrRoute.shapePath('items');
+      this._shapeURL('items');
+    },
+
+    /**
+    * Fires when the user wants to view a item
+    */
+    _viewItem(event) {
+      let item = event.detail;
+      let itemId = this.$.collectionHandler.getId(item);
+      this._shapeURL('items', itemId);
     },
 
     _viewObject(event) {
@@ -278,16 +237,7 @@ Example:
       let itemId = object.itemId;
       let itemName = this.$.collectionHandler.getNameById(itemId);
       let objectId = this.$.objectHandler.getId(object);
-      this.$.zrickrRoute.shapePath('items', itemId, objectId);
-    },
-
-    /**
-     * Fires when the user wants to view a item
-     */
-    _viewItem(event) {
-      let item = event.detail;
-      let itemId = this.$.collectionHandler.getId(item);
-      this.$.zrickrRoute.shapePath('items', itemId);
+      this._shapeURL('items', itemId, objectId);
     },
 
     /**
@@ -295,10 +245,8 @@ Example:
      * the new process of collecion creation
      */
     _newItemProcess() {
-      let newCollectionProcess =
-        document.createElement('zrickr-collection-new');
-      this.$.mainContent.appendChild(newCollectionProcess);
-      this.$.mainPanel.closeDrawer();
+      this._showViewTempElement('zrickr-collection-new');
+      this.$.zrickrAppView.closeDrawer();
     },
 
     /**
@@ -331,7 +279,7 @@ Example:
       let itemId = object.itemId;
       let itemName = object.itemName;
       let zrickrObjectNew =
-        this._addMainContent('zrickr-object-new',
+        this._showViewElement('zrickr-object-new',
                              'New ' + itemName + ' object');
       zrickrObjectNew.itemId = itemId;
     },
@@ -345,7 +293,7 @@ Example:
       let itemId = object.itemId;
       let itemName = this.$.collectionHandler.getNameById(itemId);
       let zrickrObjectList =
-        this._addMainContent('zrickr-object-list', itemName);
+        this._showViewElement('zrickr-object-list', itemName);
       zrickrObjectList.item = {
         'id': itemId,
         'name': itemName

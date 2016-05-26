@@ -104,7 +104,9 @@ methods (add, modify, remove a collection)
             dataVal = this.getName(collection);
             resolve(dataVal);
           }
-          reject();
+          else {
+            reject('Collection Not Found');
+          }
         });
       });
       return promise;
