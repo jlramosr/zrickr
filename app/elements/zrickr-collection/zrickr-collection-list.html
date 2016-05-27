@@ -131,8 +131,7 @@
       toggle>
     </array-selector>
 
-    <!--<div class="loadingIndicator" hidden$="[[!loadingCollections]]">-->
-    <div class="loadingIndicator" hidden>
+    <div class="loadingIndicator" hidden$="[[!loadingCollections]]">
       <paper-spinner active$="[[loadingCollections]]"></paper-spinner>
         Loading collections</b>
     </div>
@@ -172,7 +171,7 @@
       },
       loadingCollections: {
         type: Boolean,
-        value: true
+        value: false
       },
       hoveredIndex: {
         type: Number,

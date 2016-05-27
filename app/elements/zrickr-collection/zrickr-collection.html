@@ -11,25 +11,16 @@ methods (add, modify, remove a collection)
 
 <dom-module id="zrickr-collection">
   <template>
-    <firebase-collection
+    <!--<firebase-collection
       location="[[_getLocation(location)]]"
       data="{{collections}}">
-   </firebase-collection>
+   </firebase-collection>-->
   </template>
 
 </dom-module>
 
 <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
-<script>
-  var config = {
-    apiKey: "AIzaSyAEjGn2rv0MQ9xtha15xHkMvhntP4mM3Kg",
-    authDomain: "zrickrdatabase.firebaseapp.com",
-    databaseURL: "https://zrickrdatabase.firebaseio.com",
-    storageBucket: "zrickrdatabase.appspot.com",
-  };
-  var mainApp = firebase.initializeApp(config);
-  var ref2 = mainApp.database().ref("collections");
-</script>
+
 
 <script>
 (function() {
@@ -40,23 +31,33 @@ methods (add, modify, remove a collection)
     is: "zrickr-collection",
 
     properties: {
-      uid: String,
-      baseUrl: {
-        type: String,
-        value: "collections/",
+      app: {
+        type: Object,
         readonly: true
       },
-      mainName: {
+      subLocation: {
+        type: String,
+        value: "/",
+        readonly: true
+      },
+      nameCollection: {
+        type: String,
+        value: "Collection",
+        readonly: true
+      },
+      titleKeyName: {
         type: String,
         value: "name",
+        readonly: true
+      },
+      idKeyName: {
+        type: String,
+        value: "__firebaseKey__",
         readonly: true
       },
       location: {
         type: String,
         readonly: true
-      },
-      data: {
-        type: Object,
       },
       collections: {
         type: Array,
@@ -65,13 +66,33 @@ methods (add, modify, remove a collection)
         },
         notify: true
       },
+      loading: {
+        type: Boolean,
+        value: true,
+        notify: true
+      },
+    },
+
+    ready() {
+      let config = {
+        apiKey: "AIzaSyAEjGn2rv0MQ9xtha15xHkMvhntP4mM3Kg",
+        authDomain: "zrickrdatabase.firebaseapp.com",
+        databaseURL: "https://zrickrdatabase.firebaseio.com",
+        storageBucket: "zrickrdatabase.appspot.com",
+      };
+      this.app = firebase.initializeApp(config);
+      this.getCollections()
+        .then((collections) => {
+          this.loading = false;
+          this.collections = collections;
+        });
     },
 
     /**
      * Calculate the complete url of the collection backend
      */
     _getLocation() {
-      return (this.location + "/" + this.baseUrl);
+      return (this.location + "/" + this.subLocation);
     },
 
     /**
@@ -79,41 +100,55 @@ methods (add, modify, remove a collection)
      * @param {object} The collection to add
      */
     add(collection) {
-      this.$$('firebase-collection').add(collection);
-    },
-
-    getCollection(collectionId) {
-      return this.$$('firebase-collection').getByKey(collectionId);
+      let ref = this.app.database().ref(this.subLocation);
+      ref.push(collection);
+      this.collections.push(collection);
     },
 
     getId(collection) {
-      return collection.__firebaseKey__;
+      return collection[this.idKeyName];
     },
 
     getName(collection) {
-      return collection[this.mainName];
+      return collection[this.titleKeyName];
     },
 
-    getNameById(collectionId) {
-      let dataVal;
-      let ref = mainApp.database().ref(this.baseUrl + collectionId);
+    getCollection(id) {
+      let ref = this.app.database().ref(this.subLocation + id);
       let promise = new Promise((resolve, reject) => {
         ref.once("value", (snapshot) => {
           let collection = snapshot.val();
           if (collection) {
-            dataVal = this.getName(collection);
-            resolve(dataVal);
+            resolve(collection);
           }
           else {
-            reject('Collection Not Found');
+            reject(this.nameCollection + ' Not Found');
           }
         });
       });
       return promise;
-      /*let collection = this.getCollection(collectionId);
-      return this.getName(collection);*/
-    }
+    },
 
+    getCollections() {
+      let ref = this.app.database().ref(this.subLocation);
+      let promise = new Promise((resolve, reject) => {
+        ref.on("value", (snapshot) => {
+          let collections = [];
+          snapshot.forEach((_collection) => {
+            let collection = _collection.val();
+            collection[this.idKeyName] = _collection.key;
+            collections.push(collection);
+          });
+          if (this.collections) {
+            resolve(collections);
+          }
+          else {
+            reject(this.nameCollection + 's Not Found');
+          }
+        });
+      });
+      return promise;
+    }
   });
 }());
 </script>

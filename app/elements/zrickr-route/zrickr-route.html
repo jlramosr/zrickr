@@ -3,11 +3,16 @@
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 
 <!--
-`<zrickr-route>` implements a routes handler
+`<zrickr-route>` implements a routes handler.
 
 Example:
 
-    <zrickr-route></zrickr-route>
+  <zrickr-route
+    path="{{path}}"
+    page-route-data="{{pageRouteData}}"
+    id-route-data="{{idRouteData}}"
+    sub-id-route-data="{{subIdRouteData}}">
+  </zrickr-route>
 
 @element zrickr-route
 @demo demo/index.html
@@ -55,21 +60,36 @@ Example:
     is: 'zrickr-route',
 
     properties: {
+      /**
+       * Complete current path of the URL (ie. '/about/123')
+       */
       path: {
         type: String,
         value: undefined,
         notify: true
       },
+      /**
+       * Information about the first level route (ie. {"page": "about"} for the
+       * path '/about')
+       */
       pageRouteData: {
         type: Object,
         value: undefined,
         notify: true
       },
+      /**
+       * Information about the second level route (ie. {"id": "123"} for the
+       * path '/about/123')
+       */
       idRouteData: {
         type: Object,
         value: undefined,
         notify: true
       },
+      /**
+       * Information about the third level route (ie. {"id": "fgh"} for the
+       * path '/about/123/fgh')
+       */
       subIdRouteData: {
         type: Object,
         value: undefined,
@@ -77,11 +97,24 @@ Example:
       }
     },
 
+    /**
+     * Form the complete path with string arguments
+     * @param  {Strings} ...subPaths [description]
+     */
     shapePath(...subPaths) {
       this.set('path', '/' + subPaths.join('/') + '/');
     },
 
-    noSubroute(level) {
+    /**
+     * It indicates if there are more prefixes routes from a level
+     * (ie. current_path ='/items/123/fgh', subroutePrefix(1)=>'123',
+     * subroutePrefix(2)=>'fgh', subroutePrefix(3)=>undefined).
+     * @param  {Number} level The level of the path route
+     * (ie. 2 if path='/about/123' and 1 if path='/about')
+     * @return {String}       The prefix of a level route and undefined
+     * if there are not prefixes from a level
+     */
+    subroutePrefix(level) {
       return !this.path.split('/')[level+1];
     }
   });

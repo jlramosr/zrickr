@@ -36,11 +36,15 @@ Example:
       id="zrickrAppView"
       auth='{{auth}}'
       items='{{items}}'
-      position-drawer='left'>
+      position-drawer='left'
+      loading-items='{{loadingItems}}'>
     </zrickr-app-view>
     <zrickr-collection
       id="collectionHandler"
       location="[[auth.location]]"
+      sub-location="collections/"
+      name-collection="LALALALA"
+      loading='{{loadingItems}}'
       collections="{{items}}">
     </zrickr-collection>
     <zrickr-object
@@ -58,15 +62,27 @@ Example:
     is: 'zrickr-app',
 
     properties: {
+      /**
+       * Current path of the URL
+       */
       path:  {
         type: String
       },
+      /**
+       * Information about the first level route
+       */
       pageRouteData:  {
         type: Object
       },
+      /**
+       * Information about the second level route
+       */
       idRouteData:  {
         type: Object
       },
+      /**
+       * Information about the third level route
+       */
       subIdRouteData:  {
         type: Object
       },
@@ -76,6 +92,9 @@ Example:
       auth: {
         type: Object
       },
+      /**
+       * Array of app items
+       */
       items: {
         type: Array
       }
@@ -103,31 +122,65 @@ Example:
       '_subIdRouteChanged(subIdRouteData.id)'
     ],
 
+    /**
+     * Form the path of the URL with the arguments
+     * @param  {Strings} ...paths Strings routes separated by comas
+     */
     _shapeURL(...paths) {
       this.$.zrickrRoute.shapePath(...paths);
     },
 
+    /**
+     * Indicate if the level of the route path has more subroutes after
+     * (ie. current_path ='/items/123', _hasSubroute(1)=>true,
+     * _hasSubroute(2)=>false).
+     * @param  {Number}  level Level of the route path. If it's 0 the path
+     * would be '/'
+     * @return {Boolean}       True if the level route path has more subroutes
+     */
     _hasSubroute(level) {
-      if (this.$.zrickrRoute.noSubroute(level)) {
+      if (this.$.zrickrRoute.subroutePrefix(level)) {
         return false;
       }
       return true;
     },
 
+    /**
+     * Show the items in the main content of the view element
+     * @param  {String} headerTitle Title of the header content
+     */
     _showViewItems(headerTitle) {
       this.$.zrickrAppView.showItems(headerTitle);
     },
 
+    /**
+     * Show an element in the main content of the view element
+     * @param  {String} elementName Element name to show
+     * @param  {String} headerTitle Title of the header content
+     * @return {Object}             The element modified with the new
+     * attributes
+     */
     _showViewElement(elementName, headerTitle) {
       let element = document.createElement(elementName);
       return this.$.zrickrAppView.showElement(element, headerTitle);
     },
 
+    /**
+     * Show a temporary element (ie. a dialog) in the main content of the view
+     * element
+     * @param  {String} elementName Element name to show
+     */
     _showViewTempElement(elementName) {
       let element = document.createElement(elementName);
       this.$.zrickrAppView.showTempElement(element);
     },
 
+    /**
+     * Fired when the path changes. This function process the route paths with
+     * level is less than 1 ('/') and level is greater than 3
+     * ('/r1/r2/r3/r4[/..]')
+     * @param  {String} path Current route path
+     */
     _pathChanged(path) {
       if (!this._hasSubroute(0)) {
         this._shapeURL('items');
@@ -138,6 +191,11 @@ Example:
       }
     },
 
+    /**
+     * Fired when the prefix of the route path with level 1 changes
+     * @param  {String} path The prefix of the route path with level 1
+     * (ie. current_path='/items/123', page='items')
+     */
     _pageRouteChanged(page) {
       if (!this._hasSubroute(1)) {
         switch (page) {
@@ -154,15 +212,21 @@ Example:
       }
     },
 
+    /**
+     * Fired when the prefix of the route path with level 2 changes
+     * @param  {String} id The prefix of the route path with level 2
+     * (ie. current_path='/items/123', id='123')
+     */
     _idRouteChanged(id) {
       if (id && !this._hasSubroute(2)) {
         let page = this.pageRouteData.page;
         switch (page) {
           case 'items':
             let itemId = id;
-            let itemNamePromise = this.$.collectionHandler.getNameById(itemId);
-            itemNamePromise
-              .then((itemName) => {
+            let itemPromise = this.$.collectionHandler.getCollection(itemId);
+            itemPromise
+              .then((item) => {
+                let itemName = this.$.collectionHandler.getName(item);
                 let zrickrObjectList =
                   this._showViewElement('zrickr-object-list', itemName);
                 zrickrObjectList.item = {
@@ -182,6 +246,12 @@ Example:
       }
     },
 
+    /**
+     * Fired when the prefix of the route path with level 3 changes
+     *
+     * @param  {String} path The prefix of the route path with level 3
+     * (ie. current_path='/items/123/fgh', id='fgh')
+     */
     _subIdRouteChanged(id) {
       if (id && !this._hasSubroute(3)) {
         let page = this.pageRouteData.page;
@@ -215,23 +285,32 @@ Example:
       }
     },
 
+    /**
+     * Fired when the user wants to view the profile page
+     */
     _editProfile() {
       this._shapeURL('profile');
     },
 
+    /**
+     * Fired when the user wants to view all the items
+     */
     _viewItems() {
       this._shapeURL('items');
     },
 
     /**
-    * Fires when the user wants to view a item
-    */
+     * Fired when the user wants to view a item information
+     */
     _viewItem(event) {
       let item = event.detail;
       let itemId = this.$.collectionHandler.getId(item);
       this._shapeURL('items', itemId);
     },
 
+    /**
+     * Fired when the user wants to view a object information
+     */
     _viewObject(event) {
       let object = event.detail;
       let itemId = object.itemId;
@@ -241,7 +320,7 @@ Example:
     },
 
     /**
-     * Fired when the user taps on add a new item in drawer. Add
+     * Fired when the user taps on adding a new item. Add
      * the new process of collecion creation
      */
     _newItemProcess() {
@@ -250,7 +329,7 @@ Example:
     },
 
     /**
-     * Fires when the process of creation has finished
+     * Fired when the process of creation has finished
      */
     _addItem(event) {
       let item = event.detail;
