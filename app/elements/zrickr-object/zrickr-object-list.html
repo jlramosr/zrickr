@@ -104,11 +104,11 @@
   </style>
 
   <template>
-    <zrickr-object-filter id="objectHandler"
+    <!--<zrickr-object-filter id="objectHandler"
       location="[[auth.location]]"
       item-id="{{item.id}}"
       objects="{{objects}}">
-    </zrickr-object-filter>
+    </zrickr-object-filter>-->
     <iron-list selection-enabled id="collectionsList" items="[[objects]]" as="object" scroll-target="document">
       <template>
         <div class="collection-container"
@@ -170,7 +170,6 @@
       },
       objects: {
         type: Array,
-        notify: true,
         value: function() {
           return [];
         }
@@ -208,8 +207,7 @@
 
     _addObject() {
       let params = {};
-      params.itemId = this.item.id;
-      params.itemName = this.item.name;
+      params.item = this.item;
       this.fire('add-object-tapped', params);
     }
 

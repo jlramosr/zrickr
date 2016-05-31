@@ -115,7 +115,7 @@ Example:
     },
 
     listeners: {
-      'drawer-menu-tapped': '_openDrawer'
+      'drawer-menu-tapped': '_menuTapped'
     },
 
     attached() {
@@ -142,7 +142,6 @@ Example:
      * @return {Object} Added element with the new properties updated
      */
     showElement(element, headerTitle) {
-      element.auth = this.auth;
       this.$.mainContent.removeContent();
       this.$.mainContent.addContent(element, headerTitle);
       this.$.mainPanel.closeDrawer();

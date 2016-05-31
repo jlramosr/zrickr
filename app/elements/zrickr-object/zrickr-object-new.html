@@ -22,17 +22,16 @@
     is: "zrickr-object-new",
 
     properties: {
-      itemId: {
-        type: String,
+      item: {
+        type: Object,
         readonly: true
       }
     },
 
     _createObject() {
-      let newObject = {
-        'itemId': this.itemId,
-      };
-      this.fire('add-object', newObject);
+      let params = {};
+      params.item = this.item;
+      this.fire('add-object', params);
     }
 
   });

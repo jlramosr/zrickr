@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../elements/zrickr-auth/zrickr-auth.html">
+<link rel="import" href="../../elements/zrickr-backend/zrickr-backend.html">
 <link rel="import" href="../../elements/zrickr-login/zrickr-login.html">
 <link rel="import" href="../../elements/zrickr-app/zrickr-app.html">
 
@@ -12,6 +13,7 @@
 
 <dom-module id="zrickr-core">
   <template>
+    <zrickr-backend app="{{backendApp}}"></<zrickr-backend>
     <zrickr-auth id="zrickrAuth" user="{{user}}"></zrickr-auth>
   </template>
 </dom-module>
@@ -29,6 +31,11 @@
         type: Object,
         readonly: true,
         notify: true
+      },
+
+      backendApp: {
+        type: Object,
+        readonly: true
       },
 
       currentElement: {
@@ -60,6 +67,7 @@
       else {
         currentElement = document.createElement('zrickr-login');
       }
+      currentElement.backendApp = this.backendApp;
       Polymer.dom(this.root).appendChild(currentElement);
       this.currentElement = currentElement;
     },

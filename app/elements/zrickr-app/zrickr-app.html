@@ -1,7 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <!-- Handlers -->
-<link rel="import" href="../../elements/zrickr-collection/zrickr-collection.html">
-<link rel="import" href="../../elements/zrickr-object/zrickr-object.html">
+<link rel="import" href="../../elements/zrickr-backend/zrickr-backend-collection.html">
 <link rel="import" href="../../elements/zrickr-route/zrickr-route.html">
 <!-- Main view -->
 <link rel="import" href="zrickr-app-view.html">
@@ -39,18 +38,24 @@ Example:
       position-drawer='left'
       loading-items='{{loadingItems}}'>
     </zrickr-app-view>
-    <zrickr-collection
+    <zrickr-backend-collection
       id="collectionHandler"
+      app='[[backendApp]]'
       location="[[auth.location]]"
-      sub-location="collections/"
+      sublocation="collections"
       name-collection="LALALALA"
       loading='{{loadingItems}}'
-      collections="{{items}}">
-    </zrickr-collection>
-    <zrickr-object
+      data="{{items}}">
+    </zrickr-backend-collection>
+    <zrickr-backend-collection
       id="objectHandler"
-      location="[[auth.location]]">
-    </zrickr-object>
+      app='[[backendApp]]'
+      location="[[auth.location]]"
+      sublocation="objects"
+      has-id
+      name-collection="LALALALA2"
+      data="{{objects}}">
+    </zrickr-backend-collection>
   </template>
 </dom-module>
 
@@ -63,9 +68,16 @@ Example:
 
     properties: {
       /**
+       *  Current backend connection
+       */
+      backendApp: {
+        type: Object,
+        readonly: true
+      },
+      /**
        * Current path of the URL
        */
-      path:  {
+      path: {
         type: String
       },
       /**
@@ -96,8 +108,24 @@ Example:
        * Array of app items
        */
       items: {
-        type: Array
-      }
+        type: Array,
+        observer: '_itemsChanged'
+      },
+      itemsReady: {
+        type: Boolean,
+        value: false
+      },
+      /**
+       * Array of objects of a item
+       */
+       objects: {
+         type: Array,
+         observer: '_objectsChanged'
+       },
+       objectsReady: {
+         type: Boolean,
+         value: false
+       }
     },
 
     listeners: {
@@ -118,9 +146,23 @@ Example:
     observers: [
       '_pathChanged(path)',
       '_pageRouteChanged(pageRouteData.page)',
-      '_idRouteChanged(idRouteData.id)',
+      '_idRouteChanged(idRouteData.id, items, objects)',
       '_subIdRouteChanged(subIdRouteData.id)'
     ],
+
+
+    _itemsChanged(newItems, oldItems) {
+      if (oldItems) {
+        this.itemsReady = true;
+      }
+    },
+
+    _objectsChanged(newObjects, oldObjects) {
+      console.log("oldObjects", oldObjects, newObjects);
+      if (oldObjects) {
+        this.objectsReady = true;
+      }
+    },
 
     /**
      * Form the path of the URL with the arguments
@@ -160,8 +202,13 @@ Example:
      * @return {Object}             The element modified with the new
      * attributes
      */
-    _showViewElement(elementName, headerTitle) {
+    _showViewElement(elementName, headerTitle, properties) {
       let element = document.createElement(elementName);
+      if (properties) {
+        Object.keys(properties).forEach((key) => {
+          element[key] = properties[key];
+        });
+      }
       return this.$.zrickrAppView.showElement(element, headerTitle);
     },
 
@@ -217,27 +264,24 @@ Example:
      * @param  {String} id The prefix of the route path with level 2
      * (ie. current_path='/items/123', id='123')
      */
-    _idRouteChanged(id) {
-      if (id && !this._hasSubroute(2)) {
+    _idRouteChanged(id, items, objects) {
+      if (id && this.itemsReady && this.objectsReady && !this._hasSubroute(2)) {
+        console.log("HOLA2", this.itemsReady, this.objectsReady, id);
         let page = this.pageRouteData.page;
         switch (page) {
           case 'items':
             let itemId = id;
-            let itemPromise = this.$.collectionHandler.getCollection(itemId);
-            itemPromise
-              .then((item) => {
-                let itemName = this.$.collectionHandler.getName(item);
-                let zrickrObjectList =
-                  this._showViewElement('zrickr-object-list', itemName);
-                zrickrObjectList.item = {
-                  'id': itemId,
-                  'name': itemName
-                };
-                zrickrObjectList.itemId = itemId;
-              })
-              .catch((message) => {
-                this._showViewElement('zrickr-profile', message);
-              });
+            this.$.objectHandler.dataId = itemId;
+            let itemName = this.items[0].name;
+            let properties = {};
+            properties.objects = this.objects;
+            properties.item = {
+              'id': itemId,
+              'name': itemName
+            };
+            let zrickrObjectList =
+              this._showViewElement('zrickr-object-list', itemName, properties);
+            this.$.objectHandler.stopLoading();
             break;
           default:
             //TODO: error page
@@ -260,21 +304,21 @@ Example:
           case 'items':
             let itemId = subPage;
             let objectId = id;
-            let itemNamePromise = this.$.collectionHandler.getNameById(itemId);
-            itemNamePromise
-            .then((itemName) => {
-              console.log(itemName);
-              let zrickrObjectView =
-                this._showViewElement('zrickr-object-view',
+            let itemPromise = this.$.collectionHandler.getDocument(itemId);
+            itemPromise
+              .then((item) => {
+                let itemName = this.$.collectionHandler.getName(item);
+                let zrickrObjectView =
+                  this._showViewElement('zrickr-object-view',
                                      itemName + ': ' + objectId);
-              zrickrObjectView.item = {
-                'id': objectId,
-                'itemId': itemId
-              };
-            })
-            .catch((message) => {
-              this._showViewElement('zrickr-profile', message);
-            });
+                zrickrObjectView.item = {
+                  'id': objectId,
+                  'itemId': itemId
+                };
+              })
+              .catch((message) => {
+                this._showViewElement('zrickr-profile', message);
+              });
             break;
           default:
             //TODO: error page
@@ -355,12 +399,11 @@ Example:
      */
     _newObjectProcess(event) {
       let object = event.detail;
-      let itemId = object.itemId;
-      let itemName = object.itemName;
+      let item = object.item;
       let zrickrObjectNew =
         this._showViewElement('zrickr-object-new',
-                             'New ' + itemName + ' object');
-      zrickrObjectNew.itemId = itemId;
+                             'New ' + item.name + ' object');
+      zrickrObjectNew.item = item;
     },
 
     /**
@@ -368,9 +411,11 @@ Example:
      */
     _addObject(event) {
       let object = event.detail;
+      console.log(object);
+      let itemId = object.item.id;
+      let itemName = object.item.name;
+      this.$.objectHandler.dataId = object.item.id;
       this.$.objectHandler.add(object);
-      let itemId = object.itemId;
-      let itemName = this.$.collectionHandler.getNameById(itemId);
       let zrickrObjectList =
         this._showViewElement('zrickr-object-list', itemName);
       zrickrObjectList.item = {
