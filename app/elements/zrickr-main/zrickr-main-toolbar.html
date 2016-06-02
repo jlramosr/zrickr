@@ -46,10 +46,19 @@
       min-height: 20px;
       padding-left: 0px;
     }
+
+    #headerTitle {
+      @apply(--layout-horizontal);
+      height: 100%;
+      margin-left: 10px;
+      /*@apply(--layout-center);
+      margin-left: 3px;
+      margin-bottom: 3px;*/
+    }
   </style>
 
   <template>
-    <paper-toolbar>
+    <paper-toolbar class="medium-tall">
       <div>
         <paper-icon-button
           id="menuButton"
@@ -58,6 +67,7 @@
           paper-drawer-toggle>
         </paper-icon-button>
       </div>
+      <span class="middle title" id="headerTitle">{{headerTitle}}</span>
       <div class="right-icons">
         <paper-icon-button on-tap="_homeTapped" icon="icons:home"></paper-icon-button>
         <paper-menu-button vertical-offset="36" horizontal-offset="-78">
@@ -104,6 +114,9 @@
       auth: {
         type: Object,
         readonly: true
+      },
+      headerTitle: {
+        type: String
       }
     },
 

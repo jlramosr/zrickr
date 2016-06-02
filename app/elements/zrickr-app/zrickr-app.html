@@ -137,7 +137,7 @@ Example:
       '_pathChanged(path)',
       '_pageRouteChanged(pageRouteData.page)',
       '_idRouteChanged(idRouteData.id, objects)',
-      '_subIdRouteChanged(subIdRouteData.id)'
+      '_subIdRouteChanged(subIdRouteData.id, objects)'
     ],
 
     /**
@@ -261,6 +261,7 @@ Example:
             }
             /*
              * Objects array have changed (notice loading of them is true yet)
+             * or dataId remains the same
              */
             else {
               let itemName = collectionHandler.getNameById(itemId);
@@ -293,29 +294,50 @@ Example:
      * @param  {String} path The prefix of the route path with level 3
      * (ie. current_path='/items/123/fgh', id='fgh')
      */
-    _subIdRouteChanged(id) {
+    _subIdRouteChanged(id, objects) {
       if (id && !this._hasSubroute(3)) {
         let page = this.pageRouteData.page;
         let subPage = this.idRouteData.id;
         switch (page) {
           case 'items':
+            let collectionHandler = this.$.collectionHandler;
+            let objectHandler = this.$.objectHandler;
             let itemId = subPage;
             let objectId = id;
-            let itemPromise = this.$.collectionHandler.getDocument(itemId);
-            itemPromise
-              .then((item) => {
-                let itemName = this.$.collectionHandler.getName(item);
-                let zrickrObjectView =
-                  this._showViewElement('zrickr-object-view',
-                                     itemName + ': ' + objectId);
-                zrickrObjectView.item = {
-                  'id': objectId,
-                  'itemId': itemId
-                };
-              })
-              .catch((message) => {
-                this._showViewElement('zrickr-profile', message);
-              });
+            if (!objectHandler.loading && objectHandler.dataId != itemId) {
+              objectHandler.startLoading();
+              this._showViewElement('zrickr-profile', "ESPERANDO");
+              objectHandler.dataId = itemId; // here objects change
+            }
+            else {
+              let item = collectionHandler.getDocument(itemId);
+              if (item) {
+                let itemName = collectionHandler.getName(item);
+                if (objectId) {
+                  let properties = {};
+                  properties.objects = objects;
+                  properties.item = {
+                    'id': itemId,
+                    'name': itemName
+                  };
+                  let zrickrObjectView =
+                    this._showViewElement('zrickr-object-view',
+                                          itemName + ': ' + objectId,
+                                          properties);
+                  zrickrObjectView.item = {
+                    'id': objectId,
+                    'itemId': itemId
+                  };
+                }
+                else {
+                  this._showViewElement('zrickr-profile', "OBJECT NO ENCONTRADO");
+                }
+              }
+              else {
+                this._showViewElement('zrickr-profile', "ITEM NO ENCONTRADO");
+              }
+              objectHandler.stopLoading();
+            }
             break;
           default:
             //TODO: error page
@@ -345,7 +367,6 @@ Example:
      */
     _viewItem(event) {
       let item = event.detail;
-      console.log("viewItem", item);
       let itemId = this.$.collectionHandler.getId(item);
       this._shapeURL('items', itemId);
     },
@@ -355,7 +376,7 @@ Example:
      */
     _viewObject(event) {
       let object = event.detail;
-      let itemId = object.itemId;
+      let itemId = object.item.id;
       let itemName = this.$.collectionHandler.getNameById(itemId);
       let objectId = this.$.objectHandler.getId(object);
       this._shapeURL('items', itemId, objectId);

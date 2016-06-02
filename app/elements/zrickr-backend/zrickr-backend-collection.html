@@ -128,22 +128,6 @@ methods (add, modify, remove a collection)
       this._getRef().push(_document);
     },
 
-    /*getDocument(id) {
-      let promise = new Promise((resolve, reject) => {
-        this._getRef(id).once("value", (snapshot) => {
-          let _document = snapshot.val();
-          if (_document) {
-            resolve(_document);
-          }
-          else {
-            reject(this.nameDocument + ' Not Found');
-          }
-        });
-      });
-      return promise;
-    },*/
-
-    /* ............................................................. */
     getId(_document) {
       if (_document) {
         return _document[this.idKeyName];
