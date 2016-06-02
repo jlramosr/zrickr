@@ -108,23 +108,13 @@ Example:
        * Array of app items
        */
       items: {
-        type: Array,
-        observer: '_itemsChanged'
-      },
-      itemsReady: {
-        type: Boolean,
-        value: false
+        type: Array
       },
       /**
        * Array of objects of a item
        */
        objects: {
-         type: Array,
-         observer: '_objectsChanged'
-       },
-       objectsReady: {
-         type: Boolean,
-         value: false
+         type: Array
        }
     },
 
@@ -146,23 +136,9 @@ Example:
     observers: [
       '_pathChanged(path)',
       '_pageRouteChanged(pageRouteData.page)',
-      '_idRouteChanged(idRouteData.id, items, objects)',
+      '_idRouteChanged(idRouteData.id, objects)',
       '_subIdRouteChanged(subIdRouteData.id)'
     ],
-
-
-    _itemsChanged(newItems, oldItems) {
-      if (oldItems) {
-        this.itemsReady = true;
-      }
-    },
-
-    _objectsChanged(newObjects, oldObjects) {
-      console.log("oldObjects", oldObjects, newObjects);
-      if (oldObjects) {
-        this.objectsReady = true;
-      }
-    },
 
     /**
      * Form the path of the URL with the arguments
@@ -260,28 +236,49 @@ Example:
     },
 
     /**
-     * Fired when the prefix of the route path with level 2 changes
+     * Fired when the prefix of the route path with level 2 changes.
+     * It fires when objects change too.
      * @param  {String} id The prefix of the route path with level 2
      * (ie. current_path='/items/123', id='123')
      */
-    _idRouteChanged(id, items, objects) {
-      if (id && this.itemsReady && this.objectsReady && !this._hasSubroute(2)) {
-        console.log("HOLA2", this.itemsReady, this.objectsReady, id);
+    _idRouteChanged(id, objects) {
+      if (id && !this._hasSubroute(2)) {
         let page = this.pageRouteData.page;
         switch (page) {
           case 'items':
+            let collectionHandler = this.$.collectionHandler;
+            let objectHandler = this.$.objectHandler;
             let itemId = id;
-            this.$.objectHandler.dataId = itemId;
-            let itemName = this.items[0].name;
-            let properties = {};
-            properties.objects = this.objects;
-            properties.item = {
-              'id': itemId,
-              'name': itemName
-            };
-            let zrickrObjectList =
-              this._showViewElement('zrickr-object-list', itemName, properties);
-            this.$.objectHandler.stopLoading();
+            /*
+             * Objects array have not changed yet (only id change)
+             * The second condition indicate id item of the objects changes too
+             * (i.e. the path changes from "/items/123" to "/items/123/")
+             */
+            if (!objectHandler.loading && objectHandler.dataId != itemId) {
+              objectHandler.startLoading();
+              this._showViewElement('zrickr-profile', "ESPERANDO");
+              objectHandler.dataId = itemId; // here objects change
+            }
+            /*
+             * Objects array have changed (notice loading of them is true yet)
+             */
+            else {
+              let itemName = collectionHandler.getNameById(itemId);
+              if (itemName) {
+                let properties = {};
+                properties.objects = objects;
+                properties.item = {
+                  'id': itemId,
+                  'name': itemName
+                };
+                let zrickrObjectList =
+                  this._showViewElement('zrickr-object-list', itemName, properties);
+              }
+              else {
+                this._showViewElement('zrickr-object-list', 'ITEM NO ENCONTRADO');
+              }
+              objectHandler.stopLoading();
+            }
             break;
           default:
             //TODO: error page
@@ -348,6 +345,7 @@ Example:
      */
     _viewItem(event) {
       let item = event.detail;
+      console.log("viewItem", item);
       let itemId = this.$.collectionHandler.getId(item);
       this._shapeURL('items', itemId);
     },

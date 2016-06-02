@@ -33,7 +33,8 @@ methods (add, modify, remove a collection)
         value: f => {
           return [];
         },
-        notify: true
+        notify: true,
+        /*observer: '_dataChanged'*/
       },
       dataId: {
         type: String,
@@ -71,7 +72,7 @@ methods (add, modify, remove a collection)
       },
       loading: {
         type: Boolean,
-        value: true,
+        //value: true,
         notify: true
       },
     },
@@ -101,7 +102,7 @@ methods (add, modify, remove a collection)
 
     _queryChanged(app, dataId) {
       this._getRef().on("value", (snapshot) => {
-        this.loading = true;
+        //this.loading = true;
         let params = snapshot;
         this.fire('backend-change-data', params);
       });
@@ -115,10 +116,8 @@ methods (add, modify, remove a collection)
         doc[this.idKeyName] = _document.key;
         documents.push(doc);
       });
-      this.loading = false;
-      console.log(this.sublocation);
       this.data = documents;
-      console.log(this.sublocation);
+      //this.loading = false;
     },
 
     /**
@@ -145,17 +144,34 @@ methods (add, modify, remove a collection)
     },*/
 
     /* ............................................................. */
-    getId(collection) {
-      return collection[this.idKeyName];
+    getId(_document) {
+      if (_document) {
+        return _document[this.idKeyName];
+      }
+      return;
     },
 
-    getName(collection) {
-      return collection[this.titleKeyName];
+    getName(_document) {
+      if (_document) {
+        return _document[this.titleKeyName];
+      }
+      return;
     },
 
-    /*getNameById(collections, id) {
-      return this.getName({});
-    },*/
+    getNameById(id) {
+      let _document = this.getDocument(id);
+      return this.getName(_document);
+    },
+
+    getDocument(id) {
+      let doc;
+      this.data.forEach((_document) => {
+        if (_document[this.idKeyName] == id) {
+          doc = _document;
+        }
+      });
+      return doc;
+    },
 
     startLoading() {
       this.loading = true;

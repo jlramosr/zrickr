@@ -117,8 +117,8 @@
           tabindex$="[[tabIndex]]">
           <iron-image sizing="contain" src="../../images/zrickr.png"></iron-image>
           <div class="description">
-            <span class="primary">[[object.itemId]]</span><br>
-            <span class="secondary">[[object.public]]</span>
+            <span class="primary">[[object.item.id]]</span><br>
+            <span class="secondary">[[object.item.name]]</span>
           </div>
           <div class="item-actions" hidden$={{!_computeActionsVisibility(index)}}>
             <paper-icon-button on-tap="_addItem" icon="icons:add-circle"></paper-icon-button>
