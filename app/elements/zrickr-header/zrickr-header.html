@@ -3,18 +3,26 @@
 <dom-module id="zrickr-header">
   <style include="iron-flex iron-flex-alignment">
     header {
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+      @apply(--layout-right-justified);
       margin: auto;
     }
 
     header img {
-      width: 32px;
-      height: 32px;
-      margin-right: 10px;
+      width: 48px;
+      height: 48px;
+      padding-right: 10px;
+      padding-left: 0px;
+    }
+
+    header h2 {
+      font-size: 26px;
     }
   </style>
 
   <template>
-    <header class="layout horizontal center center-justified">
+    <header>
       <img src="../../images/touch/icon-72x72.png" alt="logo" />
       <h2>ZrickR</h2>
     </header>

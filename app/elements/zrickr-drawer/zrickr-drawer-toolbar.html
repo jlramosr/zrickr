@@ -1,5 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../elements/zrickr-header/zrickr-header.html">
 
 <!--
@@ -22,7 +24,7 @@ Custom property | Description | Default
 
 
 <dom-module id="zrickr-drawer-toolbar">
-  <style>
+  <style include='iron-flex iron-flex-alignment shared-styles'>
     :host {
       display: block;
       --paper-toolbar-color:
@@ -30,10 +32,15 @@ Custom property | Description | Default
       --paper-toolbar-background:
           var(--drawer-toolbar-background-color, var(--primary-color));
     }
+
+    paper-toolbar {
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+    }
   </style>
 
   <template>
-    <paper-toolbar>
+    <paper-toolbar class="medium-tall">
       <zrickr-header></zrickr-header>
     </paper-toolbar>
   </template>

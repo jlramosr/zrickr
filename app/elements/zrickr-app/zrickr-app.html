@@ -6,6 +6,7 @@
 <link rel="import" href="zrickr-app-view.html">
 <!-- Possible views at one moment -->
 <link rel="import" href="../../elements/zrickr-collection/zrickr-collection-new.html">
+<link rel="import" href="../../elements/zrickr-loading/zrickr-loading.html">
 <link rel="import" href="../../elements/zrickr-profile/zrickr-profile.html">
 <link rel="import" href="../../elements/zrickr-object/zrickr-object-new.html">
 <link rel="import" href="../../elements/zrickr-object/zrickr-object-list.html">
@@ -256,7 +257,7 @@ Example:
              */
             if (!objectHandler.loading && objectHandler.dataId != itemId) {
               objectHandler.startLoading();
-              this._showViewElement('zrickr-profile', "ESPERANDO");
+              this._showViewElement('zrickr-loading', '', {'whatLoading': 'collections'});
               objectHandler.dataId = itemId; // here objects change
             }
             /*
@@ -306,14 +307,15 @@ Example:
             let objectId = id;
             if (!objectHandler.loading && objectHandler.dataId != itemId) {
               objectHandler.startLoading();
-              this._showViewElement('zrickr-profile', "ESPERANDO");
+              this._showViewElement('zrickr-loading', '', {'whatLoading': 'objects'});
               objectHandler.dataId = itemId; // here objects change
             }
             else {
               let item = collectionHandler.getDocument(itemId);
               if (item) {
                 let itemName = collectionHandler.getName(item);
-                if (objectId) {
+                let object = objectHandler.getDocument(objectId);
+                if (object) {
                   let properties = {};
                   properties.objects = objects;
                   properties.item = {

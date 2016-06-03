@@ -2,7 +2,6 @@
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="zrickr-object-filter.html">
@@ -76,17 +75,6 @@
       width: 32px;
     }
 
-    .loadingIndicator {
-    }
-
-    .loadingIndicator paper-spinner {
-      margin-right: 20px;
-      --paper-spinner-layer-1-color: var(--secondary-text-color);
-      --paper-spinner-layer-2-color: var(--primary-text-color);
-      --paper-spinner-layer-3-color: var(--secondary-text-color);
-      --paper-spinner-layer-4-color: var(--primary-text-color);
-    }
-
     .actions {
       @apply(--layout-horizontal);
       position: absolute;
@@ -135,12 +123,6 @@
       selected="{{selected}}"
       toggle>
     </array-selector>
-
-    <!--<div class="loadingIndicator" hidden$="[[!loadingCollections]]">-->
-    <div class="loadingIndicator" hidden>
-      <paper-spinner active$="[[loadingCollections]]"></paper-spinner>
-        Loading collections</b>
-    </div>
 
     <iron-scroll-threshold id="scrollTheshold"
       lower-threshold="500"

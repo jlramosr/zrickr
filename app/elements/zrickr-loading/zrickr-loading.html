@@ -1,0 +1,47 @@
+<link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<dom-module id="zrickr-loading">
+  <style include="iron-flex iron-flex-alignment">
+    .loadingIndicator {
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+    }
+
+    .loadingIndicator paper-spinner {
+      margin-right: 20px;
+      --paper-spinner-layer-1-color: var(--secondary-text-color);
+      --paper-spinner-layer-2-color: var(--primary-text-color);
+      --paper-spinner-layer-3-color: var(--secondary-text-color);
+      --paper-spinner-layer-4-color: var(--primary-text-color);
+    }
+  </style>
+
+  <template>
+    <!--<div class="loadingIndicator" hidden$="[[!loadingCollections]]">-->
+    <div class="loadingIndicator" hidden$="[[!loading]]">
+      <paper-spinner active$="[[loading]]"></paper-spinner>
+        Loading {{whatLoading}}</b>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  Polymer({
+
+    is: 'zrickr-loading',
+
+    properties: {
+      loading: {
+        type: Boolean,
+        value: true
+      },
+      whatLoading: {
+        type: String,
+        value: ''
+      }
+    }
+  });
+})();
+</script>
