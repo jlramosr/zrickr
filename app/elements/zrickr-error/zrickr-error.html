@@ -1,0 +1,30 @@
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<dom-module id="zrickr-error">
+  <style include="iron-flex iron-flex-alignment">
+  </style>
+
+  <template>
+    <h2>ERROR {{code}}</h2>
+    {{message}}
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  Polymer({
+
+    is: 'zrickr-error',
+
+    properties: {
+      message: {
+        type: String,
+        value: ''
+      },
+      code: {
+        type: Number
+      }
+    }
+  });
+})();
+</script>

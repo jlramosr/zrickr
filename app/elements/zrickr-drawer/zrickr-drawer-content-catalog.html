@@ -302,19 +302,15 @@ Custom property | Description | Default
 
     _itemActivate(event) {
       event.stopPropagation();
-      console.log("Item Activated", event.detail);
+      console.log("ITEMACTIVATE");
       let index = event.detail.selected;
       this.activeItem = index;
-      let itemObject = this.items[index];
-      let firebaseKey = itemObject.__firebaseKey__;
+      let item = this.items[index];
+      /*let firebaseKey = itemObject.__firebaseKey__;
       this.activeID = firebaseKey;
       let itemAnchor = event.detail.item;
       let itemPaper = itemAnchor.firstChild;
-      itemPaper.focused = true;
-      console.log("index", index);
-      console.log("itemObject", itemObject);
-      console.log("itemPaper",itemPaper.focused);
-      console.log("firebaseKey", firebaseKey);
+      itemPaper.focused = true;*/
     },
 
     _itemSelected(event) {
@@ -358,7 +354,8 @@ Custom property | Description | Default
      * @event view-item-tapped
      */
     _viewItemTapped(event) {
-      //console.log("1view", this.activeItem);
+      console.log("1view", event.detail);
+      this.fire('item-tapped', item);
       this.fire("view-item-tapped", this);
     },
 

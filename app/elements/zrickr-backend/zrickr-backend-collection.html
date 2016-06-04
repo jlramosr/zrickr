@@ -34,7 +34,7 @@ methods (add, modify, remove a collection)
           return [];
         },
         notify: true,
-        /*observer: '_dataChanged'*/
+        observer: '_dataChanged'
       },
       dataId: {
         type: String,
@@ -70,9 +70,14 @@ methods (add, modify, remove a collection)
         value: "__firebaseKey__",
         readonly: true
       },
-      loading: {
+      dataLoading: {
         type: Boolean,
-        //value: true,
+        value: false,
+        notify: true
+      },
+      dataReady: {
+        type: Boolean,
+        value: false,
         notify: true
       },
     },
@@ -100,9 +105,14 @@ methods (add, modify, remove a collection)
       return this.app.database().ref(this.route);
     },
 
+    _dataChanged(newData, oldData) {
+      if (oldData) {
+        this.dataReady = true;
+      }
+    },
+
     _queryChanged(app, dataId) {
       this._getRef().on("value", (snapshot) => {
-        //this.loading = true;
         let params = snapshot;
         this.fire('backend-change-data', params);
       });
@@ -117,7 +127,6 @@ methods (add, modify, remove a collection)
         documents.push(doc);
       });
       this.data = documents;
-      //this.loading = false;
     },
 
     /**
@@ -158,11 +167,11 @@ methods (add, modify, remove a collection)
     },
 
     startLoading() {
-      this.loading = true;
+      this.dataLoading = true;
     },
 
     stopLoading() {
-      this.loading = false;
+      this.dataLoading = false;
     }
 
   });

@@ -7,6 +7,7 @@
 <!-- Possible views at one moment -->
 <link rel="import" href="../../elements/zrickr-collection/zrickr-collection-new.html">
 <link rel="import" href="../../elements/zrickr-loading/zrickr-loading.html">
+<link rel="import" href="../../elements/zrickr-error/zrickr-error.html">
 <link rel="import" href="../../elements/zrickr-profile/zrickr-profile.html">
 <link rel="import" href="../../elements/zrickr-object/zrickr-object-new.html">
 <link rel="import" href="../../elements/zrickr-object/zrickr-object-list.html">
@@ -136,7 +137,7 @@ Example:
     //https://www.polymer-project.org/1.0/toolbox/routing
     observers: [
       '_pathChanged(path)',
-      '_pageRouteChanged(pageRouteData.page)',
+      '_pageRouteChanged(pageRouteData.page, items)',
       '_idRouteChanged(idRouteData.id, objects)',
       '_subIdRouteChanged(subIdRouteData.id, objects)'
     ],
@@ -200,6 +201,28 @@ Example:
     },
 
     /**
+     * Show error element
+     * @param  {String} message Error message to show
+     * @param  {Number} code Error code
+     */
+    _showError(message, code) {
+      let properties = {};
+      properties.message = message;
+      if (code) {
+        properties.code = code;
+      }
+      this._showViewElement('zrickr-error', '', properties);
+    },
+
+    /**
+     * Show loading element
+     * @param  {String} what Which thing is loading name
+     */
+    _showLoading(what) {
+      this._showViewElement('zrickr-loading','', {'whatLoading': what});
+    },
+
+    /**
      * Fired when the path changes. This function process the route paths with
      * level is less than 1 ('/') and level is greater than 3
      * ('/r1/r2/r3/r4[/..]')
@@ -210,7 +233,7 @@ Example:
         this._shapeURL('items');
       }
       if (this._hasSubroute(3)) {
-        this._showViewElement('zrickr-profile', "RUTA NO ENCONTRADA");
+        this._showError('Incorrect Path', 404);
         return;
       }
     },
@@ -220,18 +243,28 @@ Example:
      * @param  {String} path The prefix of the route path with level 1
      * (ie. current_path='/items/123', page='items')
      */
-    _pageRouteChanged(page) {
+    _pageRouteChanged(page, items) {
       if (!this._hasSubroute(1)) {
         switch (page) {
           case 'items':
-            this._showViewItems('My Collections jiji');
+            let collectionHandler = this.$.collectionHandler;
+            if (!collectionHandler.dataReady) {
+              collectionHandler.startLoading();
+              this._showLoading('collections');
+              collectionHandler.dataReady = true;
+            }
+            else {
+              this._showViewItems('My Collections');
+              collectionHandler.stopLoading();
+            }
             break;
           case 'profile':
-            this._showViewElement('zrickr-profile','User Profile');
+            let properties = {};
+            properties.auth = this.auth;
+            this._showViewElement('zrickr-profile', 'User Profile', properties);
             break;
           default:
-            //TODO: error page
-            this._showViewElement('zrickr-profile', "RUTA NO ENCONTRADA");
+            this._showError('Incorrect Path', 404);
         }
       }
     },
@@ -252,16 +285,16 @@ Example:
             let itemId = id;
             /*
              * Objects array have not changed yet (only id change)
-             * The second condition indicate id item of the objects changes too
+             * The second condition indicates id item of the objects changes too
              * (i.e. the path changes from "/items/123" to "/items/123/")
              */
-            if (!objectHandler.loading && objectHandler.dataId != itemId) {
+            if (!objectHandler.dataLoading && objectHandler.dataId != itemId) {
               objectHandler.startLoading();
-              this._showViewElement('zrickr-loading', '', {'whatLoading': 'collections'});
+              this._showLoading('objects');
               objectHandler.dataId = itemId; // here objects change
             }
             /*
-             * Objects array have changed (notice loading of them is true yet)
+             * Objects array have changed (notice dataLoading of them is true yet)
              * or dataId remains the same
              */
             else {
@@ -277,14 +310,13 @@ Example:
                   this._showViewElement('zrickr-object-list', itemName, properties);
               }
               else {
-                this._showViewElement('zrickr-object-list', 'ITEM NO ENCONTRADO');
+                this._showError('Collection Not Found', 404);
               }
               objectHandler.stopLoading();
             }
             break;
           default:
-            //TODO: error page
-            this._showViewElement('zrickr-profile', "RUTA NO ENCONTRADA");
+            this._showError('Incorrect Path', 404);
         }
       }
     },
@@ -305,9 +337,9 @@ Example:
             let objectHandler = this.$.objectHandler;
             let itemId = subPage;
             let objectId = id;
-            if (!objectHandler.loading && objectHandler.dataId != itemId) {
+            if (!objectHandler.dataLoading && objectHandler.dataId != itemId) {
               objectHandler.startLoading();
-              this._showViewElement('zrickr-loading', '', {'whatLoading': 'objects'});
+              this._showLoading('object');
               objectHandler.dataId = itemId; // here objects change
             }
             else {
@@ -332,18 +364,17 @@ Example:
                   };
                 }
                 else {
-                  this._showViewElement('zrickr-profile', "OBJECT NO ENCONTRADO");
+                  this._showError('Object not found', 404);
                 }
               }
               else {
-                this._showViewElement('zrickr-profile', "ITEM NO ENCONTRADO");
+                this._showError('Collection not found', 404);
               }
               objectHandler.stopLoading();
             }
             break;
           default:
-            //TODO: error page
-            this._showViewElement('zrickr-profile', "RUTA NO ENCONTRADA");
+            this._showError('Incorrect Path', 404);
         }
       }
       else {
