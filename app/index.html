@@ -45,12 +45,42 @@
     <style is="custom-style" include="shared-styles"></style>
 
     <script src="bower_components/polymer/polymer.html"></script>
+    <link rel="import" href="bower_components/iron-meta/iron-meta.html">
   </head>
 
   <body unresolved>
     <!-- build:remove -->
     <span id="browser-sync-binding"></span>
     <!-- endbuild -->
+
+
+    <!-- Metas -->
+    <iron-meta id='main'>
+      <iron-meta key='location' value='zrickrdatabase.firebaseapp.com'></iron-meta>
+    </iron-meta>
+    <iron-meta id='db'>
+      <iron-meta key='location' value="https://zrickrdatabase.firebaseio.com"></iron-meta>
+      <iron-meta key='apiKey' value='AIzaSyAEjGn2rv0MQ9xtha15xHkMvhntP4mM3Kg'></iron-meta>
+      <iron-meta key='storageLocation' value='zrickrdatabase.appspot.com'></iron-meta>
+    </iron-meta>
+    <iron-meta id='info'>
+      <iron-meta key='catalogTitle' value='My Catalog'></iron-meta>
+      <iron-meta key='catalogUrl' value='catalog'></iron-meta>
+      <iron-meta key='collectionName' value='collection'></iron-meta>
+      <iron-meta key='collectionNameCap' value='Collection'></iron-meta>
+      <iron-meta key='collectionNamePlural' value='collections'></iron-meta>
+      <iron-meta key='objectName' value='item'></iron-meta>
+      <iron-meta key='objectNameCap' value='Item'></iron-meta>
+      <iron-meta key='objectNamePlural' value='items'></iron-meta>
+      <iron-meta key='profileTitle' value='User Profile'></iron-meta>
+      <iron-meta key='profileUrl' value='profile'></iron-meta>
+    </iron-meta>
+    <iron-meta id='error'>
+      <iron-meta key='notFound' value='Not Found'></iron-meta>
+      <iron-meta key='incorrectPath' value='Incorrect Path'></iron-meta>
+    </iron-meta>
+
+
 
     <template is="dom-bind" id="app">
       <zrickr-core

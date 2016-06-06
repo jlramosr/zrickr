@@ -15,10 +15,29 @@
   <style include="iron-flex iron-flex-alignment shared-styles">
     :host {
       display: block;
+    }
+
+    #mainToolbar {
       --paper-toolbar-color:
           var(--main-toolbar-color, #FFF);
       --paper-toolbar-background:
           var(--main-toolbar-background, var(--primary-color));
+      --paper-toolbar-height: 52px;
+      --paper-toolbar-sm-height: 56px;
+    }
+
+    #secondaryToolbar {
+      --paper-toolbar-color:
+          var(--main-secondary-toolbar-color, #FFF);
+      --paper-toolbar-background:
+          var(--main-secondary-toolbar-background, var(--primary-color));
+      --paper-toolbar-height: 40px;
+      --paper-toolbar-sm-height: 44px;
+    }
+
+    #secondaryToolbar span {
+      padding: 10px;
+      padding-bottom: 13px;
     }
 
     .right-icons {
@@ -46,19 +65,10 @@
       min-height: 20px;
       padding-left: 0px;
     }
-
-    #headerTitle {
-      @apply(--layout-horizontal);
-      height: 100%;
-      margin-left: 10px;
-      /*@apply(--layout-center);
-      margin-left: 3px;
-      margin-bottom: 3px;*/
-    }
   </style>
 
   <template>
-    <paper-toolbar class="medium-tall">
+    <paper-toolbar id='mainToolbar'>
       <div>
         <paper-icon-button
           id="menuButton"
@@ -67,7 +77,6 @@
           paper-drawer-toggle>
         </paper-icon-button>
       </div>
-      <span class="middle title" id="headerTitle">{{headerTitle}}</span>
       <div class="right-icons">
         <paper-icon-button on-tap="_homeTapped" icon="icons:home"></paper-icon-button>
         <paper-menu-button vertical-offset="36" horizontal-offset="-78">
@@ -99,6 +108,9 @@
           </paper-menu>
         </paper-menu-button>
       </div>
+    </paper-toolbar>
+    <paper-toolbar id='secondaryToolbar'>
+      <span>{{headerTitle}}</span>
     </paper-toolbar>
   </template>
 </dom-module>

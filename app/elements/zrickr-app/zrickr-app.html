@@ -37,8 +37,7 @@ Example:
       id="zrickrAppView"
       auth='{{auth}}'
       items='{{items}}'
-      position-drawer='left'
-      loading-items='{{loadingItems}}'>
+      position-drawer='left'>
     </zrickr-app-view>
     <zrickr-backend-collection
       id="collectionHandler"
@@ -230,10 +229,10 @@ Example:
      */
     _pathChanged(path) {
       if (!this._hasSubroute(0)) {
-        this._shapeURL('items');
+        this._shapeURL(info.byKey('catalogUrl'));
       }
       if (this._hasSubroute(3)) {
-        this._showError('Incorrect Path', 404);
+        this._showError(error.byKey('incorrectPath'), 404);
         return;
       }
     },
@@ -246,25 +245,27 @@ Example:
     _pageRouteChanged(page, items) {
       if (!this._hasSubroute(1)) {
         switch (page) {
-          case 'items':
+          case info.byKey('catalogUrl'):
             let collectionHandler = this.$.collectionHandler;
             if (!collectionHandler.dataReady) {
               collectionHandler.startLoading();
-              this._showLoading('collections');
+              this._showLoading(info.byKey('collectionNamePlural'));
               collectionHandler.dataReady = true;
             }
             else {
-              this._showViewItems('My Collections');
+              this._showViewItems(info.byKey('catalogTitle'));
               collectionHandler.stopLoading();
             }
             break;
-          case 'profile':
+          case info.byKey('profileUrl'):
             let properties = {};
             properties.auth = this.auth;
-            this._showViewElement('zrickr-profile', 'User Profile', properties);
+            this._showViewElement('zrickr-profile',
+                                  info.byKey('profileTitle'),
+                                  properties);
             break;
           default:
-            this._showError('Incorrect Path', 404);
+            this._showError(error.byKey('incorrectPath'), 404);
         }
       }
     },
@@ -279,7 +280,7 @@ Example:
       if (id && !this._hasSubroute(2)) {
         let page = this.pageRouteData.page;
         switch (page) {
-          case 'items':
+          case info.byKey('catalogUrl'):
             let collectionHandler = this.$.collectionHandler;
             let objectHandler = this.$.objectHandler;
             let itemId = id;
@@ -290,7 +291,7 @@ Example:
              */
             if (!objectHandler.dataLoading && objectHandler.dataId != itemId) {
               objectHandler.startLoading();
-              this._showLoading('objects');
+              this._showLoading(info.byKey('objectNamePlural'));
               objectHandler.dataId = itemId; // here objects change
             }
             /*
@@ -310,13 +311,15 @@ Example:
                   this._showViewElement('zrickr-object-list', itemName, properties);
               }
               else {
-                this._showError('Collection Not Found', 404);
+                this._showError(info.byKey('collectionNameCap') + ' ' +
+                                      error.byKey('notFound'),
+                                404);
               }
               objectHandler.stopLoading();
             }
             break;
           default:
-            this._showError('Incorrect Path', 404);
+            this._showError(error.byKey('incorrectPath'), 404);
         }
       }
     },
@@ -332,14 +335,14 @@ Example:
         let page = this.pageRouteData.page;
         let subPage = this.idRouteData.id;
         switch (page) {
-          case 'items':
+          case info.byKey('catalogUrl'):
             let collectionHandler = this.$.collectionHandler;
             let objectHandler = this.$.objectHandler;
             let itemId = subPage;
             let objectId = id;
             if (!objectHandler.dataLoading && objectHandler.dataId != itemId) {
               objectHandler.startLoading();
-              this._showLoading('object');
+              this._showLoading(info.byKey('objectName'));
               objectHandler.dataId = itemId; // here objects change
             }
             else {
@@ -364,17 +367,21 @@ Example:
                   };
                 }
                 else {
-                  this._showError('Object not found', 404);
+                  this._showError(info.byKey('objectNameCap') + ' ' +
+                                        error.byKey('notFound'),
+                                  404);
                 }
               }
               else {
-                this._showError('Collection not found', 404);
+                this._showError(info.byKey('collectionNameCap') + ' ' +
+                                      error.byKey('notFound'),
+                                404);
               }
               objectHandler.stopLoading();
             }
             break;
           default:
-            this._showError('Incorrect Path', 404);
+            this._showError(error.byKey('incorrectPath'), 404);
         }
       }
       else {
@@ -385,14 +392,14 @@ Example:
      * Fired when the user wants to view the profile page
      */
     _editProfile() {
-      this._shapeURL('profile');
+      this._shapeURL(info.byKey('profileUrl'));
     },
 
     /**
      * Fired when the user wants to view all the items
      */
     _viewItems() {
-      this._shapeURL('items');
+      this._shapeURL(info.byKey('catalogUrl'));
     },
 
     /**
@@ -401,7 +408,7 @@ Example:
     _viewItem(event) {
       let item = event.detail;
       let itemId = this.$.collectionHandler.getId(item);
-      this._shapeURL('items', itemId);
+      this._shapeURL(info.byKey('catalogUrl'), itemId);
     },
 
     /**
@@ -412,7 +419,7 @@ Example:
       let itemId = object.item.id;
       let itemName = this.$.collectionHandler.getNameById(itemId);
       let objectId = this.$.objectHandler.getId(object);
-      this._shapeURL('items', itemId, objectId);
+      this._shapeURL(info.byKey('catalogUrl'), itemId, objectId);
     },
 
     /**
@@ -454,7 +461,7 @@ Example:
       let item = object.item;
       let zrickrObjectNew =
         this._showViewElement('zrickr-object-new',
-                             'New ' + item.name + ' object');
+                             'New ' + item.name + ' ' + info.byKey('objectName'));
       zrickrObjectNew.item = item;
     },
 

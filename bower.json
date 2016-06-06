@@ -54,7 +54,8 @@
     "iron-scroll-threshold": "PolymerElements/iron-scroll-threshold#^1.0.1",
     "paper-fab": "PolymerElements/paper-fab#^1.2.0",
     "app-route": "PolymerElements/app-route#^0.9.1",
-    "firebase-element": "GoogleWebComponents/firebase-element#^1.0.12"
+    "firebase-element": "GoogleWebComponents/firebase-element#^1.0.12",
+    "iron-meta": "PolymerElements/iron-meta#^1.1.1"
   },
   "devDependencies": {
     "web-component-tester": "^4.2.2",

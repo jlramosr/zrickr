@@ -27,15 +27,17 @@ Custom property | Description | Default
   <style include='iron-flex iron-flex-alignment shared-styles'>
     :host {
       display: block;
-      --paper-toolbar-color:
-          var(--drawer-toolbar-color, #FFFFFF);
-      --paper-toolbar-background:
-          var(--drawer-toolbar-background-color, var(--primary-color));
     }
 
     paper-toolbar {
       @apply(--layout-horizontal);
       @apply(--layout-center);
+      --paper-toolbar-color:
+          var(--drawer-toolbar-color, #FFFFFF);
+      --paper-toolbar-background:
+          var(--drawer-toolbar-background-color, var(--primary-color));
+      --paper-toolbar-height: 46px;
+      --paper-toolbar-sm-height: 50px;
     }
   </style>
 

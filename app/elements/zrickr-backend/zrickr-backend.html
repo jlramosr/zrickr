@@ -8,13 +8,9 @@ methods (add, modify, remove a collection)
 @element zrickr-collection
 -->
 
-<dom-module id="zrickr-backend">
-  <template>
-  </template>
-</dom-module>
+<dom-module id="zrickr-backend"></dom-module>
 
 <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
-
 
 <script>
 (function() {
@@ -32,6 +28,14 @@ methods (add, modify, remove a collection)
     },
 
     ready() {
+      /*
+      let config = {
+        apiKey: db.byKey('apiKey'),
+        authDomain: main.byKey('location'),
+        databaseURL: db.byKey('location'),
+        storageBucket: db.byKey('storageLocation'),
+      };
+      */
       let config = {
         apiKey: "AIzaSyAEjGn2rv0MQ9xtha15xHkMvhntP4mM3Kg",
         authDomain: "zrickrdatabase.firebaseapp.com",

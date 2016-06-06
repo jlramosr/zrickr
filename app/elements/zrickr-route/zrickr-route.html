@@ -123,7 +123,7 @@ Example:
      * When the path changes, this function forces all paths ends with '/'.
      */
     _pathChanged(path) {
-      if (!path.endsWith('/')) {
+      if (path && !path.endsWith('/')) {
         this.set('path', path + '/');
       }
     }

@@ -13,71 +13,13 @@
       @apply(--layout-vertical);
       @apply(--layout-fit);
     }
-
-    #header {
-      color: var(--content-header-color, --primary-text-color);
-      margin: 10px auto;
-      width: 100%;
-      border-image:
-        linear-gradient(0deg, transparent,
-        var(--primary-text-color) 10%, transparent) 1 0 100%;
-      -webkit-border-image:
-        -webkit-linear-gradient(0deg, transparent,
-        var(--primary-text-color) 10%, transparent) 1 0 100%;
-      -o-border-image:
-        -o-linear-gradient(0deg, transparent,
-        var(--primary-text-color) 10%, transparent) 1 0 100%;
-      -moz-border-image:
-        -moz-linear-gradient(0deg, transparent,
-        var(--primary-text-color) 10%, transparent) 1 0 100%;
-      border-bottom-width: 1px;
-      border-top-width: 0px;
-      border-left-width: 0px;
-      border-right-width: 0px;
-    }
-
-    #header.headerFixed {
-      position:fixed;
-    }
-
-    .header-content {
-      @apply(--layout-horizontal);
-      @apply(--layout center);
-      padding-left: 25px;
-      padding-right: 25px;
-    }
-
-    .header-content paper-icon-button {
-      padding: 5px;
-      width: 32px;
-      height: 32px;
-      color: var(--content-header-icon-color, --secondary-text-color);
-      opacity: 0.95;
-    }
-
-    .header-title {
-      font-size: 22px;
-    }
-
-    .header-actions {
-      margin-left: auto;
-    }
   </style>
 
   <template>
-    <!--<div id="header" class$="{{_headerFixed(headerFixed)}}">
-      <div class="header-content">
-        <span class="header-title">[[headerTitle]]</span>
-        <div class="header-actions">
-          <paper-icon-button on-tap="" icon="search"></paper-icon-button>
-        </div>
-      </div>
-    </div>-->
     <div id="zrickrItems">
       <zrickr-collection-list
         auth="{{auth}}"
         collections="{{items}}"
-        loading-collections='{{loadingItems}}'
         hidden="[[hideItems]]">
       </zrickr-collection-list>
     </div>
@@ -100,13 +42,6 @@
       },
       items: {
         type: Array
-      },
-      /**
-       * Indicates if it's loading items currently
-       */
-      loadingItems: {
-        type: Boolean,
-        value: false
       },
       hideItems: {
         type: Boolean,

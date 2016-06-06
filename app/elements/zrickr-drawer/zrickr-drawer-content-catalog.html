@@ -148,7 +148,7 @@ Custom property | Description | Default
       <paper-menu id="menuCatalog" role="listbox" class="menu-content catalog-list">
         <template is="dom-repeat" items="[[items]]" as="item">
           <paper-item class="item" id="item-{{index}}">
-            <div class="item-title" on-tap="_viewItemTapped">
+            <div class="item-title" on-tap="_itemTapped">
               <iron-image sizing="contain" src="../../images/zrickr.png"></iron-image>
               <span>[[item.name]]</span>
             </div>
@@ -169,7 +169,8 @@ Custom property | Description | Default
                   Add a [[objectName]]
                 </paper-item>
                 <paper-item class="menu-item-action"
-                            on-tap="_viewItemTapped">
+                            on-tap="_viewItemTapped"
+                            id='option-view-item-{{index}}'>
                   <paper-icon-button  icon="image:remove-red-eye"></paper-icon-button>
                   View [[itemName]]
                 </paper-item>
@@ -203,17 +204,21 @@ Custom property | Description | Default
       /**
        * Index of active or selected item
        */
-      activeItem: {
+      /*activeItem: {
         type: Number,
         value: -1
+      },*/
+      activeItem: {
+        type: Object,
+        value: undefined
       },
       /**
        * Database ID of active or selected item
        */
-      activeID: {
+      /*activeID: {
         type: String,
         value: undefined
-      },
+      },*/
       /**
        * If it should be a button to add a new item
        */
@@ -265,9 +270,9 @@ Custom property | Description | Default
       /*'iron-select': '_itemSelected'*/
     },
 
-    observers: [
-      '_activeItemChanged(activeItem, activeID)'
-    ],
+    /*observers: [
+      '_activeItemChanged(activeItem)'
+    ],*/
 
     attached() {
       if (!this.items || !this.itemMenuName) {
@@ -296,25 +301,30 @@ Custom property | Description | Default
       event.stopPropagation();
     },
 
-    _activeItemChanged(activeItem, activeID) {
-
-    },
+    /*_activeItemChanged(activeItem) {
+      console.log("activeItemChanged", activeItem)
+    },*/
 
     _itemActivate(event) {
-      event.stopPropagation();
-      console.log("ITEMACTIVATE");
+      //event.stopPropagation();
       let index = event.detail.selected;
-      this.activeItem = index;
-      let item = this.items[index];
+      /* There are several types of paper-item distinguished by their
+        HTML element id (item-{{index}} and option-[[action]]-{{index}}) */
+      let paperItemId = event.detail.item.id;
+      if (paperItemId.startsWith('item')) {
+        let item = this.items[index];
+        this.activeItem = item;
+      }
       /*let firebaseKey = itemObject.__firebaseKey__;
-      this.activeID = firebaseKey;
+      this.activeID = firebaseKey;*/
       let itemAnchor = event.detail.item;
       let itemPaper = itemAnchor.firstChild;
-      itemPaper.focused = true;*/
+      console.log('ITEM ACTIVATE', itemAnchor, itemPaper);
+      itemAnchor.active = false;
     },
 
-    _itemSelected(event) {
-    },
+  /*  _itemSelected(event) {
+  },*/
 
     /**
      * When the user tap on a catalog
@@ -334,14 +344,6 @@ Custom property | Description | Default
     },
 
     /**
-     * When the user tap on a item.
-     * @event item-tapped
-     */
-    _itemTapped(event) {
-      this.fire("item-tapped", this);
-    },
-
-    /**
      * When the user want to add an object on a item.
      * @event add-object-tapped
      */
@@ -350,13 +352,24 @@ Custom property | Description | Default
     },
 
     /**
+     * When the user tap on a item.
+     * @event item-tapped
+     */
+    _itemTapped(event) {
+      /* Wait a little longer to activeItem changes on _itemActivate function */
+      this.async(() => {
+        //console.log("itemTapped", this.activeItem);
+        this.fire("item-tapped", this.activeItem);
+      });
+    },
+
+    /**
      * When the user want to general view of a item.
      * @event view-item-tapped
      */
-    _viewItemTapped(event) {
-      console.log("1view", event.detail);
-      this.fire('item-tapped', item);
-      this.fire("view-item-tapped", this);
+    _viewItemTapped() {
+      //console.log("viewitemTapped", this.activeItem);
+      this.fire('view-item-tapped', this.activeItem);
     },
 
     /**

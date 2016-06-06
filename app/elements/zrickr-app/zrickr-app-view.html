@@ -76,7 +76,6 @@ Example:
         <zrickr-main-content
           auth="{{auth}}"
           items="{{items}}"
-          loading-items="{{loadingItems}}"
           id="mainContent">
         </zrickr-main-content>
       </paper-scroll-header-panel>
@@ -110,13 +109,6 @@ Example:
        */
       items: {
         type: Array
-      },
-      /**
-       * Indicates if it's loading items currently
-       */
-      loadingItems: {
-        type: Boolean,
-        value: false
       }
     },
 
