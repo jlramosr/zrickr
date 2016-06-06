@@ -3,6 +3,12 @@
 
 <dom-module id="zrickr-loading">
   <style include="iron-flex iron-flex-alignment">
+    :host {
+      @apply(--layout-horizontal);
+      @apply(--layout-center-justified);
+      margin-top: 80px;
+    }
+
     .loadingIndicator {
       @apply(--layout-horizontal);
       @apply(--layout-center);
@@ -18,7 +24,6 @@
   </style>
 
   <template>
-    <!--<div class="loadingIndicator" hidden$="[[!loadingCollections]]">-->
     <div class="loadingIndicator" hidden$="[[!loading]]">
       <paper-spinner active$="[[loading]]"></paper-spinner>
         Loading {{whatLoading}}</b>

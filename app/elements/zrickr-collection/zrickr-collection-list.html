@@ -3,10 +3,12 @@
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../styles/shared-styles.html">
 
 <dom-module id="zrickr-collection-list">
-  <style include="iron-flex iron-flex-alignment">
+  <style include="iron-flex iron-flex-alignment shared-styles">
     :host {
       display: block;
       margin: auto;
@@ -14,7 +16,6 @@
 
     iron-list {
       --iron-list-items-container: {
-
       };
     }
 
@@ -89,6 +90,13 @@
       }
       --paper-fab-background: var(--secondary-text-color);
     }
+
+    paper-tooltip {
+
+      --paper-tooltip: {
+
+      }
+    }
   </style>
 
   <template>
@@ -126,8 +134,17 @@
     </iron-scroll-threshold>
 
     <div class="actions">
-      <paper-fab mini icon="add" on-tap="_addCollection"></paper-fab>
-      <paper-fab mini icon="create"></paper-fab>
+      <paper-fab
+        id='button-add-collection'
+        mini
+        icon="add"
+        on-tap="_addCollection">
+      </paper-fab>
+
+      <paper-tooltip
+        for='button-add-collection'
+        position="left"> Add a collection
+      </paper-tooltip>
     </div>
 
   </template>

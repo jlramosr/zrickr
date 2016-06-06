@@ -4,7 +4,6 @@
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="zrickr-object-filter.html">
 
 <dom-module id="zrickr-object-list">
   <style include="iron-flex iron-flex-alignment">
@@ -92,11 +91,6 @@
   </style>
 
   <template>
-    <!--<zrickr-object-filter id="objectHandler"
-      location="[[auth.location]]"
-      item-id="{{item.id}}"
-      objects="{{objects}}">
-    </zrickr-object-filter>-->
     <iron-list selection-enabled id="collectionsList" items="[[objects]]" as="object" scroll-target="document">
       <template>
         <div class="collection-container"
