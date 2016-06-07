@@ -5,10 +5,11 @@
 <!-- Main view -->
 <link rel="import" href="zrickr-app-view.html">
 <!-- Possible views at one moment -->
-<link rel="import" href="../../elements/zrickr-collection/zrickr-collection-new.html">
 <link rel="import" href="../../elements/zrickr-loading/zrickr-loading.html">
 <link rel="import" href="../../elements/zrickr-error/zrickr-error.html">
 <link rel="import" href="../../elements/zrickr-profile/zrickr-profile.html">
+<link rel="import" href="../../elements/zrickr-collection/zrickr-collection-new.html">
+<link rel="import" href="../../elements/zrickr-collection/zrickr-collection-delete-dialog.html">
 <link rel="import" href="../../elements/zrickr-object/zrickr-object-new.html">
 <link rel="import" href="../../elements/zrickr-object/zrickr-object-list.html">
 <link rel="import" href="../../elements/zrickr-object/zrickr-object-view.html">
@@ -126,7 +127,8 @@ Example:
       'item-tapped': '_viewItem',
       'view-item-tapped': '_viewItem',
       'edit-item-tapped': '_editItem',
-      'delete-item-tapped': '_deleteItem',
+      'delete-item-tapped': '_deleteItemProcess',
+      'delete-item': '_deleteItem',
       'edit-profile-tapped': '_editProfile',
       'add-object-tapped': '_newObjectProcess',
       'add-object': '_addObject',
@@ -176,6 +178,7 @@ Example:
      * Show an element in the main content of the view element
      * @param  {String} elementName Element name to show
      * @param  {String} headerTitle Title of the header content
+     * @param  {Object} properties Properties (key,value) of the new element
      * @return {Object}             The element modified with the new
      * attributes
      */
@@ -193,9 +196,15 @@ Example:
      * Show a temporary element (ie. a dialog) in the main content of the view
      * element
      * @param  {String} elementName Element name to show
+     * @param  {Object} properties Properties (key,value) of the new element
      */
-    _showViewTempElement(elementName) {
+    _showViewTempElement(elementName, properties) {
       let element = document.createElement(elementName);
+      if (properties) {
+        Object.keys(properties).forEach((key) => {
+          element[key] = properties[key];
+        });
+      }
       this.$.zrickrAppView.showTempElement(element);
     },
 
@@ -361,21 +370,15 @@ Example:
                     this._showViewElement('zrickr-object-view',
                                           itemName + ': ' + objectId,
                                           properties);
-                  zrickrObjectView.item = {
-                    'id': objectId,
-                    'itemId': itemId
-                  };
                 }
                 else {
                   this._showError(info.byKey('objectNameCap') + ' ' +
-                                        error.byKey('notFound'),
-                                  404);
+                                        error.byKey('notFound'), 404);
                 }
               }
               else {
                 this._showError(info.byKey('collectionNameCap') + ' ' +
-                                      error.byKey('notFound'),
-                                404);
+                                      error.byKey('notFound'), 404);
               }
               objectHandler.stopLoading();
             }
@@ -406,7 +409,7 @@ Example:
      * Fired when the user wants to view a item information
      */
     _viewItem(event) {
-      let item = event.detail;
+      let item = event.detail.item;
       let itemId = this.$.collectionHandler.getId(item);
       this._shapeURL(info.byKey('catalogUrl'), itemId);
     },
@@ -446,41 +449,79 @@ Example:
       let item = event.detail;
     },
 
+    _generateItemShort(itemLong) {
+      let itemId = this.$.collectionHandler.getId(itemLong);
+      let itemName = this.$.collectionHandler.getName(itemLong);
+      return {'id': itemId, 'name': itemName};
+    },
+
     /**
      * Fires when the user wants to delete a item
      */
+    _deleteItemProcess(event) {
+      let itemShort = this._generateItemShort(event.detail.item);
+      let properties = {};
+      properties.item = itemShort;
+      properties.message = info.byKey('collectionDeleteText') + ' ' +
+                           itemShort.name + ' ' + info.byKey('collectionName') +
+                           '?';
+      this._showViewTempElement('zrickr-collection-delete-dialog', properties);
+    },
+
+    /**
+     * Fires when the user finish the item delete process
+     */
     _deleteItem(event) {
-      let item = event.detail;
+      let itemShort = event.detail.itemShort;
+      console.log("deleteItem", event.detail.itemShort);
+      this.$.collectionHandler.remove(itemShort.id);
     },
 
     /**
      * Fires when the user wants to add an object on a item
      */
     _newObjectProcess(event) {
-      let object = event.detail;
-      let item = object.item;
+      let item  = event.detail.item;
+      let itemShort = event.detail.itemShort;
+      let itemId;
+      let itemName;
+      let properties = {};
+      if (itemShort) {
+        itemId = itemShort.id;
+        itemName = itemShort.name;
+        properties.item = itemShort;
+      }
+      else {
+        itemId = this.$.collectionHandler.getId(item);
+        itemName = this.$.collectionHandler.getName(item);
+        console.log("pasa por aqui", itemId, itemName);
+        properties.item = {
+          'id': itemId,
+          'name': itemName
+        };
+      }
       let zrickrObjectNew =
-        this._showViewElement('zrickr-object-new',
-                             'New ' + item.name + ' ' + info.byKey('objectName'));
-      zrickrObjectNew.item = item;
+        this._showViewElement(
+          'zrickr-object-new',
+          'New ' + itemName + ' ' + info.byKey('objectName'),
+          properties
+        );
     },
 
     /**
      * Fires when the user finish the object creation process
      */
     _addObject(event) {
-      let object = event.detail;
-      console.log(object);
-      let itemId = object.item.id;
-      let itemName = object.item.name;
-      this.$.objectHandler.dataId = object.item.id;
-      this.$.objectHandler.add(object);
-      let zrickrObjectList =
-        this._showViewElement('zrickr-object-list', itemName);
-      zrickrObjectList.item = {
+      let itemShort = event.detail.itemShort;
+      let itemId = itemShort.id;
+      let itemName = itemShort.name;
+      this.$.objectHandler.dataId = itemId;
+      let newObject = {};
+      newObject.item = {
         'id': itemId,
         'name': itemName
-      };
+      }
+      this.$.objectHandler.add(newObject);
     }
   });
 })();

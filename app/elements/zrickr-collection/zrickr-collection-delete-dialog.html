@@ -1,0 +1,73 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/fade-out-animation.html">
+
+
+<!--
+`<zrickr-collection-new-name-dialog>` is the first dialog in the process of
+a collection creation.
+
+    <zrickr-collection-new-name-dialog></zrickr-collection-new-name-dialog>
+
+@element zrickr-collection-new-name-dialog
+@demo demo/index.html
+-->
+
+<dom-module id="zrickr-collection-delete-dialog">
+  <style include="iron-flex iron-flex-alignment">
+    paper-dialog {
+      padding-left: 20px;
+      padding-right: 20px;
+      padding-top: 20px;
+    }
+  </style>
+
+  <template>
+
+    <paper-dialog modal entry-animation="scale-up-animation"
+                  exit-animation="fade-out-animation">
+        {{message}}
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm on-tap='_deleteItem'>Accept</paper-button>
+      </div>
+    </paper-dialog>
+
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  'use strict';
+
+  Polymer({
+
+    is: "zrickr-collection-delete-dialog",
+
+    properties: {
+      /**
+       * Name of the collection will be deleted.
+       */
+      message: {
+        type: String
+      },
+      item: {
+        type: Object
+      }
+    },
+
+    ready() {
+      this.$$('paper-dialog').open();
+    },
+
+    _deleteItem() {
+      let params = {};
+      params.itemShort = this.item;
+      this.fire('delete-item', params);
+    }
+  });
+}());
+</script>

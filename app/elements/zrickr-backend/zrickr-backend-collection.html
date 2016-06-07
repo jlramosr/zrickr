@@ -134,6 +134,15 @@ methods (add, modify, remove a collection)
       this._getRef().push(_document);
     },
 
+    /**
+     * Remove a collection
+     * @param {String} The collection id to remove
+     */
+    remove(id) {
+      console.log("Remove de zrickr-backend-collection", this.route + id)
+      this._getRef().remove(id);
+    },
+
     getId(_document) {
       if (_document) {
         return _document[this.idKeyName];

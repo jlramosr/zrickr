@@ -183,7 +183,9 @@
     },
 
     _collectionTapped(event) {
-      this.fire('view-item-tapped', event.model.collection);
+      let params = {};
+      params.item = event.model.collection;
+      this.fire('view-item-tapped', params);
     },
 
     _collectionHover(event) {
