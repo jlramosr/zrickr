@@ -140,7 +140,7 @@ methods (add, modify, remove a collection)
      */
     remove(id) {
       console.log("Remove de zrickr-backend-collection", this.route + id)
-      this._getRef().remove(id);
+      this._getRef(id).remove();
     },
 
     getId(_document) {

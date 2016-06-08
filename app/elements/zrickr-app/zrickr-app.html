@@ -58,6 +58,15 @@ Example:
       name-collection="LALALALA2"
       data="{{objects}}">
     </zrickr-backend-collection>
+    <zrickr-backend-collection
+      id="recyclingHandler"
+      app='[[backendApp]]'
+      location="[[auth.location]]"
+      sublocation="recycling"
+      has-id
+      name-collection="LALALALA3"
+      data="{{bins}}">
+    </zrickr-backend-collection>
   </template>
 </dom-module>
 
@@ -117,6 +126,9 @@ Example:
        */
        objects: {
          type: Array
+       },
+       currentProcess: {
+         type: String
        }
     },
 
@@ -140,7 +152,8 @@ Example:
       '_pathChanged(path)',
       '_pageRouteChanged(pageRouteData.page, items)',
       '_idRouteChanged(idRouteData.id, objects)',
-      '_subIdRouteChanged(subIdRouteData.id, objects)'
+      '_subIdRouteChanged(subIdRouteData.id, objects)',
+      '_processChanged(objects)'
     ],
 
     /**
@@ -229,6 +242,17 @@ Example:
     _showLoading(what) {
       this._showViewElement('zrickr-loading','', {'whatLoading': what});
     },
+
+    /**
+     * Generate a new minimal object that represents a
+     * item only with its id and name
+     * @param  {Object} itemLong Long item with all the information about it
+     */
+      _generateItemShort(itemLong) {
+        let itemId = this.$.collectionHandler.getId(itemLong);
+        let itemName = this.$.collectionHandler.getName(itemLong);
+        return {'id': itemId, 'name': itemName};
+      },
 
     /**
      * Fired when the path changes. This function process the route paths with
@@ -449,12 +473,6 @@ Example:
       let item = event.detail;
     },
 
-    _generateItemShort(itemLong) {
-      let itemId = this.$.collectionHandler.getId(itemLong);
-      let itemName = this.$.collectionHandler.getName(itemLong);
-      return {'id': itemId, 'name': itemName};
-    },
-
     /**
      * Fires when the user wants to delete a item
      */
@@ -468,13 +486,36 @@ Example:
       this._showViewTempElement('zrickr-collection-delete-dialog', properties);
     },
 
+    _processChanged(objects) {
+      console.log("PROCESSCHANGED", this.$.objectHandler.dataLoading, this.process, objects);
+      if (this.$.objectHandler.dataLoading && this.process == 'delete') {
+        console.log("OLE");
+      }
+    },
+
     /**
      * Fires when the user finish the item delete process
      */
     _deleteItem(event) {
       let itemShort = event.detail.itemShort;
-      console.log("deleteItem", event.detail.itemShort);
-      this.$.collectionHandler.remove(itemShort.id);
+      if (!this.$.objectHandler.dataLoading) {
+        this.$.objectHandler.dataLoading = true;
+        this.async(() => {
+          this.$.objectHandler.dataId = itemShort.id;
+          this.process = 'delete';
+        });
+        console.log("deleteItemNOLOADING", this.objects, this.$.objectHandler.dataLoading);
+      }
+      else {
+        this.$.objectHandler.remove();
+        this.$.collectionHandler.remove(itemShort.id);
+        this.$.objectHandler.stopLoading();
+        console.log("deleteItemLOADING", this.objects);
+      }
+    },
+
+    _recycleItem() {
+
     },
 
     /**
@@ -483,27 +524,15 @@ Example:
     _newObjectProcess(event) {
       let item  = event.detail.item;
       let itemShort = event.detail.itemShort;
-      let itemId;
-      let itemName;
+      if (!itemShort) {
+        itemShort = this._generateItemShort(item);
+      }
       let properties = {};
-      if (itemShort) {
-        itemId = itemShort.id;
-        itemName = itemShort.name;
-        properties.item = itemShort;
-      }
-      else {
-        itemId = this.$.collectionHandler.getId(item);
-        itemName = this.$.collectionHandler.getName(item);
-        console.log("pasa por aqui", itemId, itemName);
-        properties.item = {
-          'id': itemId,
-          'name': itemName
-        };
-      }
+      properties.item = itemShort;
       let zrickrObjectNew =
         this._showViewElement(
           'zrickr-object-new',
-          'New ' + itemName + ' ' + info.byKey('objectName'),
+          'New ' + itemShort.name + ' ' + info.byKey('objectName'),
           properties
         );
     },
@@ -513,14 +542,9 @@ Example:
      */
     _addObject(event) {
       let itemShort = event.detail.itemShort;
-      let itemId = itemShort.id;
-      let itemName = itemShort.name;
-      this.$.objectHandler.dataId = itemId;
+      this.$.objectHandler.dataId = itemShort.id;
       let newObject = {};
-      newObject.item = {
-        'id': itemId,
-        'name': itemName
-      }
+      newObject.item = itemShort;
       this.$.objectHandler.add(newObject);
     }
   });
