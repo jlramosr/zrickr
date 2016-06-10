@@ -127,6 +127,9 @@ Example:
        objects: {
          type: Array
        },
+       currentItemid: {
+         type: String
+       },
        currentProcess: {
          type: String
        }
@@ -153,7 +156,7 @@ Example:
       '_pageRouteChanged(pageRouteData.page, items)',
       '_idRouteChanged(idRouteData.id, objects)',
       '_subIdRouteChanged(subIdRouteData.id, objects)',
-      '_processChanged(objects)'
+      '_processChanged(process, currentItemId, objects)'
     ],
 
     /**
@@ -486,10 +489,20 @@ Example:
       this._showViewTempElement('zrickr-collection-delete-dialog', properties);
     },
 
-    _processChanged(objects) {
-      console.log("PROCESSCHANGED", this.$.objectHandler.dataLoading, this.process, objects);
-      if (this.$.objectHandler.dataLoading && this.process == 'delete') {
-        console.log("OLE");
+    _processChanged(process, currentItemId, objects) {
+      console.log("PROCESSCHANGED", this.$.objectHandler.dataLoading, process, currentItemId, objects);
+      if (currentItemId && process == 'delete') {
+        if (!this.$.objectHandler.dataLoading) {
+          this.$.objectHandler.startLoading();
+          this.$.objectHandler.dataId = currentItemId;
+          console.log("1111111111111", currentItemId);
+        }
+        else {
+          this.$.objectHandler.stopLoading();
+          this.process = '';
+          this.currentItemId = '';
+          console.log("2222222222222", currentItemId);
+        }
       }
     },
 
@@ -498,7 +511,12 @@ Example:
      */
     _deleteItem(event) {
       let itemShort = event.detail.itemShort;
-      if (!this.$.objectHandler.dataLoading) {
+      //console.log("DELETEITEM", this.objects);
+      this.currentItemId = itemShort.id;
+      this.process = 'delete';
+      //this.$.objectHandler.dataId = itemShort.id;
+      //console.log("DELETEITEM", this.objects);
+      /*if (!this.$.objectHandler.dataLoading) {
         this.$.objectHandler.dataLoading = true;
         this.async(() => {
           this.$.objectHandler.dataId = itemShort.id;
@@ -511,7 +529,7 @@ Example:
         this.$.collectionHandler.remove(itemShort.id);
         this.$.objectHandler.stopLoading();
         console.log("deleteItemLOADING", this.objects);
-      }
+      }*/
     },
 
     _recycleItem() {
