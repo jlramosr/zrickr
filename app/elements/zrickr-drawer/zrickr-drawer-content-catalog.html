@@ -281,7 +281,6 @@ Custom property | Description | Default
     },
 
     _itemActivate(event) {
-      //event.stopPropagation();
       let index = event.detail.selected;
       /* There are several types of paper-item distinguished by their
         HTML element id (item-{{index}} and option-[[action]]-{{index}}) */
@@ -290,8 +289,6 @@ Custom property | Description | Default
         let item = this.items[index];
         this.activeItem = item;
       }
-      /*let firebaseKey = itemObject.__firebaseKey__;
-      this.activeID = firebaseKey;*/
       let itemAnchor = event.detail.item;
       let itemPaper = itemAnchor.firstChild;
       itemAnchor.active = false;

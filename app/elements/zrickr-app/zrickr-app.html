@@ -314,6 +314,7 @@ Example:
      */
     _idRouteChanged(id, objects) {
       if (id && !this._hasSubroute(2)) {
+        console.log("_idRouteChanged", id, objects);
         let page = this.pageRouteData.page;
         switch (page) {
           case info.byKey('catalogUrl'):
@@ -375,7 +376,6 @@ Example:
             let collectionHandler = this.$.collectionHandler;
             let objectHandler = this.$.objectHandler;
             let itemId = subPage;
-            let objectId = id;
             if (!objectHandler.dataLoading && objectHandler.dataId != itemId) {
               objectHandler.startLoading();
               this._showLoading(info.byKey('objectName'));
@@ -385,22 +385,36 @@ Example:
               let item = collectionHandler.getDocument(itemId);
               if (item) {
                 let itemName = collectionHandler.getName(item);
-                let object = objectHandler.getDocument(objectId);
-                if (object) {
-                  let properties = {};
-                  properties.objects = objects;
-                  properties.item = {
-                    'id': itemId,
-                    'name': itemName
-                  };
-                  let zrickrObjectView =
-                    this._showViewElement('zrickr-object-view',
-                                          itemName + ': ' + objectId,
-                                          properties);
-                }
-                else {
-                  this._showError(info.byKey('objectNameCap') + ' ' +
-                                        error.byKey('notFound'), 404);
+                switch (id) {
+                  //last url part indicates the new object proccess
+                  case info.byKey('itemNewUrl'):
+                    console.log("NEWWWW", id, objects, page, subPage);
+                    let properties = {};
+                    properties.item = this._generateItemShort(item);
+                    let zrickrObjectNew =
+                      this._showViewElement(
+                        'zrickr-object-new',
+                        'New ' + itemName + ' ' + info.byKey('objectName'),
+                        properties
+                      );
+                    break;
+                  //last url part is a object id
+                  default:
+                    let objectId = id;
+                    let object = objectHandler.getDocument(objectId);
+                    if (object) {
+                      let properties = {};
+                      properties.objects = objects;
+                      properties.item = this._generateItemShort(item);
+                      let zrickrObjectView =
+                        this._showViewElement('zrickr-object-view',
+                                              itemName + ': ' + objectId,
+                                              properties);
+                    }
+                    else {
+                      this._showError(info.byKey('objectNameCap') + ' ' +
+                                            error.byKey('notFound'), 404);
+                    }
                 }
               }
               else {
@@ -413,8 +427,6 @@ Example:
           default:
             this._showError(error.byKey('incorrectPath'), 404);
         }
-      }
-      else {
       }
     },
 
@@ -438,6 +450,11 @@ Example:
     _viewItem(event) {
       let item = event.detail.item;
       let itemId = this.$.collectionHandler.getId(item);
+      /* change path, changing item id too. This forces
+       * calling correspoding route function in case
+       * item id doesn't change (clic on active item).
+       */
+      this.path = '/';
       this._shapeURL(info.byKey('catalogUrl'), itemId);
     },
 
@@ -545,14 +562,9 @@ Example:
       if (!itemShort) {
         itemShort = this._generateItemShort(item);
       }
-      let properties = {};
-      properties.item = itemShort;
-      let zrickrObjectNew =
-        this._showViewElement(
-          'zrickr-object-new',
-          'New ' + itemShort.name + ' ' + info.byKey('objectName'),
-          properties
-        );
+      this._shapeURL( info.byKey('catalogUrl'),
+                      itemShort.id,
+                      info.byKey('itemNewUrl'));
     },
 
     /**
@@ -564,6 +576,12 @@ Example:
       let newObject = {};
       newObject.item = itemShort;
       this.$.objectHandler.add(newObject);
+      /* TODO
+       * GESTIONAR LA ESPERA DE LA APARICION DEL NUEVO DOCUMENTO
+       */
+      this.async(() => {
+        this._shapeURL(info.byKey('catalogUrl'), itemShort.id);
+      },3000);
     }
   });
 })();
