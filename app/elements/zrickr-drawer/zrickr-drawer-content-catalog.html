@@ -64,10 +64,12 @@ Custom property | Description | Default
 
     .catalog {
       @apply(--drawer-content-catalog);
+      cursor: auto;
     }
 
     .catalog-title {
       @apply(--drawer-title-catalog);
+      cursor: pointer;
     }
 
     .catalog-list {
@@ -78,30 +80,15 @@ Custom property | Description | Default
 
     .item {
       @apply(--drawer-content-item);
+      cursor: auto;
     }
-
-    /*.item:hover {
-      background: var(--drawer-content-item-hover-background-color,
-                      --paper-grey-200);
-    }
-
-    .item:focus {
-      background: var(--drawer-content-item-focus-background-color,
-                      --paper-grey-200);
-    }
-
-    .item.iron-selected {
-      background: var(--drawer-content-item-selected-background-color,
-                      --paper-grey-200);
-      color: var( --drawer-content-item-selected-color,
-                  --secondary-text-color);
-      font-weight: bold;
-    }*/
 
     .item-title {
       @apply(--layout-flex);
       @apply(--layout-horizontal);
+      cursor: pointer;
       margin-right: 8px;
+      height: 100%;
     }
 
     .menu-button {
@@ -253,8 +240,10 @@ Custom property | Description | Default
     },
 
     listeners: {
+      //'paper-dropdown-open': '_itemMenuOpened',
       'paper-dropdown-close': '_itemMenuClosed',
       'paper-submenu-open': '_catalogMenuOpened',
+      //'paper-submenu-close': '_catalogMenuClosed',
       'iron-activate': '_itemActivate'
     },
 
@@ -269,6 +258,17 @@ Custom property | Description | Default
      */
     close() {
       this.$$('paper-submenu').close();
+    },
+
+    deselect() {
+      this.$$('#menuCatalog').select(-1);
+    },
+
+    /**
+     * Fired when a item menu opens
+     */
+    _itemMenuOpened(event) {
+      //console.log("_itemMenuOpened", this.$$('#menuCatalog'));
     },
 
     /**
@@ -298,8 +298,9 @@ Custom property | Description | Default
      * When the user tap on the add item button.
      * @event add-item-tapped
      */
-    _addItemTapped() {
+    _addItemTapped(event) {
       this.fire('add-item-tapped');
+      event.stopPropagation();
     },
 
     /**
@@ -355,9 +356,13 @@ Custom property | Description | Default
     },
 
     _catalogMenuOpened(event) {
-      console.log("catalog-menu-opened", this.activeItem);
+      this.deselect();
       this.fire('catalog-menu-opened');
       event.stopPropagation();
+    },
+
+    _catalogMenuClosed(event) {
+      //this.$$('#menuCatalog').select(-1);
     },
 
     /**
@@ -365,7 +370,6 @@ Custom property | Description | Default
      * @event catalog-tapped
      */
     _catalogTapped(event) {
-      console.log("catalog-tapped", this.activeItem);
       this.fire("catalog-tapped", this);
     }
   });

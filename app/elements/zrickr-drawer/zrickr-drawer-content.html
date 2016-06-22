@@ -80,15 +80,16 @@ Custom property | Description | Default
         padding-left: 28px;
         padding-right: 0px;
         font-size: 12px;
-        min-height: 40px;
+        min-height: 20px;
         font-weight: normal;
+        line-height: 18px;
       };
     }
 
     :host {
       @apply(--layout-vertical);
-      height: calc(100% - 12px); //(-6x2);
-      padding: 6px 0px;
+      height: calc(100% - 0px); //(-0x2) padding-top(bottom)x2;
+      padding: 0px;
       min-height: 240px; //(48x5);
     }
 
@@ -201,7 +202,7 @@ Custom property | Description | Default
     },
 
     listeners: {
-      'menu-opened': '_menuCatalogOpened'
+      'catalog-menu-opened': '_menuCatalogOpened'
     },
 
     attached() {
@@ -209,14 +210,22 @@ Custom property | Description | Default
       mainMenu.selectedAttribute = 'selected';
     },
 
+    deselectedAll() {
+      let allMainItems = Polymer.dom(this.root).
+                          querySelectorAll('zrickr-drawer-content-catalog');
+      let i = 0;
+      for(i=0; i<allMainItems.length; i++) {
+        allMainItems[i].deselect();
+      }
+    },
+
     /**
      * Fired when some submenu of this element is opened
      */
     _menuCatalogOpened(event) {
       let mainMenu = Polymer.dom(this.root).querySelector('.main');
-      mainMenu.select(1);
       let allMainItems = Polymer.dom(this.root).
-                          querySelectorAll('zrickr-drawer-content-item');
+                          querySelectorAll('zrickr-drawer-content-catalog');
       let itemId = event.detail.id;
       let i = 0;
       for(i=0; i<allMainItems.length; i++) {
