@@ -110,7 +110,7 @@ Custom property | Description | Default
   </style>
 
   <template>
-    <paper-menu class="main">
+    <paper-menu class="main" id="hola">
       <zrickr-drawer-content-catalog
         id="primaryItem"
         icon="image:view-comfy"
@@ -210,6 +210,21 @@ Custom property | Description | Default
       mainMenu.selectedAttribute = 'selected';
     },
 
+    restartItemActive() {
+      let mainMenu = Polymer.dom(this.root).querySelector('.main');
+      let allMainItems = Polymer.dom(this.root).
+                          querySelectorAll('zrickr-drawer-content-catalog');
+      let i = 0;
+      for(i=0; i<allMainItems.length; i++) {
+        if (allMainItems[i].isOpened()) {
+          mainMenu.selected = -1;
+          allMainItems[i].close();
+          mainMenu.selected = i;
+          allMainItems[i].open();
+        }
+      }
+    },
+
     deselectedAll() {
       let allMainItems = Polymer.dom(this.root).
                           querySelectorAll('zrickr-drawer-content-catalog');
@@ -224,15 +239,14 @@ Custom property | Description | Default
      */
     _menuCatalogOpened(event) {
       let mainMenu = Polymer.dom(this.root).querySelector('.main');
-      let allMainItems = Polymer.dom(this.root).
+      let catalog = event.target;
+      let catalogId = catalog.id;
+      let allCatalogs = Polymer.dom(this.root).
                           querySelectorAll('zrickr-drawer-content-catalog');
-      let itemId = event.detail.id;
       let i = 0;
-      for(i=0; i<allMainItems.length; i++) {
-        if (allMainItems[i].id == itemId) {
-          mainMenu.selected = i;
-        }
-        allMainItems[i].close();
+      mainMenu.selected = mainMenu.indexOf(catalog);
+      for(i=0; i<allCatalogs.length; i++) {
+        allCatalogs[i].close();
       }
     }
 

@@ -240,10 +240,10 @@ Custom property | Description | Default
     },
 
     listeners: {
-      //'paper-dropdown-open': '_itemMenuOpened',
+      'paper-dropdown-open': '_itemMenuOpened',
       'paper-dropdown-close': '_itemMenuClosed',
       'paper-submenu-open': '_catalogMenuOpened',
-      //'paper-submenu-close': '_catalogMenuClosed',
+      'paper-submenu-close': '_catalogMenuClosed',
       'iron-activate': '_itemActivate'
     },
 
@@ -254,10 +254,21 @@ Custom property | Description | Default
     },
 
     /**
+     * Open the item dropdown menu
+     */
+    open() {
+      this.$$('paper-submenu').open();
+    },
+
+    /**
      * Close the item dropdown menu
      */
     close() {
       this.$$('paper-submenu').close();
+    },
+
+    isOpened() {
+      return this.$$('paper-submenu').opened;
     },
 
     deselect() {
@@ -268,7 +279,6 @@ Custom property | Description | Default
      * Fired when a item menu opens
      */
     _itemMenuOpened(event) {
-      //console.log("_itemMenuOpened", this.$$('#menuCatalog'));
     },
 
     /**
@@ -356,12 +366,13 @@ Custom property | Description | Default
     },
 
     _catalogMenuOpened(event) {
-      this.deselect();
-      this.fire('catalog-menu-opened');
-      event.stopPropagation();
+      //this.deselect();
+      this.fire('catalog-menu-opened', event.detail);
+      //event.stopPropagation();
     },
 
     _catalogMenuClosed(event) {
+      this.fire('catalog-menu-closed', event.detail);
       //this.$$('#menuCatalog').select(-1);
     },
 

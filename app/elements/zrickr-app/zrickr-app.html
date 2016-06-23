@@ -127,12 +127,22 @@ Example:
        objects: {
          type: Array
        },
-       currentItemid: {
+       itemToDelete: {
+         type: String,
+         value: undefined
+       }
+       /*deleteProcess: {
+         type: Object,
+         value: f => {
+           return {'delete': false, 'itemId': undefined};
+         }
+       }*/
+       /*currentItemid: {
          type: String
        },
        currentProcess: {
          type: String
-       }
+       }*/
     },
 
     listeners: {
@@ -156,7 +166,7 @@ Example:
       '_pageRouteChanged(pageRouteData.page, items)',
       '_idRouteChanged(idRouteData.id, objects)',
       '_subIdRouteChanged(subIdRouteData.id, objects)',
-      '_processChanged(process, currentItemId, objects)'
+      '_deleteProcessChanged(itemToDelete, objects)'
     ],
 
     /**
@@ -505,51 +515,34 @@ Example:
       this._showViewTempElement('zrickr-collection-delete-dialog', properties);
     },
 
-    _processChanged(process, currentItemId, objects) {
-      console.log("PROCESSCHANGED", this.$.objectHandler.dataLoading, process, currentItemId, objects);
-      if (currentItemId && process == 'delete') {
-        if (!this.$.objectHandler.dataLoading) {
-          this.$.objectHandler.startLoading();
-          this.$.objectHandler.dataId = currentItemId;
-          console.log("1111111111111", currentItemId);
-        }
-        else {
-          this.$.objectHandler.stopLoading();
-          this.process = '';
-          this.currentItemId = '';
-          console.log("2222222222222", currentItemId);
-        }
-      }
-    },
-
     /**
      * Fires when the user finish the item delete process
      */
     _deleteItem(event) {
       let itemShort = event.detail.itemShort;
-      //console.log("DELETEITEM", this.objects);
-      this.currentItemId = itemShort.id;
-      this.process = 'delete';
-      //this.$.objectHandler.dataId = itemShort.id;
-      //console.log("DELETEITEM", this.objects);
-      /*if (!this.$.objectHandler.dataLoading) {
-        this.$.objectHandler.dataLoading = true;
-        this.async(() => {
-          this.$.objectHandler.dataId = itemShort.id;
-          this.process = 'delete';
-        });
-        console.log("deleteItemNOLOADING", this.objects, this.$.objectHandler.dataLoading);
+      this.itemToDelete = itemShort.id;
+    },
+
+    _deleteProcessChanged(itemToDelete, objects) {
+      if (itemToDelete) {
+        if (!this.$.objectHandler.dataLoading) {
+          this.$.objectHandler.startLoading();
+          this.$.objectHandler.dataId = itemToDelete;
+        }
+        else {
+          this.$.objectHandler.stopLoading();
+          this._recycleItem();
+          this.itemToDelete = undefined;
+        }
       }
-      else {
-        this.$.objectHandler.remove();
-        this.$.collectionHandler.remove(itemShort.id);
-        this.$.objectHandler.stopLoading();
-        console.log("deleteItemLOADING", this.objects);
-      }*/
     },
 
     _recycleItem() {
-
+      let bin = {};
+      bin.item = this.$.collectionHandler.getDocument(this.itemToDelete);
+      //bin.objects = this.$.objectHandler.getDocument(this.itemToDelete);
+      this.$.recyclingHandler.add(bin);
+      console.log("PROCESSCHANGED", this.itemToDelete, this.objects);
     },
 
     /**

@@ -167,8 +167,8 @@ Example:
      * Fires when the menu is tapped.
      */
     _menuTapped() {
-      this.$.drawerContent.deselectedAll();
-      
+      //this.$.drawerContent.deselectedAll();
+      this.$.drawerContent.restartItemActive();
       this.$.mainPanel.openDrawer();
     }
   });
