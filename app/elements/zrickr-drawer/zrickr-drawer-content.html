@@ -202,7 +202,8 @@ Custom property | Description | Default
     },
 
     listeners: {
-      'catalog-menu-opened': '_menuCatalogOpened'
+      'catalog-menu-opened': '_menuCatalogOpened',
+      'setting-tapped': '_settingTapped'
     },
 
     attached() {
@@ -247,6 +248,19 @@ Custom property | Description | Default
       mainMenu.selected = mainMenu.indexOf(catalog);
       for(i=0; i<allCatalogs.length; i++) {
         allCatalogs[i].close();
+      }
+    },
+
+    /**
+     * Fired when user tapped on a setting option
+     */
+    _settingTapped(event) {
+      let settingName = event.detail.settingName;
+      switch (settingName) {
+        case info.byKey('recycleTitle'):
+          this.fire('recycle-tapped');
+          break;
+        default:
       }
     }
 

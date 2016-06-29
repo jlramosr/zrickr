@@ -47,7 +47,8 @@ Example:
       sublocation="collections"
       name-collection="LALALALA"
       loading='{{loadingItems}}'
-      data="{{items}}">
+      data="{{items}}"
+      recycled-data="{{recycledItems}}">
     </zrickr-backend-collection>
     <zrickr-backend-collection
       id="objectHandler"
@@ -56,16 +57,8 @@ Example:
       sublocation="objects"
       has-id
       name-collection="LALALALA2"
-      data="{{objects}}">
-    </zrickr-backend-collection>
-    <zrickr-backend-collection
-      id="recyclingHandler"
-      app='[[backendApp]]'
-      location="[[auth.location]]"
-      sublocation="recycling"
-      has-id
-      name-collection="LALALALA3"
-      data="{{bins}}">
+      data="{{objects}}"
+      recycled-data="{{recycledObjects}}">
     </zrickr-backend-collection>
   </template>
 </dom-module>
@@ -122,27 +115,27 @@ Example:
         type: Array
       },
       /**
+       * Array of recycled app items
+       */
+      recycledItems: {
+        type: Array
+      },
+      /**
        * Array of objects of a item
        */
        objects: {
          type: Array
        },
+       /**
+        * Array of recycled objects of a item
+        */
+        recycledObjects: {
+          type: Array
+        },
        itemToDelete: {
          type: String,
          value: undefined
        }
-       /*deleteProcess: {
-         type: Object,
-         value: f => {
-           return {'delete': false, 'itemId': undefined};
-         }
-       }*/
-       /*currentItemid: {
-         type: String
-       },
-       currentProcess: {
-         type: String
-       }*/
     },
 
     listeners: {
@@ -155,6 +148,7 @@ Example:
       'delete-item-tapped': '_deleteItemProcess',
       'delete-item': '_deleteItem',
       'edit-profile-tapped': '_editProfile',
+      'recycle-tapped': '_viewRecycle',
       'add-object-tapped': '_newObjectProcess',
       'add-object': '_addObject',
       'view-object-tapped': '_viewObject'
@@ -166,7 +160,7 @@ Example:
       '_pageRouteChanged(pageRouteData.page, items)',
       '_idRouteChanged(idRouteData.id, objects)',
       '_subIdRouteChanged(subIdRouteData.id, objects)',
-      '_deleteProcessChanged(itemToDelete, objects)'
+      /*'_deleteProcessChanged(itemToDelete, objects)'*/
     ],
 
     /**
@@ -290,6 +284,7 @@ Example:
      */
     _pageRouteChanged(page, items) {
       if (!this._hasSubroute(1)) {
+        let properties = {};
         switch (page) {
           case info.byKey('catalogUrl'):
             let collectionHandler = this.$.collectionHandler;
@@ -304,11 +299,13 @@ Example:
             }
             break;
           case info.byKey('profileUrl'):
-            let properties = {};
             properties.auth = this.auth;
             this._showViewElement('zrickr-profile',
                                   info.byKey('profileTitle'),
                                   properties);
+            break;
+          case info.byKey('recycleUrl'):
+            console.log("PAGINA DE RECYCLE BIN", this.recycledItems);
             break;
           default:
             this._showError(error.byKey('incorrectPath'), 404);
@@ -447,6 +444,13 @@ Example:
     },
 
     /**
+     * Fired when the user wants to view the recycle bin
+     */
+    _viewRecycle() {
+      this._shapeURL(info.byKey('recycleUrl'));
+    },
+
+    /**
      * Fired when the user wants to view all the items
      */
     _viewItems() {
@@ -520,30 +524,50 @@ Example:
      */
     _deleteItem(event) {
       let itemShort = event.detail.itemShort;
-      this.itemToDelete = itemShort.id;
+      this.$.collectionHandler.recycle(itemShort.id);
+      //this.itemToDelete = itemShort.id;
     },
 
-    _deleteProcessChanged(itemToDelete, objects) {
+    /*_deleteProcessChanged(itemToDelete, objects) {
       if (itemToDelete) {
-        if (!this.$.objectHandler.dataLoading) {
+        if (!this.$.objectHandler.dataReady || !this.$.objectHandler.dataLoading) {
           this.$.objectHandler.startLoading();
           this.$.objectHandler.dataId = itemToDelete;
+          this.$.recyclingHandler.dataId = itemToDelete;
+          this.$.objectHandler.dataReady = true;
+          console.log("Primera parte", itemToDelete, objects);
         }
         else {
           this.$.objectHandler.stopLoading();
-          this._recycleItem();
-          this.itemToDelete = undefined;
+          this._recycle();
+          console.log("Segunda parte", itemToDelete, objects);
         }
       }
     },
 
+    _recycle() {
+      this.objects.forEach((value, index) => {
+        console.log("HOLA", index, value);
+        this._recycleObject(value);
+      });
+      this._recycleItem();
+      console.log("PROCESSCHANGE", this.itemToDelete, this.objects);
+      this.itemToDelete = undefined;
+    },
+
     _recycleItem() {
       let bin = {};
-      bin.item = this.$.collectionHandler.getDocument(this.itemToDelete);
-      //bin.objects = this.$.objectHandler.getDocument(this.itemToDelete);
+      bin.type = 'collection';
+      bin.data = this.$.collectionHandler.getDocument(this.itemToDelete);
       this.$.recyclingHandler.add(bin);
-      console.log("PROCESSCHANGED", this.itemToDelete, this.objects);
     },
+
+    _recycleObject(object) {
+      let bin = {};
+      bin.type = 'object';
+      bin.data = object;
+      this.$.recyclingHandler.add(bin);
+    },*/
 
     /**
      * Fires when the user wants to add an object on a item

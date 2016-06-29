@@ -73,7 +73,9 @@ Example:
      * Fires when a user tap on the setting item
      */
     _settingTapped(event) {
-      this.fire("setting-tapped", this);
+      let params = {};
+      params.settingName = this.settingMenuName;
+      this.fire("setting-tapped", params);
     }
 
   });

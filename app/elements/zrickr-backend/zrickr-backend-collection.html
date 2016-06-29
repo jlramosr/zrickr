@@ -33,6 +33,13 @@ methods (add, modify, remove a collection)
         notify: true,
         observer: '_dataChanged'
       },
+      recycledData: {
+        type: Array,
+        value: f => {
+          return [];
+        },
+        notify: true
+      },
       dataId: {
         type: String,
         value: 'undefinedDataId',
@@ -77,6 +84,10 @@ methods (add, modify, remove a collection)
         value: false,
         notify: true
       },
+      noTimestamps: {
+        type: Boolean,
+        value: false
+      }
     },
 
     observers: [
@@ -118,12 +129,19 @@ methods (add, modify, remove a collection)
     _changeData(event) {
       let data = event.detail;
       let documents = [];
+      let recycledDocuments = [];
       data.forEach((_document) => {
         let doc = _document.val();
         doc[this.idKeyName] = _document.key;
-        documents.push(doc);
+        if (!doc.recycleDate) {
+          documents.push(doc);
+        }
+        else {
+          recycledDocuments.push(doc);
+        }
       });
       this.data = documents;
+      this.recycledData = recycledDocuments;
     },
 
     /**
@@ -131,7 +149,24 @@ methods (add, modify, remove a collection)
      * @param {object} The collection to add
      */
     add(_document) {
+      if (!this.noTimestamps) {
+        _document.createDate = Date.now();
+        _document.updateDate = undefined;
+      }
       this._getRef().push(_document);
+    },
+
+    /**
+     * Recycle a collection adding to it a new property
+     * @param {String} The collection id to recycle
+     */
+    recycle(id) {
+      let data = {};
+      if (!this.noTimestamps) {
+        data.updateDate = Date.now();
+      }
+      data.recycleDate = Date.now();
+      this._getRef(id).update(data);
     },
 
     /**
