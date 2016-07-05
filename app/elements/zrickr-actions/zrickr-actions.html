@@ -1,0 +1,120 @@
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
+
+<dom-module id="zrickr-actions">
+  <style include="iron-flex iron-flex-alignment">
+    :host {
+      @apply(--layout-horizontal);
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+    }
+
+    paper-fab {
+      --paper-fab: {
+        opacity: 0.95;
+        margin-left: 10px;
+      }
+      --paper-fab-background: var(--secondary-text-color);
+    }
+
+    #button-edit {
+      opacity: 0.94;
+    }
+
+    #button-remove {
+      opacity: 0.88;
+    }
+
+    paper-tooltip {
+
+      --paper-tooltip: {
+
+      }
+    }
+  </style>
+
+  <template>
+
+    <div id="addAction" hidden$={{!add}}>
+      <paper-fab
+        id='button-add'
+        mini
+        icon="add"
+        on-tap="_add">
+      </paper-fab>
+      <paper-tooltip
+        for='button-add'
+        position="left">{{addText}}
+      </paper-tooltip>
+    </div>
+
+    <div id="editAction" hidden$={{!edit}}>
+      <paper-fab
+        id='button-edit'
+        mini
+        icon="create"
+        on-tap="_edit">
+      </paper-fab>
+      <paper-tooltip
+        for='button-edit'
+        position="left">{{editText}}
+      </paper-tooltip>
+    </div>
+
+    <div id="removeAction" hidden$={{!remove}}>
+      <paper-fab
+        id='button-remove'
+        mini
+        icon="delete"
+        on-tap="_remove">
+      </paper-fab>
+      <paper-tooltip
+        for='button-remove'
+        position="left">{{removeText}}
+      </paper-tooltip>
+    </div>
+
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  Polymer({
+
+    is: 'zrickr-actions',
+
+    properties: {
+      add: {
+        type: Boolean,
+        value: false
+      },
+      addText: String,
+      edit: {
+        type: Boolean,
+        value: false
+      },
+      editText: String,
+      remove: {
+        type: Boolean,
+        value: false
+      },
+      removeText: String
+    },
+
+    _add() {
+      this.fire('actions-add');
+    },
+
+    _edit() {
+      this.fire('actions-edit');
+    },
+
+    _remove() {
+      this.fire('actions-remove');
+    },
+
+  });
+})();
+</script>

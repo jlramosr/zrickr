@@ -76,6 +76,7 @@ Example:
         <zrickr-main-content
           auth="{{auth}}"
           items="{{items}}"
+          recycled-items='{{recycledItems}}'
           id="mainContent">
         </zrickr-main-content>
       </paper-scroll-header-panel>
@@ -108,6 +109,12 @@ Example:
        * Array of app items
        */
       items: {
+        type: Array
+      },
+      /**
+       * Array of recycled app items
+       */
+      recycledItems: {
         type: Array
       }
     },

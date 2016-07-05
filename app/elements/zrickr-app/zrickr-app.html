@@ -4,10 +4,13 @@
 <link rel="import" href="../../elements/zrickr-route/zrickr-route.html">
 <!-- Main view -->
 <link rel="import" href="zrickr-app-view.html">
+<!-- Messages -->
+<link rel="import" href="../../elements/zrickr-message/zrickr-message.html">
 <!-- Possible views at one moment -->
 <link rel="import" href="../../elements/zrickr-loading/zrickr-loading.html">
 <link rel="import" href="../../elements/zrickr-error/zrickr-error.html">
 <link rel="import" href="../../elements/zrickr-profile/zrickr-profile.html">
+<link rel="import" href="../../elements/zrickr-collection/zrickr-collection-list.html">
 <link rel="import" href="../../elements/zrickr-collection/zrickr-collection-new.html">
 <link rel="import" href="../../elements/zrickr-collection/zrickr-collection-delete-dialog.html">
 <link rel="import" href="../../elements/zrickr-object/zrickr-object-new.html">
@@ -38,6 +41,7 @@ Example:
       id="zrickrAppView"
       auth='{{auth}}'
       items='{{items}}'
+      recycled-items ='{{recycledItems}}'
       position-drawer='left'>
     </zrickr-app-view>
     <zrickr-backend-collection
@@ -123,19 +127,19 @@ Example:
       /**
        * Array of objects of a item
        */
-       objects: {
-         type: Array
-       },
-       /**
-        * Array of recycled objects of a item
-        */
-        recycledObjects: {
-          type: Array
-        },
-       itemToDelete: {
-         type: String,
-         value: undefined
-       }
+      objects: {
+        type: Array
+      },
+      /**
+      * Array of recycled objects of a item
+      */
+      recycledObjects: {
+        type: Array
+      },
+      itemToDelete: {
+        type: String,
+        value: undefined
+      }
     },
 
     listeners: {
@@ -145,19 +149,22 @@ Example:
       'item-tapped': '_viewItem',
       'view-item-tapped': '_viewItem',
       'edit-item-tapped': '_editItem',
-      'delete-item-tapped': '_deleteItemProcess',
-      'delete-item': '_deleteItem',
+      'delete-item-tapped': '_recycleItemProcess',
+      'delete-item': '_recycleItem',
       'edit-profile-tapped': '_editProfile',
       'recycle-tapped': '_viewRecycle',
       'add-object-tapped': '_newObjectProcess',
       'add-object': '_addObject',
-      'view-object-tapped': '_viewObject'
+      'view-object-tapped': '_viewObject',
+      'edit-object-tapped': '_editObject',
+      'recycle-object-tapped': '_recycleObjectProcess',
+      'recycle-object': '_recycleObject',
     },
 
     //https://www.polymer-project.org/1.0/toolbox/routing
     observers: [
       '_pathChanged(path)',
-      '_pageRouteChanged(pageRouteData.page, items)',
+      '_pageRouteChanged(pageRouteData.page, items, recycledItems)',
       '_idRouteChanged(idRouteData.id, objects)',
       '_subIdRouteChanged(subIdRouteData.id, objects)',
       /*'_deleteProcessChanged(itemToDelete, objects)'*/
@@ -226,6 +233,7 @@ Example:
         });
       }
       this.$.zrickrAppView.showTempElement(element);
+      return element;
     },
 
     /**
@@ -282,12 +290,12 @@ Example:
      * @param  {String} path The prefix of the route path with level 1
      * (ie. current_path='/items/123', page='items')
      */
-    _pageRouteChanged(page, items) {
+    _pageRouteChanged(page, items, recycledItems) {
       if (!this._hasSubroute(1)) {
         let properties = {};
+        let collectionHandler = this.$.collectionHandler;
         switch (page) {
           case info.byKey('catalogUrl'):
-            let collectionHandler = this.$.collectionHandler;
             if (!collectionHandler.dataReady) {
               collectionHandler.startLoading();
               this._showLoading(info.byKey('collectionNamePlural'));
@@ -305,7 +313,18 @@ Example:
                                   properties);
             break;
           case info.byKey('recycleUrl'):
-            console.log("PAGINA DE RECYCLE BIN", this.recycledItems);
+            if (!collectionHandler.recycledDataReady) {
+              collectionHandler.startRecycledLoading();
+              this._showLoading(info.byKey('recycleNamePlural'));
+              collectionHandler.recycledDataReady = true;
+            }
+            else {
+              properties.collections = recycledItems;
+              this._showViewElement('zrickr-collection-list',
+                                    info.byKey('recycleTitle'),
+                                    properties);
+              collectionHandler.stopRecycledLoading();
+            }
             break;
           default:
             this._showError(error.byKey('incorrectPath'), 404);
@@ -394,7 +413,6 @@ Example:
                 switch (id) {
                   //last url part indicates the new object proccess
                   case info.byKey('itemNewUrl'):
-                    console.log("NEWWWW", id, objects, page, subPage);
                     let properties = {};
                     properties.item = this._generateItemShort(item);
                     let zrickrObjectNew =
@@ -472,17 +490,6 @@ Example:
     },
 
     /**
-     * Fired when the user wants to view a object information
-     */
-    _viewObject(event) {
-      let object = event.detail;
-      let itemId = object.item.id;
-      let itemName = this.$.collectionHandler.getNameById(itemId);
-      let objectId = this.$.objectHandler.getId(object);
-      this._shapeURL(info.byKey('catalogUrl'), itemId, objectId);
-    },
-
-    /**
      * Fired when the user taps on adding a new item. Add
      * the new process of collecion creation
      */
@@ -509,11 +516,11 @@ Example:
     /**
      * Fires when the user wants to delete a item
      */
-    _deleteItemProcess(event) {
+    _recycleItemProcess(event) {
       let itemShort = this._generateItemShort(event.detail.item);
       let properties = {};
       properties.item = itemShort;
-      properties.message = info.byKey('collectionDeleteText') + ' ' +
+      properties.message = info.byKey('collectionDeleteConfirmationText') + ' ' +
                            itemShort.name + ' ' + info.byKey('collectionName') +
                            '?';
       this._showViewTempElement('zrickr-collection-delete-dialog', properties);
@@ -522,52 +529,17 @@ Example:
     /**
      * Fires when the user finish the item delete process
      */
-    _deleteItem(event) {
+    _recycleItem(event) {
       let itemShort = event.detail.itemShort;
       this.$.collectionHandler.recycle(itemShort.id);
-      //this.itemToDelete = itemShort.id;
+      let properties = {};
+      properties.text = itemShort.name + ' ' +
+                        info.byKey('collectionNameCap') + ' ' +
+                        info.byKey('collectionDeleteText') + ' ' +
+                        info.byKey('recycleTitle');
+      let messageElement = this._showViewTempElement('zrickr-message', properties);
+      messageElement.open();
     },
-
-    /*_deleteProcessChanged(itemToDelete, objects) {
-      if (itemToDelete) {
-        if (!this.$.objectHandler.dataReady || !this.$.objectHandler.dataLoading) {
-          this.$.objectHandler.startLoading();
-          this.$.objectHandler.dataId = itemToDelete;
-          this.$.recyclingHandler.dataId = itemToDelete;
-          this.$.objectHandler.dataReady = true;
-          console.log("Primera parte", itemToDelete, objects);
-        }
-        else {
-          this.$.objectHandler.stopLoading();
-          this._recycle();
-          console.log("Segunda parte", itemToDelete, objects);
-        }
-      }
-    },
-
-    _recycle() {
-      this.objects.forEach((value, index) => {
-        console.log("HOLA", index, value);
-        this._recycleObject(value);
-      });
-      this._recycleItem();
-      console.log("PROCESSCHANGE", this.itemToDelete, this.objects);
-      this.itemToDelete = undefined;
-    },
-
-    _recycleItem() {
-      let bin = {};
-      bin.type = 'collection';
-      bin.data = this.$.collectionHandler.getDocument(this.itemToDelete);
-      this.$.recyclingHandler.add(bin);
-    },
-
-    _recycleObject(object) {
-      let bin = {};
-      bin.type = 'object';
-      bin.data = object;
-      this.$.recyclingHandler.add(bin);
-    },*/
 
     /**
      * Fires when the user wants to add an object on a item
@@ -598,7 +570,35 @@ Example:
       this.async(() => {
         this._shapeURL(info.byKey('catalogUrl'), itemShort.id);
       },3000);
+    },
+
+    /**
+     * Fired when the user wants to view a object information
+     */
+    _viewObject(event) {
+      let object = event.detail;
+      let itemId = object.item.id;
+      let itemName = this.$.collectionHandler.getNameById(itemId);
+      let objectId = this.$.objectHandler.getId(object);
+      this._shapeURL(info.byKey('catalogUrl'), itemId, objectId);
+    },
+
+    /**
+     * Fires when the user wants to edit a object
+     */
+    _editObject(event) {
+      let object = event.detail;
+      console.log("EDIT OBJECT", object);
+    },
+
+    /**
+     * Fires when the user wants to recycle an object on a item
+     */
+    _recycleObjectProcess(event) {
+      let object = event.detail;
+      console.log("RECYCLE OBJECT", object);
     }
+
   });
 })();
 </script>

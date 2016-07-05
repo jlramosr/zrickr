@@ -2,8 +2,8 @@
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../elements/zrickr-actions/zrickr-actions.html">
 
 <dom-module id="zrickr-object-list">
   <style include="iron-flex iron-flex-alignment">
@@ -73,21 +73,6 @@
       height: 32px;
       width: 32px;
     }
-
-    .actions {
-      @apply(--layout-horizontal);
-      position: absolute;
-      bottom: 20px;
-      right: 30px;
-    }
-
-    paper-fab {
-      --paper-fab: {
-        opacity: 0.8;
-        margin-left: 10px;
-      }
-      --paper-fab-background: var(--secondary-text-color);
-    }
   </style>
 
   <template>
@@ -124,10 +109,7 @@
       scroll-target="document">
     </iron-scroll-threshold>
 
-    <div class="actions">
-      <paper-fab mini icon="add" on-tap="_addObject"></paper-fab>
-      <paper-fab mini icon="create"></paper-fab>
-    </div>
+    <zrickr-actions add add-text='Add an object'></zrickr-actions>
 
   </template>
 </dom-module>
@@ -162,6 +144,10 @@
         type: Number,
         value: 0
       }
+    },
+
+    listeners: {
+      'actions-add': '_addObject'
     },
 
     _computeActionsVisibility(index) {

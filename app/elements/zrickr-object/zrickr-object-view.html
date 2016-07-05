@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="zrickr-object-filter.html">
+<link rel="import" href="../../elements/zrickr-actions/zrickr-actions.html">
 
 <dom-module id="zrickr-object-view">
   <style include="iron-flex iron-flex-alignment">
@@ -17,7 +18,12 @@
       objects="{{objects}}">
     </zrickr-object-filter>
     {{item.id}}
-    <span>
+
+    <zrickr-actions add add-text = 'Add a new object'
+                    edit edit-text='Edit object'
+                    remove remove-text='Delete object'>
+    </zrickr-actions>
+
   </template>
 </dom-module>
 
@@ -38,37 +44,31 @@
       }
     },
 
-    _computeActionsVisibility(index) {
-      if (index == this.selectedIndex) {
-        return true;
-      }
-      return false;
-    },
-
-    _collectionTapped(event) {
-      this.fire('view-object-tapped', event.model.object);
-    },
-
-    _collectionHover(event) {
-      /*console.log ("Hovered index is ", event.model.index);
-      console.log ("Hovered collection is", event.model.collection);*/
-      this.hoveredIndex = event.model.index;
+    listeners: {
+      'actions-add': '_addObject',
+      'actions-edit': '_editObject',
+      'actions-remove': '_removeObject'
     },
 
     _addObject() {
       let params = {};
+      params.itemShort = this.item;
+      this.fire('add-object-tapped', params);
+    },
+
+    _editObject() {
+      let params = {};
       params.itemId = this.item.id;
       params.itemName = this.item.name;
-      this.fire('add-object-tapped', params);
-    }
+      this.fire('edit-object-tapped', params);
+    },
 
-    /*_loadMoreCollections() {
-      console.log("HOLA");
+    _removeObject() {
+      let params = {};
+      params.itemId = this.item.id;
+      params.itemName = this.item.name;
+      this.fire('recycle-object-tapped', params);
     }
-
-    renderList() {
-      this.$.collectionsList.render();
-    }*/
 
   });
 }());

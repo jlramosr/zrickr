@@ -2,9 +2,8 @@
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../elements/zrickr-actions/zrickr-actions.html">
 <link rel="import" href="../../styles/shared-styles.html">
 
 <dom-module id="zrickr-collection-list">
@@ -75,28 +74,6 @@
       height: 32px;
       width: 32px;
     }
-
-    .actions {
-      @apply(--layout-horizontal);
-      position: fixed;
-      bottom: 20px;
-      right: 30px;
-    }
-
-    paper-fab {
-      --paper-fab: {
-        opacity: 0.95;
-        margin-left: 10px;
-      }
-      --paper-fab-background: var(--secondary-text-color);
-    }
-
-    paper-tooltip {
-
-      --paper-tooltip: {
-
-      }
-    }
   </style>
 
   <template>
@@ -133,19 +110,7 @@
       scroll-target="document">
     </iron-scroll-threshold>
 
-    <div class="actions">
-      <paper-fab
-        id='button-add-collection'
-        mini
-        icon="add"
-        on-tap="_addCollection">
-      </paper-fab>
-
-      <paper-tooltip
-        for='button-add-collection'
-        position="left"> Add a collection
-      </paper-tooltip>
-    </div>
+    <zrickr-actions add add-text='Add a collection'></zrickr-actions>
 
   </template>
 </dom-module>
@@ -175,6 +140,14 @@
       }
     },
 
+    listeners: {
+      'actions-add': '_addCollection'
+    },
+
+    _addCollection() {
+      this.fire('add-item-tapped');
+    },
+
     _computeActionsVisibility(index) {
       if (index == this.selectedIndex) {
         return true;
@@ -192,10 +165,6 @@
       /*console.log ("Hovered index is ", event.model.index);
       console.log ("Hovered collection is", event.model.collection);*/
       this.hoveredIndex = event.model.index;
-    },
-
-    _addCollection() {
-      this.fire('add-item-tapped');
     }
 
     /*_loadMoreCollections() {

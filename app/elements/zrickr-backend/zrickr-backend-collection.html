@@ -38,7 +38,8 @@ methods (add, modify, remove a collection)
         value: f => {
           return [];
         },
-        notify: true
+        notify: true,
+        observer: '_recycledDataChanged'
       },
       dataId: {
         type: String,
@@ -79,7 +80,17 @@ methods (add, modify, remove a collection)
         value: false,
         notify: true
       },
+      recycledDataLoading: {
+        type: Boolean,
+        value: false,
+        notify: true
+      },
       dataReady: {
+        type: Boolean,
+        value: false,
+        notify: true
+      },
+      recycledDataReady: {
         type: Boolean,
         value: false,
         notify: true
@@ -119,6 +130,12 @@ methods (add, modify, remove a collection)
       }
     },
 
+    _recycledDataChanged(newData, oldData) {
+      if (oldData) {
+        this.recycledDataReady = true;
+      }
+    },
+
     _queryChanged(app, dataId) {
       this._getRef().on("value", (snapshot) => {
         let params = snapshot;
@@ -151,7 +168,6 @@ methods (add, modify, remove a collection)
     add(_document) {
       if (!this.noTimestamps) {
         _document.createDate = Date.now();
-        _document.updateDate = undefined;
       }
       this._getRef().push(_document);
     },
@@ -170,12 +186,33 @@ methods (add, modify, remove a collection)
     },
 
     /**
+     * Recover a collection belonging to the recycle bin
+     * @param {String} The collection id to recycle
+     */
+    recover(id) {
+      let data = {};
+      if (!this.noTimestamps) {
+        data.updateDate = Date.now();
+      }
+      data.recycleDate = undefined;
+      this._getRef(id).update(data);
+    },
+
+    /**
      * Remove a collection
      * @param {String} The collection id to remove
      */
     remove(id) {
       console.log("Remove de zrickr-backend-collection", this.route + id)
       this._getRef(id).remove();
+    },
+
+    /**
+     * Remove all collection belonging to the recycle bin
+     */
+    removeAll() {
+      console.log("RemoveAll de zrickr-backend-collection", this.route)
+      this._getRef().remove();
     },
 
     getId(_document) {
@@ -213,6 +250,14 @@ methods (add, modify, remove a collection)
 
     stopLoading() {
       this.dataLoading = false;
+    },
+
+    startRecycledLoading() {
+      this.recycledDataLoading = true;
+    },
+
+    stopRecycledLoading() {
+      this.recycledDataLoading = false;
     }
 
   });
