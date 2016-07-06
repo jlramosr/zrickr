@@ -36,12 +36,9 @@
     is: "zrickr-object-view",
 
     properties: {
-      auth: {
-        type: Object
-      },
-      item: {
-        type: Object
-      }
+      auth: Object,
+      item: Object,
+      object: Object
     },
 
     listeners: {
@@ -65,9 +62,9 @@
 
     _removeObject() {
       let params = {};
-      params.itemId = this.item.id;
-      params.itemName = this.item.name;
-      this.fire('recycle-object-tapped', params);
+      params.itemShort = this.item;
+      params.object = this.object;
+      this.fire('delete-object-tapped', params);
     }
 
   });

@@ -10,9 +10,9 @@
 <link rel="import" href="../../elements/zrickr-loading/zrickr-loading.html">
 <link rel="import" href="../../elements/zrickr-error/zrickr-error.html">
 <link rel="import" href="../../elements/zrickr-profile/zrickr-profile.html">
+<link rel="import" href="../../elements/zrickr-dialog/zrickr-dialog-mini.html">
 <link rel="import" href="../../elements/zrickr-collection/zrickr-collection-list.html">
 <link rel="import" href="../../elements/zrickr-collection/zrickr-collection-new.html">
-<link rel="import" href="../../elements/zrickr-collection/zrickr-collection-delete-dialog.html">
 <link rel="import" href="../../elements/zrickr-object/zrickr-object-new.html">
 <link rel="import" href="../../elements/zrickr-object/zrickr-object-list.html">
 <link rel="import" href="../../elements/zrickr-object/zrickr-object-view.html">
@@ -61,8 +61,7 @@ Example:
       sublocation="objects"
       has-id
       name-collection="LALALALA2"
-      data="{{objects}}"
-      recycled-data="{{recycledObjects}}">
+      data="{{objects}}">
     </zrickr-backend-collection>
   </template>
 </dom-module>
@@ -149,16 +148,17 @@ Example:
       'item-tapped': '_viewItem',
       'view-item-tapped': '_viewItem',
       'edit-item-tapped': '_editItem',
+      'dialog-mini-accept-tapped': '_dialogMiniAccepted',
       'delete-item-tapped': '_recycleItemProcess',
       'delete-item': '_recycleItem',
       'edit-profile-tapped': '_editProfile',
-      'recycle-tapped': '_viewRecycle',
+      'recycle-bin-tapped': '_viewRecycle',
       'add-object-tapped': '_newObjectProcess',
       'add-object': '_addObject',
       'view-object-tapped': '_viewObject',
       'edit-object-tapped': '_editObject',
-      'recycle-object-tapped': '_recycleObjectProcess',
-      'recycle-object': '_recycleObject',
+      'delete-object-tapped': '_recycleObjectProcess',
+      'delete-object': '_recycleObject',
     },
 
     //https://www.polymer-project.org/1.0/toolbox/routing
@@ -167,7 +167,7 @@ Example:
       '_pageRouteChanged(pageRouteData.page, items, recycledItems)',
       '_idRouteChanged(idRouteData.id, objects)',
       '_subIdRouteChanged(subIdRouteData.id, objects)',
-      /*'_deleteProcessChanged(itemToDelete, objects)'*/
+      '_recycledObjectsChanged(recycledObjects)'
     ],
 
     /**
@@ -428,7 +428,7 @@ Example:
                     let object = objectHandler.getDocument(objectId);
                     if (object) {
                       let properties = {};
-                      properties.objects = objects;
+                      properties.object = object;
                       properties.item = this._generateItemShort(item);
                       let zrickrObjectView =
                         this._showViewElement('zrickr-object-view',
@@ -514,16 +514,37 @@ Example:
     },
 
     /**
+     * Fires when the user accepts a mini dialog
+     */
+    _dialogMiniAccepted(event) {
+      let params = {};
+      let process = event.detail.process;
+      switch (process) {
+        case 'deleteItem':
+          params.itemShort = event.detail.data;
+          this.fire('delete-item', params);
+          break;
+        case 'deleteObject':
+          params.data = event.detail.data;
+          this.fire('delete-object', params);
+          break;
+        default:
+          break;
+      }
+    },
+
+    /**
      * Fires when the user wants to delete a item
      */
     _recycleItemProcess(event) {
       let itemShort = this._generateItemShort(event.detail.item);
       let properties = {};
-      properties.item = itemShort;
-      properties.message = info.byKey('collectionDeleteConfirmationText') + ' ' +
+      properties.process = 'deleteItem';
+      properties.message = info.byKey('deleteConfirmationText') + ' ' +
                            itemShort.name + ' ' + info.byKey('collectionName') +
                            '?';
-      this._showViewTempElement('zrickr-collection-delete-dialog', properties);
+      properties.data = itemShort;
+      this._showViewTempElement('zrickr-dialog-mini', properties);
     },
 
     /**
@@ -535,7 +556,7 @@ Example:
       let properties = {};
       properties.text = itemShort.name + ' ' +
                         info.byKey('collectionNameCap') + ' ' +
-                        info.byKey('collectionDeleteText') + ' ' +
+                        info.byKey('deleteSuccessText') + ' ' +
                         info.byKey('recycleTitle');
       let messageElement = this._showViewTempElement('zrickr-message', properties);
       messageElement.open();
@@ -595,9 +616,57 @@ Example:
      * Fires when the user wants to recycle an object on a item
      */
     _recycleObjectProcess(event) {
-      let object = event.detail;
-      console.log("RECYCLE OBJECT", object);
-    }
+      let itemShort = event.detail.itemShort;
+      let object = event.detail.object;
+      let properties = {};
+      properties.process = 'deleteObject';
+      properties.message = info.byKey('deleteConfirmationText') + ' ' +
+                           'this ' + itemShort.name + ' ' +
+                           info.byKey('objectName') + '?';
+      properties.data = {};
+      properties.data.itemShort = itemShort;
+      properties.data.object = object;
+      this._showViewTempElement('zrickr-dialog-mini', properties);
+    },
+
+    /**
+     * Fires when the user finish the object delete process
+     */
+    _recycleObject(event) {
+      let itemShort = event.detail.data.itemShort;
+      let object = event.detail.data.object;
+      let objectHandler = this.$.objectHandler;
+      let objectId = objectHandler.getId(object);
+      //objectHandler.recycle(objectId);
+      this._addRecyclingObject(object);
+      let properties = {};
+      properties.text = itemShort.name + ' ' +
+                        info.byKey('objectNameCap') + ' ' +
+                        info.byKey('deleteSuccessText') + ' ' +
+                        info.byKey('recycleTitle');
+      this._shapeURL(info.byKey('catalogUrl'), itemShort.id);
+      let messageElement = this._showViewTempElement('zrickr-message', properties);
+      messageElement.open();
+    },
+
+    _addRecyclingObject(object) {
+      let recyclingObjectsElement = document.createElement('zrickr-backend-collection');
+      recyclingObjectsElement.app = this.backendApp;
+      recyclingObjectsElement.location = this.auth.location;
+      recyclingObjectsElement.sublocation = "recyclingObjects";
+      recyclingObjectsElement.data = "[21,2,2,2,2]";
+      this.recycledObjects = [];
+      Polymer.dom(this.root).appendChild(recyclingObjectsElement);
+      recyclingObjectsElement.add(object);
+      recyclingObjectsElement.addEventListener("data-changed", (event) => {
+        console.log("SISISIS", recycledObjects);
+        this.recycledObjects = recyclingObjectsElement.data;
+      });
+    },
+
+    _recycledObjectsChanged(recycledObjects) {
+      console.log("HOLAAAAAAAAAA", recycledObjects);
+    },
 
   });
 })();

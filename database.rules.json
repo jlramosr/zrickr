@@ -8,7 +8,7 @@
       ".read": true,
       ".write": true
     },
-    "recycling": {
+    "recyclingObjects": {
       ".read": true,
       ".write": true
     }
