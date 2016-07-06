@@ -133,7 +133,10 @@ Example:
       * Array of recycled objects of a item
       */
       recycledObjects: {
-        type: Array
+        type: Array,
+        value: f => {
+          return [];
+        }
       },
       itemToDelete: {
         type: String,
@@ -651,21 +654,21 @@ Example:
 
     _addRecyclingObject(object) {
       let recyclingObjectsElement = document.createElement('zrickr-backend-collection');
-      recyclingObjectsElement.app = this.backendApp;
-      recyclingObjectsElement.location = this.auth.location;
-      recyclingObjectsElement.sublocation = "recyclingObjects";
-      recyclingObjectsElement.data = "[21,2,2,2,2]";
-      this.recycledObjects = [];
+      recyclingObjectsElement.addEventListener("data-changed", (event) => {
+        console.log("1", event.detail.value);
+        this.set('recycledObjects', recyclingObjectsElement.data);
+        console.log("2", this.recycledObjects, recyclingObjectsElement.data);
+      });
+      recyclingObjectsElement.set('app', this.backendApp);
+      recyclingObjectsElement.set('location', this.auth.location);
+      recyclingObjectsElement.set('sublocation',"recyclingObjects");
+      recyclingObjectsElement.set('data', this.recycledObjects);
       Polymer.dom(this.root).appendChild(recyclingObjectsElement);
       recyclingObjectsElement.add(object);
-      recyclingObjectsElement.addEventListener("data-changed", (event) => {
-        console.log("SISISIS", recycledObjects);
-        this.recycledObjects = recyclingObjectsElement.data;
-      });
     },
 
     _recycledObjectsChanged(recycledObjects) {
-      console.log("HOLAAAAAAAAAA", recycledObjects);
+      console.log("Cambio de recycledObjects", recycledObjects);
     },
 
   });

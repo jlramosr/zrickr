@@ -61,5 +61,8 @@
     "web-component-tester": "^4.2.2",
     "iron-component-page": "PolymerElements/iron-component-page#^1.1.5"
   },
-  "ignore": []
+  "ignore": [],
+  "resolutions": {
+    "polymer": "^1.5.0"
+  }
 }
