@@ -1,6 +1,6 @@
 # Zrickr
 
-Zrickr Fontend using Polymer to organizate films, series, books, etc.
+Zrickr App using Polymer and Firebase to organizate films, series, books, etc.
 
 ## Previous Requirements on Windows
 
